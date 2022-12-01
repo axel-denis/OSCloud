@@ -1,12 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './HomePage/HomePage';
 import PhotosPage from './PhotosPage/PhotosPage';
 
-function App() {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
   return (
@@ -25,5 +24,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

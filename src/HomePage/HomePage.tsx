@@ -9,7 +9,7 @@ interface Props {
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
 }
-type AnimationStates = "intro" | "inter" | "outro" | "hidden"
+type AnimationStates = "intro" | "inter" | "outro";
 
 export default function HomePage(props: Props) {
   const [animationState, setAnimationState] = React.useState<AnimationStates>("intro");

@@ -1,9 +1,8 @@
 import React from 'react';
 import "./PhotosPage.css"
+import "../WindowAnimation.css"
 import { Navigate } from "react-router-dom"
 import HomePage from '../HomePage/HomePage';
-import un from "../testPhotos/1.png";
-import deux from "../testPhotos/2.png";
 
 
 interface Props {
@@ -11,17 +10,26 @@ interface Props {
   setIsLoggedIn: Function;
   startAnimation: boolean;
 }
-type AnimationStates = "intro" | "inter" | "outro" | "hidden"
+type AnimationStates = "intro" | "inter";
 
 export default function PhotosPage(props: Props) {
   const [animationState, setAnimationState] = React.useState<AnimationStates>(props.startAnimation ? "intro" : "inter");
   const [redirect, setRedirect] = React.useState<boolean | "waiting">(false);
+  const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
+
+  React.useEffect(() => {
+    window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
+    console.log("useeffect on isloggedin");
+    if (props.isLoggedIn) {
+      setAnimationState("inter")
+      console.log("activated on isloggedin");
+    }
+  }, [props.isLoggedIn])
 
   React.useEffect(() => {
     console.log("photos anim here");
     if (props.startAnimation) {
       console.log("photos anim VALID");
-      setAnimationState("intro");
       setAnimationState("inter");
     }
   }, [props.startAnimation])
@@ -30,7 +38,7 @@ export default function PhotosPage(props: Props) {
     <>
       {redirect === "waiting" ? <HomePage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} /> : null}
       {redirect === true ? <Navigate to="/" /> : null}
-      <div className={'mainDivAnim ' + animationState} style={{zIndex: props.startAnimation ? 2 : ""}} >
+      <div className={'photosAppBackground windowAnimation ' + animationState} style={{ zIndex: props.startAnimation ? 2 : "" }} >
         <div className="banner">
           <h1 className="h1HomePage" onClick={() => {
             setRedirect("waiting")

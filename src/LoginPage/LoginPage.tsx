@@ -2,6 +2,7 @@ import React from 'react';
 import "./LoginPage.css"
 import nextIcon from "../icons/next.svg"
 import loadingIcon from "../icons/loading.svg"
+import { backIp } from '../consts';
 
 interface Props {
   isLoggedIn: boolean;
@@ -10,26 +11,46 @@ interface Props {
 
 export default function LoginPage(props: Props) {
   const [waitingValidation, setWaitingValidation] = React.useState<boolean>(false);
+  const [errorAnim, setErrorAnim] = React.useState<boolean>(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setWaitingValidation(true);
-    setTimeout(() => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: e.target.name.value,
+        password: e.target.password.value
+      })
+    }
+    const answer: Response = await fetch(backIp + "/login", options);
+    console.log("response is", answer)
+    if (answer.status === 200) {
       props.setIsLoggedIn(true);
-      setWaitingValidation(false);
-    }, 1000)
+    } else {
+      setErrorAnim(true);
+      console.log("red color on");
+      setTimeout(() => {
+        console.log("red color off");
+        setErrorAnim(false);
+      }, 250);
+    }
+    setWaitingValidation(false);
   }
 
   return (
     <div className={'backPannel ' + (!props.isLoggedIn ? "opened" : "closed")} >
       <div className={"flexCenter rotationAnimation " + (!props.isLoggedIn ? "opened" : "closed")}>
 
-        <form className={'roundedBox centeredForm ' + (!props.isLoggedIn ? "opened" : "closed")} onSubmit={handleSubmit}>
+        <form className={'roundedBox centeredForm ' + (!props.isLoggedIn ? "opened " : "closed ") + (errorAnim ? "shake" : "")} onSubmit={handleSubmit}>
           <h1 className={"h1LoginPage " + (!props.isLoggedIn ? "opened" : "closed")} >Connexion</h1>
           <div className={'fieldsBox ' + (waitingValidation ? "loading" : "notLoading")}>
             <div style={{ flex: "4" }}>
-              <input id="email" type="text" placeholder='E-mail' style={{ paddingTop: "6px", height: "44px", borderBottom: "solid rgba(0, 0, 0, 0.253) 1px" }} /> {/* 50px de hauteur en tout*/}
-              <input id="password" type="password" placeholder='Mot de passe' style={{ paddingBottom: "6px", height: "44px" }} />
+              <input id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(0, 0, 0, 0.253) 1px" }} /> {/* 50px de hauteur en tout*/}
+              <input id="password" type="password" placeholder='Mot de passe' style={{ color: errorAnim ? "red" : "", paddingBottom: "6px", height: "44px" }} />
             </div>
             <button className='nextButton'>
               <div className='nextButtonSlider'>

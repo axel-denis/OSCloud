@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 export const authenticateToken: RequestHandler = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader?.split(' ')[1]; // 'Bearer letoken'
-  console.log("token is", token);
 
   if (!token) {
     return res.sendStatus(401);
@@ -14,7 +13,6 @@ export const authenticateToken: RequestHandler = (req, res, next) => {
     if (err) {
       return res.sendStatus(401);
     }
-    //req.user = user;
     res.locals.user = user;
     next();
   })

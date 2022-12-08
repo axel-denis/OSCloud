@@ -11,11 +11,13 @@ fs.writeFileSync("database/users.json", `[
   {
     "id": 0,
     "name": "Axel",
+    "type": "admin",
     "password": "password"
   },
   {
     "id": 1,
     "name": "Arthur",
+    "type": "user",
     "password": "mdp"
   }
 ]`);

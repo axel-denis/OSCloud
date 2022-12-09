@@ -9,9 +9,16 @@ interface Props {
   setIsLoggedIn: Function;
 }
 
+interface loginForm {
+  name: string,
+  password: string
+}
+
 export default function LoginPage(props: Props) {
   const [waitingValidation, setWaitingValidation] = React.useState<boolean>(false);
   const [errorAnim, setErrorAnim] = React.useState<boolean>(false);
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,8 +29,8 @@ export default function LoginPage(props: Props) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: e.target.name.value,
-        password: e.target.password.value
+        name: nameRef.current?.value,
+        password: passwordRef.current?.value
       })
     }
     const answer: Response = await fetch(backIp + "/login", options);
@@ -49,8 +56,8 @@ export default function LoginPage(props: Props) {
           <h1 className={"h1LoginPage " + (!props.isLoggedIn ? "opened" : "closed")} >Connexion</h1>
           <div className={'fieldsBox ' + (waitingValidation ? "loading" : "notLoading")}>
             <div style={{ flex: "4" }}>
-              <input id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(0, 0, 0, 0.253) 1px" }} /> {/* 50px de hauteur en tout*/}
-              <input id="password" type="password" placeholder='Mot de passe' style={{ color: errorAnim ? "red" : "", paddingBottom: "6px", height: "44px" }} />
+              <input ref={nameRef} id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(0, 0, 0, 0.253) 1px" }} /> {/* 50px de hauteur en tout*/}
+              <input ref={passwordRef} id="password" type="password" placeholder='Mot de passe' style={{ color: errorAnim ? "red" : "", paddingBottom: "6px", height: "44px" }} />
             </div>
             <button className='nextButton'>
               <div className='nextButtonSlider'>

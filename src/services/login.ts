@@ -16,7 +16,7 @@ export const login: RequestHandler = (req, res) => {
   }
 
   const user = getUser(req.body.name, req.body.password);
-  if (!user) { // well, if we couldn't find the user...
+  if (!user || !req.body.name || !req.body.password) { // well, if we couldn't find the user...
     return res.status(401).send("invalid creds");
   }
   const { password, ...userWithoutPassword } = user; // deleting the password from the user object

@@ -4,6 +4,7 @@ import LoginPage from './LoginPage/LoginPage';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './HomePage/HomePage';
 import PhotosPage from './PhotosPage/PhotosPage';
+import FilesPage from './FilesPage/FilesPage';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
@@ -18,6 +19,9 @@ export default function App() {
           } />
           <Route path="/photos" element={
             <PhotosPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} />
+          } />
+          <Route path="/files" element={
+            <FilesPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} />
           } />
         </Routes>
       </BrowserRouter>

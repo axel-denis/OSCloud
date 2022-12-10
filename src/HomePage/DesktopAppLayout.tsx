@@ -1,5 +1,6 @@
 interface Props {
-  launchPhotosPage: Function
+  launchPhotosPage: Function,
+  launchFilesPage: Function
 }
 
 export default function DesktopAppLayout(props: Props) {
@@ -7,7 +8,7 @@ export default function DesktopAppLayout(props: Props) {
     <>
       <div className="appsWidget">
         <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
+        <div className="app" onClick={() => props.launchFilesPage()}>app</div>
         <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
       </div>
       <div className="appsWidget">

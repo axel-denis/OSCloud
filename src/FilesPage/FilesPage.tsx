@@ -3,6 +3,7 @@ import "./FilesPage.css"
 import "../WindowAnimation.css"
 import { Navigate } from "react-router-dom"
 import HomePage from '../HomePage/HomePage';
+import ProtectorOverlay from '../ProtectorOverlay/ProtectorOverlay';
 
 
 interface Props {
@@ -21,7 +22,6 @@ export default function FilesPage(props: Props) {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
     if (props.isLoggedIn) {
       setAnimationState("inter");
-      console.log("activated on isloggedin");
     }
   }, [props.isLoggedIn])
 
@@ -33,6 +33,7 @@ export default function FilesPage(props: Props) {
 
   return (
     <>
+      {redirect !== false ? <ProtectorOverlay /> : null}
       {redirect === "waiting" ? <HomePage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} /> : null}
       {redirect === true ? <Navigate to="/" /> : null}
 

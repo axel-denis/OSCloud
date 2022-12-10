@@ -5,12 +5,13 @@ import PhotosPage from "../PhotosPage/PhotosPage";
 import "./HomePage.css"
 import MobileAppLayout from "./MobileAppLayout";
 import FilesPage from "../FilesPage/FilesPage";
+import ProtectorOverlay from "../ProtectorOverlay/ProtectorOverlay";
 
 interface Props {
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
 }
-type AnimationStates = "intro" | "inter" | "outro";
+type AnimationStates = "intro" | "inter" | "outro"; // virer outro ?
 
 export default function HomePage(props: Props) {
   const [animationState, setAnimationState] = React.useState<AnimationStates>("intro");
@@ -33,17 +34,15 @@ export default function HomePage(props: Props) {
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-    console.log("useeffect on isloggedin");
     if (props.isLoggedIn) {
       setAnimationState("inter")
-      console.log("activated on isloggedin");
     }
     //return(window.removeEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches)))
   }, [props.isLoggedIn])
 
-  console.log("is mobile :", isMobile);
   return (
     <>
+      {photosPageStartAnimation || filesPageStartAnimation ? <ProtectorOverlay /> : null}
       {photosPageStartAnimation === true ? <PhotosPage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} startAnimation={true} /> : null}
       {photosPageStartAnimation === "redirect" ? <Navigate to="/photos" /> : null}
 

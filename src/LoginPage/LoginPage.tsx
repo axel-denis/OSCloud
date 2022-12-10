@@ -34,14 +34,11 @@ export default function LoginPage(props: Props) {
       })
     }
     const answer: Response = await fetch(backIp + "/login", options);
-    console.log("response is", answer)
     if (answer.status === 200) {
       props.setIsLoggedIn(true);
     } else {
       setErrorAnim(true);
-      console.log("red color on");
       setTimeout(() => {
-        console.log("red color off");
         setErrorAnim(false);
       }, 250);
     }

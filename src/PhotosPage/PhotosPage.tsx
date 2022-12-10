@@ -3,6 +3,7 @@ import "./PhotosPage.css"
 import "../WindowAnimation.css"
 import { Navigate } from "react-router-dom"
 import HomePage from '../HomePage/HomePage';
+import ProtectorOverlay from '../ProtectorOverlay/ProtectorOverlay';
 
 
 interface Props {
@@ -19,23 +20,20 @@ export default function PhotosPage(props: Props) {
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-    console.log("useeffect on isloggedin");
     if (props.isLoggedIn) {
       setAnimationState("inter")
-      console.log("activated on isloggedin");
     }
   }, [props.isLoggedIn])
 
   React.useEffect(() => {
-    console.log("photos anim here");
     if (props.startAnimation) {
-      console.log("photos anim VALID");
       setAnimationState("inter");
     }
   }, [props.startAnimation])
 
   return (
     <>
+      {redirect !== false ? <ProtectorOverlay /> : null}
       {redirect === "waiting" ? <HomePage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} /> : null}
       {redirect === true ? <Navigate to="/" /> : null}
       <div className={'photosAppBackground windowAnimation ' + animationState} style={{ zIndex: props.startAnimation ? 2 : "" }} >

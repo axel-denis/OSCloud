@@ -71,7 +71,6 @@
   margin-top: 8rem;
   border-radius: 1rem;
   width: 19rem;
-  height: 6rem;
   overflow: hidden;
   border: solid rgba(0, 0, 0, 0.253) 1px;
   display: flex;
@@ -142,7 +141,7 @@ input:focus {
   top: 0px;
   left: 0px;
   width: 7.5rem;
-  height: 6rem;
+  height: 100%;
   display: flex;
 }
 

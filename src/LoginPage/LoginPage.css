@@ -72,7 +72,7 @@
   border-radius: 1rem;
   width: 19rem;
   overflow: hidden;
-  border: solid rgba(0, 0, 0, 0.253) 1px;
+  border: solid rgba(190, 190, 190, 255) 1px;
   display: flex;
   position: relative;
 }
@@ -124,7 +124,7 @@ input:focus {
 .nextButton {
   all: unset;
   flex: 1;
-  border-left: solid rgba(0, 0, 0, 0.253) 1px;
+  border-left: solid rgba(190, 190, 190, 255) 1px;
   background-color: white;
   overflow: hidden;
   position: relative;

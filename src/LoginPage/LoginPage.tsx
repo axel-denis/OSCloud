@@ -53,7 +53,7 @@ export default function LoginPage(props: Props) {
           <h1 className={"h1LoginPage " + (!props.isLoggedIn ? "opened" : "closed")} >Connexion</h1>
           <div className={'fieldsBox ' + (waitingValidation ? "loading" : "notLoading")}>
             <div style={{ flex: "4" }}>
-              <input ref={nameRef} id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(0, 0, 0, 0.253) 1px" }} /> {/* 50px de hauteur en tout*/}
+              <input ref={nameRef} id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(190, 190, 190, 255) 1px" }} /> {/* 50px de hauteur en tout*/}
               <input ref={passwordRef} id="password" type="password" placeholder='Mot de passe' style={{ color: errorAnim ? "red" : "", paddingBottom: "6px", height: "44px" }} />
             </div>
             <button className='nextButton'>

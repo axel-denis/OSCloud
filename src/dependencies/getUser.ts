@@ -1,14 +1,14 @@
 import { User } from "~/types/Users";
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
 
-export const getUser = (userName: string, password: string | null = null): User | undefined => {
+export const getUser = async (userName: string, password: string | null = null): Promise<User | undefined | false> => {
   // getting user and sending 500 internal server error if so.
   let users: User[];
   try {
-    users = JSON.parse(fs.readFileSync("database/users.json", "utf-8"));
+    users = JSON.parse(await fs.readFile("database/users.json", "utf-8"));
   } catch (error) {
     console.log("database/users.json is not correct.\n", error);
-    return undefined;
+    return false;
   }
 
   let user: User;

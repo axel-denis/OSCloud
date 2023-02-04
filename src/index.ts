@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 import { Application, Request, Response } from "express";
-const cors = require("cors");
-const { exit } = require("process");
+import cors from "cors";
+import { exit } from "process";
 require('dotenv').config();
 import { authenticateToken } from "./middlewares/authenticateToken";
 import { login } from "./services/login";

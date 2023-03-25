@@ -11,7 +11,7 @@ interface Props {
   setIsLoggedIn: Function;
   startAnimation: boolean;
 }
-type AnimationStates = "intro" | "inter";
+type AnimationStates = "intro" | "inter" | "outro";
 
 export default function PhotosPage(props: Props) {
   const [animationState, setAnimationState] = React.useState<AnimationStates>(props.startAnimation ? "intro" : "inter");
@@ -20,16 +20,7 @@ export default function PhotosPage(props: Props) {
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-    if (props.isLoggedIn) {
-      setAnimationState("inter")
-    }
   }, [props.isLoggedIn])
-
-  React.useEffect(() => {
-    if (props.startAnimation) {
-      setAnimationState("inter");
-    }
-  }, [props.startAnimation])
 
   return (
     <>
@@ -40,7 +31,7 @@ export default function PhotosPage(props: Props) {
         <div className="banner">
           <h1 className="h1HomePage" onClick={() => {
             setRedirect("waiting")
-            setAnimationState("intro");
+            setAnimationState("outro");
             setTimeout(() => {
               setRedirect(true);
             }, 1100)

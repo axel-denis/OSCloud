@@ -7,14 +7,22 @@
   display: flex;
   /*background-color:green;*/
   overflow: hidden;
-  transition: all 1s, opacity 250ms, box-shadow 300ms 700ms;
+  /*transition: all 1s, opacity 250ms, box-shadow 300ms 700ms;*/
 }
 
+.windowAnimation.intro {
+  animation: 500ms ease-out 0s 1 normal both running windowTransition;
+}
+
+.windowAnimation.outro {
+  animation: 500ms ease-out 0s 1 reverse both running windowTransition;
+}
+
+/*
 .windowAnimation.intro {
   opacity: 0;
   top: 80vh;
   overflow: hidden;
-  /*background-color:blue;*/
   box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
   transition: all 1s, opacity 250ms 350ms, box-shadow 300ms;
 }
@@ -22,18 +30,41 @@
 .windowAnimation.inter {
   transform: rotateX(0) scale(1);
   top: 0;
-  /*background-color:red;*/
-
 }
+*/
 
-/* for desktop only */
-@media (min-width: 34.5rem) {
-  .windowAnimation.intro {
-    border-radius: 25%;
-    transform: perspective(500px) rotateX(-60deg) scale(0.3);
+/* mobile */
+@keyframes windowTransition {
+  from {
+    opacity: 0;
+    top: 50vh;
+    overflow: hidden;
+    box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .windowAnimation.inter {
-    transform: rotateX(0) scale(1);
+  to {
+    top: 0;
+    opacity: 100%;
+  }
+}
+
+/* for desktop only*/
+@media (min-width: 34.5rem) {
+  @keyframes windowTransition {
+    from {
+      opacity: 0;
+      top: 50vh;
+      overflow: hidden;
+      box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 6rem;
+      transform: perspective(500px) rotateX(-30deg) scale(0.3);
+    }
+
+    to {
+      top: 0;
+      opacity: 100%;
+      transform: rotateX(0) scale(1);
+      border-radius: 0px;
+    }
   }
 }

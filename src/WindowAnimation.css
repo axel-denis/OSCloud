@@ -11,11 +11,11 @@
 }
 
 .windowAnimation.intro {
-  animation: 500ms ease-out 0s 1 normal both running windowTransition;
+  animation: 500ms ease-out 0s 1 normal forwards running windowTransition;
 }
 
 .windowAnimation.outro {
-  animation: 500ms ease-out 0s 1 reverse both running windowTransition;
+  animation: 500ms ease-out 0s 1 reverse forwards running windowTransition;
 }
 
 /*

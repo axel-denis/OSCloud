@@ -15,10 +15,20 @@ interface loginForm {
 }
 
 export default function LoginPage(props: Props) {
+  const [isDisplayed, setIsDisplayed] = React.useState<boolean>(false);
   const [waitingValidation, setWaitingValidation] = React.useState<boolean>(false);
   const [errorAnim, setErrorAnim] = React.useState<boolean>(false);
   const nameRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    if (props.isLoggedIn) {
+      setIsDisplayed(true);
+    } else {
+      setTimeout(() => {
+        setIsDisplayed(false);
+      }, 1000);}
+  }, [props.isLoggedIn]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,6 +55,9 @@ export default function LoginPage(props: Props) {
     setWaitingValidation(false);
   }
 
+  //if (!isDisplayed) {
+  //  return (<></>)
+  //}
   return (
     <div className={'backPannel ' + (!props.isLoggedIn ? "opened" : "closed")} >
       <div className={"flexCenter rotationAnimation " + (!props.isLoggedIn ? "opened" : "closed")}>

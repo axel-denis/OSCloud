@@ -12,6 +12,7 @@ export default function App() {
   return (
     <div className="App">
       <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={

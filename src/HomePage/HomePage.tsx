@@ -6,10 +6,14 @@ import "./HomePage.css"
 import MobileAppLayout from "./MobileAppLayout";
 import FilesPage from "../FilesPage/FilesPage";
 import ProtectorOverlay from "../ProtectorOverlay/ProtectorOverlay";
+import { UrlsHandler, transitionToUrl } from "../UrlGestion";
 
 interface Props {
+  appName: string;
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
+  urlsHandler: UrlsHandler;
+  setUrlsHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>;
 }
 type AnimationStates = "intro" | "inter" | "outro"; // virer outro ?
 
@@ -20,16 +24,10 @@ export default function HomePage(props: Props) {
   const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
 
   function launchPhotosPage() {
-    setPhotosPageStartAnimation(true);
-    setTimeout(() => {
-      setPhotosPageStartAnimation("redirect");
-    }, 1000);
+    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Photos", 1000);
   }
   function launchFilesPage() {
-    setFilesPageStartAnimation(true);
-    setTimeout(() => {
-      setFilesPageStartAnimation("redirect");
-    }, 1000);
+    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files", 1000);
   }
 
   React.useEffect(() => {
@@ -42,19 +40,12 @@ export default function HomePage(props: Props) {
 
   return (
     <>
-      {photosPageStartAnimation || filesPageStartAnimation ? <ProtectorOverlay /> : null}
-      {photosPageStartAnimation === true ? <PhotosPage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} startAnimation={true} /> : null}
-      {photosPageStartAnimation === "redirect" ? <Navigate to="/photos" /> : null}
-
-      {filesPageStartAnimation === true ? <FilesPage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} startAnimation={true} /> : null}
-      {filesPageStartAnimation === "redirect" ? <Navigate to="/files" /> : null}
-
       <div className="banner">
         <h1 className="h1HomePage" onClick={() => {
           props.setIsLoggedIn(false);
           setAnimationState("outro");
           setTimeout(() => setAnimationState("intro"), 1100)
-        }}>OSCloud</h1>
+        }}>OSCloud (H)</h1>
       </div>
       <div className="centerContent">
         <div className={"widgetAera " + animationState}>

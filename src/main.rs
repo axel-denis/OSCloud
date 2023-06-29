@@ -25,8 +25,14 @@ async fn main_actix() -> std::io::Result<()> {
 fn main() {
     dotenv().ok();
     let token = std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set.");
-    let users = get_users();
 
-    println!("{:?} {:?}", users, token);
-    main_actix().unwrap();
+    match get_users() {
+        Err(err) => {
+            println!("Unable to obtain users: {err}");
+        }
+        Ok(users) => {
+            println!("{:?} {:?}", users, token);
+            main_actix().unwrap();
+        }
+    }
 }

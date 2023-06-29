@@ -24,10 +24,10 @@ struct Content {
     users: Vec<User>
 }
 
-pub fn get_users() -> Vec<User> {
-    let mut users_file = File::open("database/users.json").unwrap();
+pub fn get_users() -> Result<Vec<User>, std::io::Error> {
+    let mut users_file = File::open("database/users.json")?;
     let mut data = String::new();
-    users_file.read_to_string(&mut data).unwrap();
-    let content: Content = serde_json::from_str(&data).unwrap();
-    content.users
+    users_file.read_to_string(&mut data)?;
+    let content: Content = serde_json::from_str(&data)?;
+    Ok(content.users)
 }

@@ -4,12 +4,15 @@ import "../WindowAnimation.css"
 import { Navigate } from "react-router-dom"
 import HomePage from '../HomePage/HomePage';
 import ProtectorOverlay from '../ProtectorOverlay/ProtectorOverlay';
-
+import { transitionToUrl, UrlsHandler } from '../UrlGestion';
 
 interface Props {
+  appName: string;
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
   startAnimation: boolean;
+  urlsHandler: UrlsHandler;
+  setUrlsHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>;
 }
 type AnimationStates = "intro" | "outro" | "inter";
 

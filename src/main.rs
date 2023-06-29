@@ -1,6 +1,7 @@
 mod users;
 use serde::{Deserialize, Serialize};
 use users::User;
+use dotenv::dotenv;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(transparent)]
@@ -9,6 +10,8 @@ struct Network {
 }
 
 fn main() {
+    dotenv().ok();
+
     let json = r#"
     [
       {
@@ -33,5 +36,7 @@ fn main() {
     "#;
 
     let network: Network = serde_json::from_str(json).unwrap();
-    println!("{:?}", network);
+    let token = std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set.");
+
+    println!("{:?} {:?}", network, token);
 }

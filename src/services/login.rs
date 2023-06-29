@@ -1,5 +1,6 @@
 use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize};
+use crate::users;
 
 #[derive(Debug, Deserialize)]
 pub struct Loggin {
@@ -8,5 +9,12 @@ pub struct Loggin {
 }
 
 pub async fn login(loggin: web::Json<Loggin>) -> impl Responder {
-    HttpResponse::Ok().body(format!("{:?}, Logged!", loggin))
+    match users::get_user(&loggin.name, &loggin.password) {
+        Ok(user) => {
+            HttpResponse::Ok().body(format!("{:?}, Logged!", user))
+        },
+        Err((code, error)) => {
+            HttpResponse::build(code).body(format!("{}", error))
+        }
+    }
 }

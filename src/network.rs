@@ -4,7 +4,7 @@ use actix_web::{web, App, HttpServer};
 pub async fn launch_actix() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .route("/login", web::get().to(crate::services::login::login))
+            .route("/login", web::post().to(crate::services::login::login))
     })
     .bind(("127.0.0.1", 8080))?
     .run()

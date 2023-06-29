@@ -1,5 +1,12 @@
-use actix_web::{HttpResponse, Responder};
+use actix_web::{web, HttpResponse, Responder};
+use serde::{Deserialize};
 
-pub async fn login() -> impl Responder {
-    HttpResponse::Ok().body("Logged!")
+#[derive(Debug, Deserialize)]
+pub struct Loggin {
+    name: String,
+    password: String,
+}
+
+pub async fn login(loggin: web::Json<Loggin>) -> impl Responder {
+    HttpResponse::Ok().body(format!("{:?}, Logged!", loggin))
 }

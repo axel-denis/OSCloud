@@ -1,7 +1,7 @@
 import React from 'react';
 import "./PhotosPage.css"
 import "../WindowAnimation.css"
-import { transitionToUrl, UrlsHandler } from '../UrlGestion';
+import { transitionToUrl, UrlsHandler, AnimationStates, getAnimationState } from '../UrlGestion';
 
 interface Props {
   appName: string;
@@ -11,18 +11,25 @@ interface Props {
   urlsHandler: UrlsHandler;
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>;
 }
-type AnimationStates = "intro" | "inter" | "outro";
 
 export default function PhotosPage(props: Props) {
   const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
+  const [animationState, setAnimationState] = React.useState<AnimationStates>()
+
+  React.useEffect(() => {
+    setAnimationState(getAnimationState(props.urlsHandler, props.appName));// getAnimationState(props.urlsHandler, props.appName);
+  }, [props.urlsHandler]);
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-  }, [props.isLoggedIn])
+  }, [props.isLoggedIn]);
 
+  if (animationState === undefined) {
+    return (<></>)
+  }
   return (
     <>
-      <div className={'photosAppBackground windowAnimation ' + 'inter'} style={{ zIndex: props.startAnimation ? 2 : "" }} >
+      <div className={'photosAppBackground windowAnimation ' + animationState}>
         <div className="banner">
           <h1 className="h1HomePage" onClick={() => {
             transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 1100);

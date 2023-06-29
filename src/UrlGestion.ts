@@ -8,6 +8,8 @@ export interface UrlsHandler {
   nextUrl: UrlInfo;
 }
 
+export type AnimationStates = "intro" | "inter" | "outro";
+
 export function urlToInfo(url: string): UrlInfo {
   if (url == "") {
     return { app: "", parameters: null }
@@ -29,4 +31,17 @@ export function transitionToUrl(handler: UrlsHandler, setHandler: React.Dispatch
 
 export function discreetlyChangeUrlPath(path: string) {
   window.history.replaceState(null, "", path)
+}
+
+export function getAnimationState(urlsHandler: UrlsHandler, appName: string): AnimationStates {
+  if (urlsHandler.actualUrl.app === appName) {
+    if (urlsHandler.nextUrl.app == null || urlsHandler.nextUrl.app == "") {
+      return "inter";
+    } else {
+      return "outro";
+    }
+  } else if (urlsHandler.nextUrl.app === appName) {
+    return "intro";
+  }
+  return "inter";
 }

@@ -1,26 +1,9 @@
 mod users;
-
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+mod services;
+mod network;
 
 use users::get_users;
 use dotenv::dotenv;
-
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-#[actix_web::main]
-async fn main_actix() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .service(hello)
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
-}
 
 fn main() {
     dotenv().ok();
@@ -32,7 +15,7 @@ fn main() {
         }
         Ok(users) => {
             println!("{:?} {:?}", users, token);
-            main_actix().unwrap();
+            network::launch_actix().unwrap();
         }
     }
 }

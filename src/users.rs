@@ -12,11 +12,12 @@ pub enum Type {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct User {
-    id: i64,
-    name: String,
+    pub id: i64,
+    pub name: String,
     #[serde(rename = "type")]
-    user_type: Type,
-    password: String,
+    pub user_type: Type,
+    #[serde(skip_serializing)]
+    pub password: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

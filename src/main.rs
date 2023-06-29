@@ -1,24 +1,12 @@
 mod users;
-use serde::{Deserialize, Serialize};
-use users::User;
-use dotenv::dotenv;
-use std::fs::File;
-use std::io::Read;
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(transparent)]
-struct Network {
-    users: Vec<User>
-}
+use users::get_users;
+use dotenv::dotenv;
 
 fn main() {
     dotenv().ok();
-    let mut users_file = File::open("database/users.json").unwrap();
-    let mut data = String::new();
-    users_file.read_to_string(&mut data).unwrap();
-
-    let network: Network = serde_json::from_str(&data).unwrap();
     let token = std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set.");
+    let users = get_users();
 
-    println!("{:?} {:?}", network, token);
+    println!("{:?} {:?}", users, token);
 }

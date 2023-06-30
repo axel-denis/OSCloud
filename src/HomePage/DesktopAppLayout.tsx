@@ -6,12 +6,14 @@ interface Props {
 }
 
 export default function DesktopAppLayout(props: Props) {
-  const [hoverAnimationDuration, setHoverAnimationDuration] = React.useState(0);
-  React.useEffect(() => { // protection against hover breaking while ending an app transition
-    setTimeout(() => {
-      setHoverAnimationDuration(400);
-    }, 10);
-  })
+  const hoverAnimationDuration = 400;
+  // const [hoverAnimationDuration, setHoverAnimationDuration] = React.useState(0);
+  // React.useEffect(() => { // protection against hover breaking while ending an app transition
+  //   setTimeout(() => {
+  //     setHoverAnimationDuration(400);
+  //   }, 10);
+  // })
+  // NOTE - was used to prevent hover from break on transition, see commit 318f0a8
 
   return (
     <>

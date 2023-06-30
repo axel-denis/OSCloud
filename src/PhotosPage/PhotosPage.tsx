@@ -2,6 +2,7 @@ import React from 'react';
 import "./PhotosPage.css"
 import "../WindowAnimation.css"
 import { transitionToUrl, UrlsHandler, AnimationStates, getAnimationState } from '../UrlGestion';
+import Banner from '../Banner/Banner';
 
 interface Props {
   appName: string;
@@ -30,11 +31,9 @@ export default function PhotosPage(props: Props) {
   return (
     <>
       <div className={'photosAppBackground windowAnimation ' + animationState}>
-        <div className="banner">
-          <h1 className="h1HomePage" onClick={() => {
-            transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 1100);
-          }}>OSCloud:Photos</h1>
-        </div>
+        <Banner text="OSCloud:Photos" onClick={() => {
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 1100);
+        }} />
         <div className='leftPannel'>
           leftPannel
         </div>

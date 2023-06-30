@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  display: flex;
+  /* display: flex; */
   overflow: hidden;
   /*transition: all 1s, opacity 250ms, box-shadow 300ms 700ms;*/
 }

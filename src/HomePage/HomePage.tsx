@@ -7,6 +7,7 @@ import MobileAppLayout from "./MobileAppLayout";
 import FilesPage from "../FilesPage/FilesPage";
 import ProtectorOverlay from "../ProtectorOverlay/ProtectorOverlay";
 import { UrlsHandler, transitionToUrl } from "../UrlGestion";
+import Banner from "../Banner/Banner";
 
 interface Props {
   appName: string;
@@ -40,13 +41,11 @@ export default function HomePage(props: Props) {
 
   return (
     <>
-      <div className="banner">
-        <h1 className="h1HomePage" onClick={() => {
-          props.setIsLoggedIn(false);
-          setAnimationState("outro");
-          setTimeout(() => setAnimationState("intro"), 1100)
-        }}>OSCloud (H)</h1>
-      </div>
+      <Banner text="OSCloud" onClick={() => {
+        props.setIsLoggedIn(false);
+        setAnimationState("outro");
+        setTimeout(() => setAnimationState("intro"), 1100)
+      }}></Banner>
       <div className="centerContent">
         <div className={"widgetAera " + animationState}>
           {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}

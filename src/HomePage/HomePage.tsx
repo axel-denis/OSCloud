@@ -1,11 +1,7 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 import DesktopAppLayout from "./DesktopAppLayout";
-import PhotosPage from "../PhotosPage/PhotosPage";
 import "./HomePage.css"
 import MobileAppLayout from "./MobileAppLayout";
-import FilesPage from "../FilesPage/FilesPage";
-import ProtectorOverlay from "../ProtectorOverlay/ProtectorOverlay";
 import { UrlsHandler, transitionToUrl } from "../UrlGestion";
 import Banner from "../Banner/Banner";
 
@@ -30,7 +26,6 @@ export default function HomePage(props: Props) {
   function launchFilesPage() {
     transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files", 1000);
   }
-
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
     if (props.isLoggedIn) {

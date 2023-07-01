@@ -13,7 +13,7 @@ fn get_secret() -> Vec<u8> {
         .into_bytes()
 }
 
-pub fn decode_jwt(token: &String) -> Result<i64, jsonwebtoken::errors::Error> {
+pub fn decode_jwt(token: &str) -> Result<i64, jsonwebtoken::errors::Error> {
     match jsonwebtoken::decode::<Claims>(
         token,
         &jsonwebtoken::DecodingKey::from_secret(&get_secret()),

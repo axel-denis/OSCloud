@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use actix_web::http;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 
@@ -7,7 +7,7 @@ use std::io::Read;
 #[serde(rename_all = "lowercase")]
 pub enum Type {
     Admin,
-    User
+    User,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -23,7 +23,7 @@ pub struct User {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(transparent)]
 struct Content {
-    users: Vec<User>
+    users: Vec<User>,
 }
 
 pub fn get_users() -> Result<Vec<User>, std::io::Error> {
@@ -34,7 +34,10 @@ pub fn get_users() -> Result<Vec<User>, std::io::Error> {
     Ok(content.users)
 }
 
-pub fn get_user(username: &str, password: &str) -> Result<User, (http::StatusCode, std::io::Error)> {
+pub fn get_user(
+    username: &str,
+    password: &str,
+) -> Result<User, (http::StatusCode, std::io::Error)> {
     match get_users() {
         Ok(users) => {
             let found_user = users.iter().find(|&user| user.name == username);
@@ -43,12 +46,21 @@ pub fn get_user(username: &str, password: &str) -> Result<User, (http::StatusCod
                     if user.password == password {
                         Ok((*user).clone())
                     } else {
-                        Err((http::StatusCode::UNAUTHORIZED, std::io::Error::new(std::io::ErrorKind::InvalidData, "Invalid password")))
+                        Err((
+                            http::StatusCode::UNAUTHORIZED,
+                            std::io::Error::new(
+                                std::io::ErrorKind::InvalidData,
+                                "Invalid password",
+                            ),
+                        ))
                     }
-                },
-                None => Err((http::StatusCode::UNAUTHORIZED, std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"))),
+                }
+                None => Err((
+                    http::StatusCode::UNAUTHORIZED,
+                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                )),
             }
         }
-        Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err))
+        Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
     }
 }

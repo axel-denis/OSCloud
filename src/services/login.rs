@@ -1,8 +1,8 @@
-use actix_web::{web, HttpResponse, Responder};
-use serde::{Deserialize, Serialize};
 use crate::users::{self, User};
-use jsonwebtoken;
+use actix_web::{web, HttpResponse, Responder};
 use chrono;
+use jsonwebtoken;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct LoginRequest {
@@ -23,7 +23,9 @@ struct Claims {
 }
 
 fn get_secret() -> Vec<u8> {
-    std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set.").into_bytes()
+    std::env::var("ACCESS_TOKEN_SECRET")
+        .expect("ACCESS_TOKEN_SECRET must be set.")
+        .into_bytes()
 }
 
 fn create_jwt(user: User) -> Result<LoginResponse, jsonwebtoken::errors::Error> {
@@ -34,30 +36,24 @@ fn create_jwt(user: User) -> Result<LoginResponse, jsonwebtoken::errors::Error> 
     let header = jsonwebtoken::Header::new(jsonwebtoken::Algorithm::HS512);
     let claims = Claims {
         sub: user.id,
-        exp: expiration_time as usize
+        exp: expiration_time as usize,
     };
     let key = jsonwebtoken::EncodingKey::from_secret(&get_secret());
     let token = jsonwebtoken::encode(&header, &claims, &key)?;
 
-    Ok(LoginResponse {
-        token
-    })
+    Ok(LoginResponse { token })
 }
 
 pub async fn login(login: web::Json<LoginRequest>) -> impl Responder {
     match users::get_user(&login.name, &login.password) {
-        Err((code, error)) => {
-            HttpResponse::build(code).body(format!("{}", error))
-        }
+        Err((code, error)) => HttpResponse::build(code).body(error.to_string()),
         Ok(user) => {
             match create_jwt(user) {
-                Ok(token) => {
-                    HttpResponse::Ok().json(token)
-                },
+                Ok(token) => HttpResponse::Ok().json(token),
                 Err(error) => {
-                    HttpResponse::InternalServerError().body(error.to_string()) //to ofuscate
-                },
+                    HttpResponse::InternalServerError().body(error.to_string()) // to ofuscate
+                }
             }
-        },
+        }
     }
 }

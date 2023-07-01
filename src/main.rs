@@ -1,9 +1,9 @@
-mod users;
-mod services;
 mod network;
+mod services;
+mod users;
 
-use users::get_users;
 use dotenv::dotenv;
+use users::get_users;
 
 fn main() {
     dotenv().ok();

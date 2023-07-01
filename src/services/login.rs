@@ -1,6 +1,6 @@
 use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
-use crate::users::get_user;
+use crate::users::get_user_with_password;
 use crate::jwt_manager::encode_jwt;
 
 #[derive(Debug, Deserialize)]
@@ -16,13 +16,13 @@ pub struct LoginResponse {
 }
 
 pub async fn login(login: web::Json<LoginRequest>) -> impl Responder {
-    match get_user(&login.name, &login.password) {
-        Err((code, error)) => HttpResponse::build(code).body(error.to_string()),
+    match get_user_with_password(&login.name, &login.password) {
+        Err((code, _)) => HttpResponse::build(code).finish(),
         Ok(user) => {
             match encode_jwt(&user) {
                 Ok(token) => HttpResponse::Ok().json(LoginResponse { token }),
-                Err(error) => {
-                    HttpResponse::InternalServerError().body(error.to_string()) // to ofuscate
+                Err(_) => {
+                    HttpResponse::InternalServerError().finish() // to ofuscate
                 }
             }
         }

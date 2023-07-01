@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum Type {
     Admin,
@@ -34,7 +34,49 @@ pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
     Ok(content.users)
 }
 
-pub fn get_user(
+pub fn get_user_from_id(
+    id: i64,
+) -> Result<User, (http::StatusCode, std::io::Error)> {
+    match get_users_from_database() {
+        Ok(users) => {
+            let found_user = users.iter().find(|&user| user.id == id);
+
+            found_user.map_or_else(
+                ||
+                Err((
+                    http::StatusCode::UNAUTHORIZED,
+                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                )),
+                |user|
+                    Ok((*user).clone())
+            )
+        }
+        Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
+    }
+}
+
+pub fn get_user_from_name(
+    username: &str,
+) -> Result<User, (http::StatusCode, std::io::Error)> {
+    match get_users_from_database() {
+        Ok(users) => {
+            let found_user = users.iter().find(|&user| user.name == username);
+
+            found_user.map_or_else(
+                ||
+                Err((
+                    http::StatusCode::UNAUTHORIZED,
+                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                )),
+                |user|
+                    Ok((*user).clone())
+            )
+        }
+        Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
+    }
+}
+
+pub fn get_user_with_password(
     username: &str,
     password: &str,
 ) -> Result<User, (http::StatusCode, std::io::Error)> {

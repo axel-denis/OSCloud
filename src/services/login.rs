@@ -28,7 +28,7 @@ fn get_secret() -> Vec<u8> {
         .into_bytes()
 }
 
-fn create_jwt(user: User) -> Result<LoginResponse, jsonwebtoken::errors::Error> {
+fn create_jwt(user: &User) -> Result<LoginResponse, jsonwebtoken::errors::Error> {
     let expiration_time = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::seconds(1800))
         .expect("invalid timestamp")
@@ -48,7 +48,7 @@ pub async fn login(login: web::Json<LoginRequest>) -> impl Responder {
     match users::get_user(&login.name, &login.password) {
         Err((code, error)) => HttpResponse::build(code).body(error.to_string()),
         Ok(user) => {
-            match create_jwt(user) {
+            match create_jwt(&user) {
                 Ok(token) => HttpResponse::Ok().json(token),
                 Err(error) => {
                     HttpResponse::InternalServerError().body(error.to_string()) // to ofuscate

@@ -26,7 +26,7 @@ struct Content {
     users: Vec<User>,
 }
 
-pub fn get_users() -> Result<Vec<User>, std::io::Error> {
+pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
     let mut users_file = File::open("database/users.json")?;
     let mut data = String::new();
     users_file.read_to_string(&mut data)?;
@@ -38,11 +38,17 @@ pub fn get_user(
     username: &str,
     password: &str,
 ) -> Result<User, (http::StatusCode, std::io::Error)> {
-    match get_users() {
+    match get_users_from_database() {
         Ok(users) => {
             let found_user = users.iter().find(|&user| user.name == username);
-            match found_user {
-                Some(user) => {
+
+            found_user.map_or_else(
+                ||
+                Err((
+                    http::StatusCode::UNAUTHORIZED,
+                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                )),
+                |user|
                     if user.password == password {
                         Ok((*user).clone())
                     } else {
@@ -52,14 +58,9 @@ pub fn get_user(
                                 std::io::ErrorKind::InvalidData,
                                 "Invalid password",
                             ),
-                        ))
-                    }
-                }
-                None => Err((
-                    http::StatusCode::UNAUTHORIZED,
-                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
-                )),
-            }
+                    ))
+                },
+            )
         }
         Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
     }

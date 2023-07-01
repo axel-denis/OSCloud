@@ -1,0 +1,12 @@
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--emit=files"]
+
+[tasks.set_clippy]
+command = "cargo"
+args = ["clippy", "--", "-W", "clippy::pedantic", "-W", "clippy::nursery", "-W", "clippy::unwrap_used"]
+
+[tasks.run]
+command = "cargo"
+args = ["watch", "-x", "'run'"]

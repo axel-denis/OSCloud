@@ -1,6 +1,6 @@
 import React from 'react';
 import "./FilesPage.css"
-import "../WindowAnimation.css"
+import "../WindowAnimation/WindowAnimation.css"
 import { transitionToUrl, UrlsHandler, AnimationStates, getAnimationState } from '../UrlGestion';
 import Banner from '../Banner/Banner';
 
@@ -32,7 +32,7 @@ export default function FilesPage(props: Props) {
     <>
       <div className={'FilesAppBackground windowAnimation ' + animationState} >
         <Banner text="OSCloud:Files" onClick={() => {
-          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 500);
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home");
         }} />
         <div className='leftPannel'>
           leftPannel

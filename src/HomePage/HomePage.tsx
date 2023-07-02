@@ -21,10 +21,10 @@ export default function HomePage(props: Props) {
   const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
 
   function launchPhotosPage() {
-    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Photos", 500);
+    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Photos");
   }
   function launchFilesPage() {
-    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files", 500);
+    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files");
   }
   React.useEffect(() => {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));

@@ -55,11 +55,12 @@ where
                 let token = bearer_token.trim_start_matches("Bearer ");
                 match decode_jwt(token) {
                     Ok(id) => {
-                        let local_user = crate::users::get_user_from_id(id);
-                        req.extensions_mut().insert(local_user);
+                        if let Ok(local_user) = crate::users::get_user_from_id(id) {
+                            req.extensions_mut().insert(local_user);
+                        }
                     }
-                    Err(_) => {
-                        println!("Here!");
+                    Err(err) => {
+                        println!("{err:?}");
                         let response = HttpResponse::Unauthorized().finish().map_into_right_body();
                         let (request, _pl) = req.into_parts();
 
@@ -70,7 +71,6 @@ where
         }
 
         let res = self.service.call(req);
-
         Box::pin(async move { res.await.map(ServiceResponse::map_into_left_body) })
     }
 }

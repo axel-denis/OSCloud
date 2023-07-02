@@ -10,6 +10,7 @@ pub async fn launch_actix() -> std::io::Result<()> {
                 "/userInfo",
                 web::get().to(crate::services::user_info::user_info),
             )
+            .route("/home", web::get().to(crate::services::home::home))
     })
     .bind(("127.0.0.1", 8080))?
     .run()

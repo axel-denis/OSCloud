@@ -1,7 +1,4 @@
-use crate::{
-    jwt_manager::decode_jwt,
-    users::{get_user_from_id, get_user_from_name, Type, User},
-};
+use crate::users::{get_user_from_name, Type, User};
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 

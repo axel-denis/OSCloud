@@ -34,42 +34,38 @@ pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
     Ok(content.users)
 }
 
-pub fn get_user_from_id(
-    id: i64,
-) -> Result<User, (http::StatusCode, std::io::Error)> {
+pub fn get_user_from_id(id: i64) -> Result<User, (http::StatusCode, std::io::Error)> {
     match get_users_from_database() {
         Ok(users) => {
             let found_user = users.iter().find(|&user| user.id == id);
 
             found_user.map_or_else(
-                ||
-                Err((
-                    http::StatusCode::UNAUTHORIZED,
-                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
-                )),
-                |user|
-                    Ok((*user).clone())
+                || {
+                    Err((
+                        http::StatusCode::UNAUTHORIZED,
+                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                    ))
+                },
+                |user| Ok((*user).clone()),
             )
         }
         Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
     }
 }
 
-pub fn get_user_from_name(
-    username: &str,
-) -> Result<User, (http::StatusCode, std::io::Error)> {
+pub fn get_user_from_name(username: &str) -> Result<User, (http::StatusCode, std::io::Error)> {
     match get_users_from_database() {
         Ok(users) => {
             let found_user = users.iter().find(|&user| user.name == username);
 
             found_user.map_or_else(
-                ||
-                Err((
-                    http::StatusCode::UNAUTHORIZED,
-                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
-                )),
-                |user|
-                    Ok((*user).clone())
+                || {
+                    Err((
+                        http::StatusCode::UNAUTHORIZED,
+                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                    ))
+                },
+                |user| Ok((*user).clone()),
             )
         }
         Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
@@ -85,12 +81,13 @@ pub fn get_user_with_password(
             let found_user = users.iter().find(|&user| user.name == username);
 
             found_user.map_or_else(
-                ||
-                Err((
-                    http::StatusCode::UNAUTHORIZED,
-                    std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
-                )),
-                |user|
+                || {
+                    Err((
+                        http::StatusCode::UNAUTHORIZED,
+                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                    ))
+                },
+                |user| {
                     if user.password == password {
                         Ok((*user).clone())
                     } else {
@@ -100,7 +97,8 @@ pub fn get_user_with_password(
                                 std::io::ErrorKind::InvalidData,
                                 "Invalid password",
                             ),
-                    ))
+                        ))
+                    }
                 },
             )
         }

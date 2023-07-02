@@ -1,7 +1,7 @@
+use crate::jwt_manager::encode_jwt;
+use crate::users::get_user_with_password;
 use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
-use crate::users::get_user_with_password;
-use crate::jwt_manager::encode_jwt;
 
 #[derive(Debug, Deserialize)]
 pub struct LoginRequest {

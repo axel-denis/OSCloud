@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::users::User;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Claims {
@@ -17,7 +17,7 @@ pub fn decode_jwt(token: &str) -> Result<i64, jsonwebtoken::errors::Error> {
     match jsonwebtoken::decode::<Claims>(
         token,
         &jsonwebtoken::DecodingKey::from_secret(&get_secret()),
-        &jsonwebtoken::Validation::new(jsonwebtoken::Algorithm::HS512)
+        &jsonwebtoken::Validation::new(jsonwebtoken::Algorithm::HS512),
     ) {
         Ok(claims) => Ok(claims.claims.sub),
         Err(err) => Err(err),

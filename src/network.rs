@@ -2,7 +2,7 @@ use actix_web::{web, App, HttpServer};
 
 #[actix_web::main]
 pub async fn launch_actix() -> std::io::Result<()> {
-    HttpServer::new(|| App::new()
+    HttpServer::new(|| App::new().wrap(crate::auth_middleware::SayHi)
             .route("/login", web::post().to(crate::services::login::login))
             .route("/userInfo", web::get().to(crate::services::user_info::user_info))
         )

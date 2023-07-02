@@ -2,6 +2,7 @@ mod network;
 mod services;
 mod users;
 mod jwt_manager;
+mod auth_middleware;
 
 use dotenv::dotenv;
 use users::get_users_from_database;

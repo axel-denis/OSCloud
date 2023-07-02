@@ -3,13 +3,7 @@ export interface UrlInfo {
   parameters: string[] | null
 }
 
-export interface UrlsHandler {
-  actualUrl: UrlInfo;
-  nextUrl: UrlInfo;
-  afterUrl: UrlInfo;
-}
-
-export type AnimationStates = "intro" | "inter" | "outro";
+export type AnimationStates = "intro" | "inter" | "outro" | "off";
 
 export function urlToInfo(url: string): UrlInfo {
   if (url == "") {
@@ -23,35 +17,39 @@ export function urlToInfo(url: string): UrlInfo {
   return { app: splitted[0], parameters: splitted.slice(1) };
 }
 
-export function transitionToUrl(handler: UrlsHandler, setHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>, newUrl: string, duration: number) {
-  if (handler.nextUrl.app === "") {
-    setHandler({ ...handler, nextUrl: urlToInfo(newUrl) });
-    setTimeout(() => {
-      console.log("1handler goind from to", handler, {...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") })
-      setHandler({...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") });
-    }, duration);
-  } else {
-    setHandler({ ...handler, afterUrl: urlToInfo(newUrl) });
-    setTimeout(() => {
-      console.log("1handler goind from to", handler, {...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") })
-      setHandler({actualUrl: urlToInfo(newUrl), nextUrl:urlToInfo(""), afterUrl: urlToInfo("") });
-    }, duration);
-  }
+export function transitionToUrl(handler: UrlInfo[], setHandler: React.Dispatch<React.SetStateAction<UrlInfo[]>>, newUrl: string) {
+  setHandler([...handler, urlToInfo(newUrl)]);
 }
 
 export function discreetlyChangeUrlPath(path: string) {
   window.history.replaceState(null, "", path)
 }
 
-export function getAnimationState(urlsHandler: UrlsHandler, appName: string): AnimationStates {
-  console.log("asked for", urlsHandler)
-  if (urlsHandler.nextUrl.app === appName || urlsHandler.afterUrl.app === appName) {
-    console.log("returned", "intro" )
+export function getAnimationState(urlsHandler: UrlInfo[], appName: string): AnimationStates {
+  let inSecondPart = false;
+  let inFirstPart = false;
+  console.log("for ", urlsHandler)
+  for (let i = 1; i < urlsHandler.length; i++) {
+    if (urlsHandler[i].app === appName) {
+      inSecondPart = true;
+    }
+  }
+  if (urlsHandler[0] && urlsHandler[0].app === appName) {
+    inFirstPart = true;
+  }
+  if (inFirstPart && inSecondPart) {
     return "intro";
-  } else if (urlsHandler.actualUrl.app === appName && urlsHandler.nextUrl.app === "" && urlsHandler.afterUrl.app === "") {
-    console.log("returned", "inter" )
+  }
+  if (inFirstPart && !inSecondPart && urlsHandler.length > 1) {
+    return "outro";
+  } else {
+    console.log("no bcse", inFirstPart, inSecondPart, urlsHandler.length)
+  }
+  if (inFirstPart) {
     return "inter";
   }
-  console.log("returned", "outro" )
-  return "outro";
+  if (inSecondPart) {
+    return "intro";
+  }
+  return "off";
 }

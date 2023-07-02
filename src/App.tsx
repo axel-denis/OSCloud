@@ -4,8 +4,7 @@ import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosPage from './PhotosPage/PhotosPage';
 import FilesPage from './FilesPage/FilesPage';
-import { UrlsHandler, urlToInfo, discreetlyChangeUrlPath } from './UrlGestion';
-import CustomRouter from './CustomRouter/CustomRouter';
+import {urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 
 function TestAppName(props: any) {
   return (<>
@@ -21,33 +20,30 @@ function TestAppName(props: any) {
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(true); //FIXME - set to false
-  const [urlsHandler, setUrlsHandler] = React.useState<UrlsHandler>({
-    actualUrl: { app: "Home", parameters: null },
-    nextUrl: { app: "", parameters: null },
-    afterUrl: { app: "", parameters: null }
-  });
+  const [urlsHandler, setUrlsHandler] = React.useState<UrlInfo[]>([urlToInfo(window.location.pathname)]);
   // console.log(window.location.pathname)
   // window.history.replaceState(null, "", "/pathname/goes/here")
   React.useEffect(() => {
-    console.log("test1", window.location.pathname)
     if (window.location.pathname === "/") {
       discreetlyChangeUrlPath("/Home")
+      setUrlsHandler([urlToInfo("Home")]);
     }
-    console.log("test2", window.location.pathname)
-    setUrlsHandler({
-      actualUrl: urlToInfo(window.location.pathname),
-      nextUrl: urlToInfo(""),
-      afterUrl: urlToInfo("")
-    })
   }, [])
+
+  React.useEffect(() => {
+    console.log("useeffect urlhandler", urlsHandler)
+    if (urlsHandler.length >= 2) {
+      setTimeout(() => {
+        setUrlsHandler(urlsHandler.slice(1));
+      }, 500);
+    }
+  }, [urlsHandler]);
   return (
     <div className="App">
       <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      <CustomRouter openedApps={urlsHandler}>
-        <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <FilesPage appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-      </CustomRouter>
+      <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+      <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+      <FilesPage appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
     </div>
   );
 }

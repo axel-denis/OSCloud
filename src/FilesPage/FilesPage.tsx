@@ -25,7 +25,7 @@ export default function FilesPage(props: Props) {
     window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
   }, [props.isLoggedIn])
 
-  if (animationState === undefined) {
+  if (animationState === undefined || animationState === "off") {
     return (<></>)
   }
   return (

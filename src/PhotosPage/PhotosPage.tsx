@@ -14,39 +14,39 @@ interface Props {
 }
 
 export default function PhotosPage(props: Props) {
-  const [animationLock, setAnimationLock] = React.useState<boolean>(false);
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
+  // const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
   const [animationState, setAnimationState] = React.useState<AnimationStates>()
 
   React.useEffect(() => {
-    //setAnimationState(getAnimationState(props.urlsHandler, props.appName));// getAnimationState(props.urlsHandler, props.appName);
-    if (animationLock === false) { // prevent from changing it's mind during animation
-      console.log("changing animation state...", (props as any).shouldKey, animationLock)
-      setAnimationState(getAnimationState(props.urlsHandler, props.appName));// getAnimationState(props.urlsHandler, props.appName);
-      setAnimationLock(true);
-      console.log("locked")
-      setTimeout(() => {
-        setAnimationLock(false);
-        console.log("unlocked")
-      }, 600);
-    }
+    console.log("will set state to", getAnimationState(props.urlsHandler, props.appName))
+    setAnimationState(getAnimationState(props.urlsHandler, props.appName));// getAnimationState(props.urlsHandler, props.appName);
   }, [props.urlsHandler]);
 
-  React.useEffect(() => {
-    window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-  }, [props.isLoggedIn]);
+  // React.useEffect(() => {
+  //   window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
+  // }, [props.isLoggedIn]);
 
-  if (animationState === undefined) {
+  if (animationState === undefined || animationState === "off") {
     return (<></>)
   }
+  let z_index = 0;
+  if (animationState === "intro") { z_index = 2 }
+  if (animationState === "inter") { z_index = 1 }
+  if (animationState === "outro") { z_index = 1 }
   return (
     <>
-      <div className={'photosAppBackground windowAnimation ' + animationState}>
+      <div className={'photosAppBackground windowAnimation ' + animationState} style={{ zIndex: z_index }}>
         <Banner text="OSCloud:Photos" onClick={() => {
-          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 500);
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "Home");
         }} />
         <div className='leftPannel'>
           leftPannel
+          <button onClick={() => {
+            setAnimationState("outro");
+            setTimeout(() => {
+              setAnimationState("intro");
+            }, 300);
+          }}>test</button>
         </div>
         <div className='contentDiv'>
         </div>

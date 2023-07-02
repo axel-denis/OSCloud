@@ -6,6 +6,7 @@ export interface UrlInfo {
 export interface UrlsHandler {
   actualUrl: UrlInfo;
   nextUrl: UrlInfo;
+  afterUrl: UrlInfo;
 }
 
 export type AnimationStates = "intro" | "inter" | "outro";
@@ -19,14 +20,23 @@ export function urlToInfo(url: string): UrlInfo {
   }
   while (url[0] === '/') url = url.substring(1);
   const splitted = url.split("/");
-  return {app: splitted[0], parameters: splitted.slice(1)};
+  return { app: splitted[0], parameters: splitted.slice(1) };
 }
 
 export function transitionToUrl(handler: UrlsHandler, setHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>, newUrl: string, duration: number) {
-  setHandler({...handler, nextUrl: urlToInfo(newUrl)});
-  setTimeout(() => {
-    setHandler({actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("")});
-  }, duration);
+  if (handler.nextUrl.app === "") {
+    setHandler({ ...handler, nextUrl: urlToInfo(newUrl) });
+    setTimeout(() => {
+      console.log("1handler goind from to", handler, {...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") })
+      setHandler({...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") });
+    }, duration);
+  } else {
+    setHandler({ ...handler, afterUrl: urlToInfo(newUrl) });
+    setTimeout(() => {
+      console.log("1handler goind from to", handler, {...handler, actualUrl: urlToInfo(newUrl), nextUrl: urlToInfo("") })
+      setHandler({actualUrl: urlToInfo(newUrl), nextUrl:urlToInfo(""), afterUrl: urlToInfo("") });
+    }, duration);
+  }
 }
 
 export function discreetlyChangeUrlPath(path: string) {
@@ -34,14 +44,14 @@ export function discreetlyChangeUrlPath(path: string) {
 }
 
 export function getAnimationState(urlsHandler: UrlsHandler, appName: string): AnimationStates {
-  if (urlsHandler.actualUrl.app === appName) {
-    if (urlsHandler.nextUrl.app == null || urlsHandler.nextUrl.app == "") {
-      return "inter";
-    } else {
-      return "outro";
-    }
-  } else if (urlsHandler.nextUrl.app === appName) {
+  console.log("asked for", urlsHandler)
+  if (urlsHandler.nextUrl.app === appName || urlsHandler.afterUrl.app === appName) {
+    console.log("returned", "intro" )
     return "intro";
+  } else if (urlsHandler.actualUrl.app === appName && urlsHandler.nextUrl.app === "" && urlsHandler.afterUrl.app === "") {
+    console.log("returned", "inter" )
+    return "inter";
   }
-  return "inter";
+  console.log("returned", "outro" )
+  return "outro";
 }

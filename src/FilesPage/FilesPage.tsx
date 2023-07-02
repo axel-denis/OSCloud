@@ -32,7 +32,7 @@ export default function FilesPage(props: Props) {
     <>
       <div className={'FilesAppBackground windowAnimation ' + animationState} >
         <Banner text="OSCloud:Files" onClick={() => {
-          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 1100);
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home", 500);
         }} />
         <div className='leftPannel'>
           leftPannel

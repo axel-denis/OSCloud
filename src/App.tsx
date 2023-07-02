@@ -23,9 +23,9 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(true); //FIXME - set to false
   const [urlsHandler, setUrlsHandler] = React.useState<UrlsHandler>({
     actualUrl: { app: "Home", parameters: null },
-    nextUrl: { app: "", parameters: null }
+    nextUrl: { app: "", parameters: null },
+    afterUrl: { app: "", parameters: null }
   });
-  console.log(urlToInfo(window.location.pathname))
   // console.log(window.location.pathname)
   // window.history.replaceState(null, "", "/pathname/goes/here")
   React.useEffect(() => {
@@ -36,7 +36,8 @@ export default function App() {
     console.log("test2", window.location.pathname)
     setUrlsHandler({
       actualUrl: urlToInfo(window.location.pathname),
-      nextUrl: urlToInfo("")
+      nextUrl: urlToInfo(""),
+      afterUrl: urlToInfo("")
     })
   }, [])
   return (

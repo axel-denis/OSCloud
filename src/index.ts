@@ -7,6 +7,7 @@ import { authenticateToken } from "./middlewares/authenticateToken";
 import { login } from "./services/login";
 import { userInfo } from "./services/userInfo";
 import { homePage } from "./services/home";
+import { files } from "./services/files";
 
 // ERROR HANDLING
 if (process.env.IS_ENV_SETUP === undefined) {
@@ -27,6 +28,8 @@ app.post("/login", login);
 
 app.get("/userInfo", authenticateToken, userInfo);
 
-app.get("/home", authenticateToken, homePage)
+app.get("/home", authenticateToken, homePage);
+
+app.get("/files", authenticateToken, files);
 
 app.listen(8080, () => console.log("running on 8080"));

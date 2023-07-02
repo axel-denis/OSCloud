@@ -7,7 +7,7 @@ export const userInfo: RequestHandler = async (req, res) => {
 
   if (!req.query.name) return res.sendStatus(404);
 
-  if (res.locals.user.type === "admin" || res.locals.user.name === req.body.name) {
+  if (res.locals.user.type === "admin" || res.locals.user.name === req.query.name.toString()) {
     user = await getUser(req.query.name.toString());
   } else {
     return res.sendStatus(401);

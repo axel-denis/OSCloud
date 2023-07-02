@@ -59,8 +59,7 @@ where
                             req.extensions_mut().insert(local_user);
                         }
                     }
-                    Err(err) => {
-                        println!("{err:?}");
+                    Err(_) => {
                         let response = HttpResponse::Unauthorized().finish().map_into_right_body();
                         let (request, _pl) = req.into_parts();
 

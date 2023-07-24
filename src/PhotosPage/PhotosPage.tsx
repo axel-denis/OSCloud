@@ -1,7 +1,7 @@
 import React from 'react';
 import "./PhotosPage.css"
 import "../WindowAnimation/WindowAnimation.css"
-import { transitionToUrl, AnimationStates, getAnimationState } from '../UrlGestion';
+import { transitionToUrl, AnimationStates, getAnimationState, UrlInfo } from '../UrlGestion';
 import Banner from '../Banner/Banner';
 import WindowAnimation from '../WindowAnimation/WindowAnimation';
 
@@ -10,8 +10,8 @@ interface Props {
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
   startAnimation: boolean;
-  urlsHandler: UrlsHandler;
-  setUrlsHandler: React.Dispatch<React.SetStateAction<UrlsHandler>>;
+  urlsHandler: UrlInfo;
+  setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }
 
 export default function PhotosPage(props: Props) {

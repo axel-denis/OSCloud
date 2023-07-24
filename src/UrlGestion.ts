@@ -17,8 +17,8 @@ export function urlToInfo(url: string): UrlInfo {
   return { app: splitted[0], parameters: splitted.slice(1) };
 }
 
-export function transitionToUrl(handler: UrlInfo[], setHandler: React.Dispatch<React.SetStateAction<UrlInfo[]>>, newUrl: string) {
-  setHandler([...handler, urlToInfo(newUrl)]);
+export function transitionToUrl(handler: UrlInfo, setHandler: React.Dispatch<React.SetStateAction<UrlInfo>>, newUrl: string) {
+  setHandler(urlToInfo(newUrl));
 }
 
 export function discreetlyChangeUrlPath(path: string) {

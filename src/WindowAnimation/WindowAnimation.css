@@ -5,29 +5,28 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  animation-name: windowTransition;
 }
 
 .windowAnimation.intro {
-  animation-name: windowTransition;
   animation-timing-function: ease-out;
   animation-delay: 0;
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;
   animation-play-state: running;
-  /* animation-duration: 500ms; */
+  animation-duration: 500ms;
   /* animation: 500ms ease-out 0s 1 normal forwards running windowTransition; */
 }
 
 .windowAnimation.outro {
-  animation-name: windowTransition;
   animation-timing-function: ease-out;
   animation-delay: 0;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-fill-mode: forwards;
   animation-play-state: running;
-  /* animation-duration: 500ms; */
+  animation-duration: 500ms;
   /* animation: 500ms ease-out 0s 1 reverse forwards running windowTransition; */
 }
 

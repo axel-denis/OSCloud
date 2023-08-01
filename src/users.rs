@@ -29,6 +29,7 @@ struct Content {
 pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
     let mut users_file = File::open("database/users.json")?;
     let mut data = String::new();
+
     users_file.read_to_string(&mut data)?;
     let content: Content = serde_json::from_str(&data)?;
     Ok(content.users)
@@ -37,16 +38,16 @@ pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
 pub fn get_user_from_id(id: i64) -> Result<User, (http::StatusCode, std::io::Error)> {
     match get_users_from_database() {
         Ok(users) => {
-            let found_user = users.iter().find(|&user| user.id == id);
-
-            found_user.map_or_else(
+            users.iter()
+                .find(|&user| user.id == id)
+                .map_or_else(
                 || {
                     Err((
                         http::StatusCode::UNAUTHORIZED,
                         std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
                     ))
                 },
-                |user| Ok((*user).clone()),
+                |user| Ok((*user).clone())
             )
         }
         Err(err) => Err((http::StatusCode::INTERNAL_SERVER_ERROR, err)),
@@ -88,16 +89,22 @@ pub fn get_user_with_password(
                     ))
                 },
                 |user| {
-                    if user.password == password {
-                        Ok((*user).clone())
-                    } else {
-                        Err((
+                    match bcrypt::verify(&password, &user.password) {
+                        Ok(true) => {Ok((*user).clone())},
+                        Ok(false) => {Err((
                             http::StatusCode::UNAUTHORIZED,
                             std::io::Error::new(
                                 std::io::ErrorKind::InvalidData,
                                 "Invalid password",
                             ),
-                        ))
+                        ))},
+                        Err(error) => {Err((
+                            http::StatusCode::UNAUTHORIZED,
+                            std::io::Error::new(
+                                std::io::ErrorKind::InvalidData,
+                                error.to_string(),
+                            ),
+                        ))},
                     }
                 },
             )

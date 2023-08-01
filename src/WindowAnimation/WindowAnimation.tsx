@@ -29,6 +29,7 @@ export default function WindowAnimation(props: Props) {
       transform: "perspective(500px) rotateX(0deg) scale(1.0)",
       transition: {
         duration: timeScale,
+        ease: "easeOut"
       }
     },
     closed: {
@@ -38,6 +39,7 @@ export default function WindowAnimation(props: Props) {
       transform: "perspective(1000px) rotateX(-20deg) scale(0.3)",
       transition: {
         duration: timeScale,
+        ease: "easeIn"
       }
     }
   }

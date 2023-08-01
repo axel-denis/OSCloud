@@ -4,13 +4,16 @@ import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosPage from './PhotosPage/PhotosPage';
 import FilesPage from './FilesPage/FilesPage';
-import {urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
+import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import { timeScale } from './consts';
+
+export const MobileDevice = React.createContext<boolean>(false);
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(true); //FIXME - set to false
   const [urlsHandler, setUrlsHandler] = React.useState<UrlInfo>(urlToInfo(window.location.pathname));
   const urlsRef = React.useRef(urlsHandler); // permet d'avoir la vraie valeur de la state même dans les setTimeout
+  const [isMobile, setIsMobile] = React.useState<boolean>(false);
   urlsRef.current = urlsHandler;
 
   // console.log(window.location.pathname)
@@ -20,14 +23,22 @@ export default function App() {
       discreetlyChangeUrlPath("/Home")
       setUrlsHandler(urlToInfo("Home"));
     }
+    const checkDevice = () => {
+      setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches)
+    }
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return (() => window.removeEventListener("resize", checkDevice));
   }, []);
 
   return (
-    <div className="App">
-      <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-      <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-      {/* <FilesPage appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} /> */}
-    </div>
+    <MobileDevice.Provider value={isMobile}>
+      <div className="App">
+        <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        {/* <FilesPage appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} /> */}
+      </div>
+    </MobileDevice.Provider>
   );
 }

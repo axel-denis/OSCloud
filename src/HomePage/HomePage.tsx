@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import DesktopAppLayout from "./DesktopAppLayout";
 import "./HomePage.css"
 import MobileAppLayout from "./MobileAppLayout";
 import { UrlsHandler, transitionToUrl } from "../UrlGestion";
 import Banner from "../Banner/Banner";
+import { MobileDevice } from "../App";
 
 interface Props {
   appName: string;
@@ -18,7 +19,7 @@ export default function HomePage(props: Props) {
   const [animationState, setAnimationState] = React.useState<AnimationStates>("intro");
   const [photosPageStartAnimation, setPhotosPageStartAnimation] = React.useState<boolean | "redirect">(false);
   const [filesPageStartAnimation, setFilesPageStartAnimation] = React.useState<boolean | "redirect">(false);
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
+  const isMobile = React.useContext(MobileDevice);
 
   function launchPhotosPage() {
     transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Photos");
@@ -26,12 +27,11 @@ export default function HomePage(props: Props) {
   function launchFilesPage() {
     transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files");
   }
+
   React.useEffect(() => {
-    window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
     if (props.isLoggedIn) {
-      setAnimationState("inter")
+      setAnimationState("inter");
     }
-    //return(window.removeEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches)))
   }, [props.isLoggedIn])
 
   return (

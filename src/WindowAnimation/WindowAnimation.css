@@ -5,7 +5,8 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  animation-name: windowTransition;
+  box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.2);
+  /* animation-name: windowTransition; */
 }
 
 .windowAnimation.intro {

@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { AnimationStates, getAnimationState, UrlInfo } from "../UrlGestion";
 import "./WindowAnimation.css"
 import { timeScale } from "../consts";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   appName: string;
@@ -10,64 +11,49 @@ type Props = {
 }
 
 export default function WindowAnimation(props: Props) {
-  const [animationState, setAnimationState] = React.useState<AnimationStates>("off");
-  const [animationTime, setAnimationTime] = React.useState<number>(0);
-  const [animationDuration, setAnimationDuration] = React.useState<number>((500 * timeScale));
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  // const [animationState, setAnimationState] = React.useState<AnimationStates>("off");
 
+  // const open = () => setIsOpen(true);
+  // const close = () => setIsOpen(false);
 
   React.useEffect(() => {
-    let timeout: number;
-
-
-    // IL FAUT ESSAYER DE METTRE UNE DUREE NEGATIVE AU ANIMATION DELAY (on utilisera animationduration parce que osef)
-    if (props.urlsHandler.app !== props.appName && (animationState !== "off" && animationState !== "outro")) {
-      if (animationTime > Date.now()) {
-        setAnimationTime(animationTime + (500 * timeScale))
-        setAnimationDuration((animationTime + (500 * timeScale)) - Date.now());
-        console.log("animatio11111nduration :", (animationTime + (500 * timeScale * 2)) - Date.now());
-      } else {
-        setAnimationTime(Date.now() + (500 * timeScale));
-        setAnimationDuration((500 * timeScale));
-        console.log("animationduration :", 500);
-      }
-      setAnimationState("outro");
-      timeout = setTimeout(() => {
-        setAnimationState("off");
-      }, timeScale * 500);
-    }
-    if (props.urlsHandler.app === props.appName && animationState !== "intro" && animationState !== "inter") {
-      if (animationTime > Date.now()) {
-        setAnimationTime(animationTime + (500 * timeScale))
-        setAnimationDuration((animationTime + (500 * timeScale)) - Date.now());
-        console.log("animat11111ionduration :", (animationTime + (500 * timeScale * 2)) - Date.now());
-      } else {
-        setAnimationTime(Date.now() + (500 * timeScale));
-        setAnimationDuration((500 * timeScale));
-        console.log("animationduration :", 500);
-      }
-      setAnimationState("intro");
-      timeout = setTimeout(() => {
-        setAnimationState("inter");
-      }, timeScale * 500);
-    }
-    return () => {
-      // clears timeout before running the new effect
-      clearTimeout(timeout);
-    };
+    setIsOpen(props.urlsHandler.app === props.appName);
   }, [props.urlsHandler]);
 
-  if (animationState === "off") {
-    return (<></>)
+  const variants = {
+    open: {
+      top: 0,
+      opacity: 1,
+      borderRadius: 0, // desktop only
+      transform: "perspective(500px) rotateX(0deg) scale(1.0)",
+      transition: {
+        duration: timeScale,
+      }
+    },
+    closed: {
+      top: "100vh",
+      opacity: 0,
+      borderRadius: "6rem", // desktop only
+      transform: "perspective(1000px) rotateX(-20deg) scale(0.3)",
+      transition: {
+        duration: timeScale,
+      }
+    }
   }
-  // let z_index = 0;
-  // if (animationState === "intro") { z_index = 2; }
-  // if (animationState === "inter") { z_index = 1; }
-  // if (animationState === "outro") { z_index = 1; }
 
-  console.log("aya", animationDuration)
   return (
-    <div className={'photosAppBackground windowAnimation ' + animationState} style={{ /*zIndex: z_index,*/ animationDelay: animationDuration + "ms" }}>
-      {props.children}
-    </div>
+    <AnimatePresence>
+      {isOpen && // n'affiche que si isOpen === true
+        <motion.div
+          className={'photosAppBackground windowAnimation'}
+          initial={variants.closed}
+          animate={variants.open}
+          exit={variants.closed}
+        >
+          {props.children}
+        </motion.div>
+      }
+    </AnimatePresence>
   )
 }

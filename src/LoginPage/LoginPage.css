@@ -1,5 +1,6 @@
 .backPannel {
   position: fixed;
+  top: 0vh;
   height: 100vh;
   width: 100vw;
   background-color: rgb(250, 250, 255, 0.9);
@@ -9,26 +10,6 @@
   align-items: center;
   overflow: hidden;
   z-index: 1;
-}
-
-@keyframes backPannel_transition {
-  from {
-    top: 100vh;
-    background-color: red;
-  }
-
-  to {
-    top: 0vh;
-    background-color: blue;
-  }
-}
-
-.backPannel.opened {
-  animation: 500ms ease-out 0s 1 normal forwards running backPannel_transition;
-}
-
-.backPannel.closed {
-  animation: 500ms ease-out 0s 3 reverse both running backPannel_transition;
 }
 
 .h1LoginPage {
@@ -46,17 +27,6 @@
   opacity: 0;
   transition: all .5s;
 }
-
-/* .rotationAnimation {
-  width: 100%;
-  height: 100%;
-  transition: all 1s;
-}
-
-.rotationAnimation.closed {
-  rotate: 20deg;
-  scale: 2;
-} */
 
 .centeredForm {
   width: 30rem;
@@ -151,15 +121,9 @@ input:focus {
 .nextButtonSlider {
   position: absolute;
   top: 0px;
-  left: 0px;
   width: 7.5rem;
   height: 100%;
   display: flex;
-}
-
-.nextButton:hover .nextButtonSlider {
-  left: -3.75rem;
-  transition: all 300ms;
 }
 
 .nextButtonDivision {
@@ -176,7 +140,7 @@ input:focus {
   }
 
   .decorativeFlyers {
-    opacity: 0;
+    display: none
   }
 
   .fieldsBox {
@@ -186,13 +150,9 @@ input:focus {
 
 .loadingRotation {
   opacity: 1;
-}
-
-/*rotation du logo de chargement*/
-@media (prefers-reduced-motion: no-preference) {
-  .loadingRotation {
-    animation: loadingLogo-spin 500ms steps(12, end) infinite;
-  }
+  animation: loadingLogo-spin 500ms steps(12, end) infinite;
+  height: 30px;
+  opacity: .5;
 }
 
 @keyframes loadingLogo-spin {
@@ -216,7 +176,7 @@ input:focus {
   }
 
   .decorativeFlyers {
-    opacity: 0;
+    display: none;
   }
 
   .fieldsBox {

@@ -16,9 +16,6 @@ interface Props {
 type AnimationStates = "intro" | "inter" | "outro"; // virer outro ?
 
 export default function HomePage(props: Props) {
-  const [animationState, setAnimationState] = React.useState<AnimationStates>("intro");
-  const [photosPageStartAnimation, setPhotosPageStartAnimation] = React.useState<boolean | "redirect">(false);
-  const [filesPageStartAnimation, setFilesPageStartAnimation] = React.useState<boolean | "redirect">(false);
   const isMobile = React.useContext(MobileDevice);
 
   function launchPhotosPage() {
@@ -33,20 +30,16 @@ export default function HomePage(props: Props) {
     return (() => {console.log("unmounted ?")})
   }, [])
   React.useEffect(() => {
-    if (props.isLoggedIn) {
-      setAnimationState("inter");
-    }
+    // animation ?
   }, [props.isLoggedIn])
 
   return (
     <>
       <Banner text="OSCloud" onClick={() => {
         props.setIsLoggedIn(false);
-        setAnimationState("outro");
-        setTimeout(() => setAnimationState("intro"), 1100)
       }}></Banner>
       <div className="centerContent">
-        <div className={"widgetAera " + animationState}>
+        <div className={"widgetAera"}>
           {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
           {isMobile === true ? <MobileAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
         </div>

@@ -16,7 +16,7 @@ pub async fn launch_actix() -> std::io::Result<()> {
             )
             .route("/home", web::get().to(crate::services::home::home))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 8888))?
     .run()
     .await
 }

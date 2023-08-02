@@ -4,6 +4,7 @@ mod network;
 mod services;
 mod users;
 mod register;
+mod database;
 
 use dotenv::dotenv;
 fn main() {

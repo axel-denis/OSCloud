@@ -1,7 +1,7 @@
 use actix_web::http;
 use serde::{Deserialize, Serialize};
-use std::fs::File;
-use std::io::Read;
+use std::fs;
+use std::io::Error;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -27,10 +27,8 @@ struct Content {
 }
 
 pub fn get_users_from_database() -> Result<Vec<User>, std::io::Error> {
-    let mut users_file = File::open("database/users.json")?;
-    let mut data = String::new();
+    let data = fs::read_to_string("database/users.json")?;
 
-    users_file.read_to_string(&mut data)?;
     let content: Content = serde_json::from_str(&data)?;
     Ok(content.users)
 }
@@ -44,7 +42,7 @@ pub fn get_user_from_id(id: i64) -> Result<User, (http::StatusCode, std::io::Err
                 || {
                     Err((
                         http::StatusCode::UNAUTHORIZED,
-                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                        Error::new(std::io::ErrorKind::NotFound, "User not found"),
                     ))
                 },
                 |user| Ok((*user).clone())
@@ -63,7 +61,7 @@ pub fn get_user_from_name(username: &str) -> Result<User, (http::StatusCode, std
                 || {
                     Err((
                         http::StatusCode::UNAUTHORIZED,
-                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                        Error::new(std::io::ErrorKind::NotFound, "User not found"),
                     ))
                 },
                 |user| Ok((*user).clone()),
@@ -85,7 +83,7 @@ pub fn get_user_with_password(
                 || {
                     Err((
                         http::StatusCode::UNAUTHORIZED,
-                        std::io::Error::new(std::io::ErrorKind::NotFound, "User not found"),
+                        Error::new(std::io::ErrorKind::NotFound, "User not found"),
                     ))
                 },
                 |user| {
@@ -93,14 +91,14 @@ pub fn get_user_with_password(
                         Ok(true) => {Ok((*user).clone())},
                         Ok(false) => {Err((
                             http::StatusCode::UNAUTHORIZED,
-                            std::io::Error::new(
+                            Error::new(
                                 std::io::ErrorKind::InvalidData,
                                 "Invalid password",
                             ),
                         ))},
                         Err(error) => {Err((
                             http::StatusCode::UNAUTHORIZED,
-                            std::io::Error::new(
+                            Error::new(
                                 std::io::ErrorKind::InvalidData,
                                 error.to_string(),
                             ),

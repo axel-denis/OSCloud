@@ -3,7 +3,6 @@ import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosPage from './PhotosPage/PhotosPage';
-import FilesPage from './FilesPage/FilesPage';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import { timeScale } from './consts';
 
@@ -37,7 +36,6 @@ export default function App() {
         <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
         <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        {/* <FilesPage appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} /> */}
       </div>
     </MobileDevice.Provider>
   );

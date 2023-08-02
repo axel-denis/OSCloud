@@ -29,6 +29,10 @@ export default function HomePage(props: Props) {
   }
 
   React.useEffect(() => {
+    console.log("mounted");
+    return (() => {console.log("unmounted ?")})
+  }, [])
+  React.useEffect(() => {
     if (props.isLoggedIn) {
       setAnimationState("inter");
     }

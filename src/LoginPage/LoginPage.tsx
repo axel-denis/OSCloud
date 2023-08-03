@@ -2,16 +2,12 @@ import React from 'react';
 import "./LoginPage.css"
 import nextIcon from "../icons/next.svg"
 import loadingIcon from "../icons/loading.svg"
-import { backIp } from '../consts';
+import { backIp, timeScale } from '../consts';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface Props {
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
-}
-
-interface loginForm {
-  name: string,
-  password: string
 }
 
 export default function LoginPage(props: Props) {
@@ -40,41 +36,79 @@ export default function LoginPage(props: Props) {
       setErrorAnim(true);
       setTimeout(() => {
         setErrorAnim(false);
-      }, 250);
+      }, 275);
     }
     setWaitingValidation(false);
   }
-
+  console.log("the props is", props.isLoggedIn)
   return (
-    <div className={'backPannel ' + (!props.isLoggedIn ? "opened" : "closed")} >
-      <div className={"flexCenter rotationAnimation " + (!props.isLoggedIn ? "opened" : "closed")}>
+    <AnimatePresence>
+      {!props.isLoggedIn &&
+        <motion.div className={'backPannel'}
+          initial={{ top: "100vh" }}
+          animate={{ top: "0vh", transition: { duration: .6 * timeScale, ease: "easeOut"} }}
+          exit={{ top: "100vh", transition: { duration: .6 * timeScale, ease: "easeIn"} }}
+        >
+          <form className={'roundedBox centeredForm ' + (errorAnim ? "shake" : "")} onSubmit={handleSubmit}>
+            <h1 className="h1LoginPage">
+              Connexion
+            </h1>
+            <div className={'fieldsBox ' + (waitingValidation ? "loading" : "notLoading")}>
+              <div style={{ flex: "4" }}>
 
-        <form className={'roundedBox centeredForm ' + (!props.isLoggedIn ? "opened " : "closed ") + (errorAnim ? "shake" : "")} onSubmit={handleSubmit}>
-          <h1 className={"h1LoginPage " + (!props.isLoggedIn ? "opened" : "closed")} >Connexion</h1>
-          <div className={'fieldsBox ' + (waitingValidation ? "loading" : "notLoading")}>
-            <div style={{ flex: "4" }}>
-              <input ref={nameRef} id="name" type="text" placeholder='E-mail' style={{ color: errorAnim ? "red" : "", paddingTop: "6px", height: "44px", borderBottom: "solid rgba(190, 190, 190, 255) 1px" }} /> {/* 50px de hauteur en tout*/}
-              <input ref={passwordRef} id="password" type="password" placeholder='Mot de passe' style={{ color: errorAnim ? "red" : "", paddingBottom: "6px", height: "44px" }} />
-            </div>
-            <button className='nextButton'>
-              <div className='nextButtonSlider'>
-                <div className='flexCenter nextButtonDivision'>
-                  <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
-                </div>
-                <div className='flexCenter nextButtonDivision'>
-                  <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
-                </div>
+                <input ref={nameRef} id="name" type="text" placeholder='E-mail' style={{
+                  color: errorAnim ? "red" : "",
+                  paddingTop: "6px",
+                  height: "44px",
+                  borderBottom: "solid rgba(190, 190, 190, 255) 1px"
+                }} /> {/* 50px de hauteur en tout*/}
+
+                <input ref={passwordRef} id="password" type="password" placeholder='Mot de passe' style={{
+                  color: errorAnim ? "red" : "",
+                  paddingBottom: "6px",
+                  height: "44px"
+                }} />
+
               </div>
-            </button>
-            <div className={"loadingFieldsBox " + (waitingValidation ? "loading" : "notLoading")}>
-              <img src={loadingIcon} alt="loading" className='loadingRotation' style={{ height: "30px", opacity: ".5" }} />
+              <button className='nextButton'>
+                <motion.div className='nextButtonSlider' whileHover={{ left: "-3.7rem" }}>
+                  <div className='flexCenter nextButtonDivision'>
+                    <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
+                  </div>
+                  <div className='flexCenter nextButtonDivision'>
+                    <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
+                  </div>
+                </motion.div>
+              </button>
+              <div className={"loadingFieldsBox " + (waitingValidation ? "loading" : "notLoading")}>
+                <motion.img src={loadingIcon} alt="loading" className='loadingRotation' />
+              </div>
             </div>
-          </div>
-        </form>
-        <div className='roundedBox decorativeFlyers' style={{ left: !props.isLoggedIn ? "calc(50% + 200px)" : "calc(50% + 300px)", top: "calc(22% - 100px)", width: "150px", height: "200px", rotate: "15deg", zIndex: 3 }}></div>
-        <div className='roundedBox decorativeFlyers' style={{ left: !props.isLoggedIn ? "calc(50% - 400px)" : "calc(50% - 500px)", top: "calc(70% - 200px)", width: "300px", height: "400px", rotate: "-10deg" }}></div>
+          </form>
 
-      </div>
-    </div>
+          <motion.div className='roundedBox decorativeFlyers'
+            initial={{left: "calc(50% + 260px)" }}
+            animate={{ left: "calc(50% + 150px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
+            exit={{left: "calc(50% + 260px)" }}
+            style={{
+              top: "calc(22% - 100px)",
+              width: "150px",
+              height: "200px",
+              rotate: "15deg",
+              zIndex: 3
+            }} />
+          <motion.div className='roundedBox decorativeFlyers'
+            initial={{left: "calc(50% - 550px)" }}
+            animate={{ left: "calc(50% - 400px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
+            exit={{left: "calc(50% - 550px)" }}
+            style={{
+              top: "calc(70% - 200px)",
+              width: "300px",
+              height: "400px",
+              rotate: "-10deg"
+            }} />
+        </motion.div>
+      }
+    </AnimatePresence>
   )
 }

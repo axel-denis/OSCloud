@@ -1,57 +1,34 @@
 import React from 'react';
 import "./PhotosPage.css"
-import "../WindowAnimation.css"
-import { Navigate } from "react-router-dom"
-import HomePage from '../HomePage/HomePage';
-import ProtectorOverlay from '../ProtectorOverlay/ProtectorOverlay';
-
+import "../WindowAnimation/WindowAnimation.css"
+import { transitionToUrl, AnimationStates, getAnimationState, UrlInfo } from '../UrlGestion';
+import Banner from '../Banner/Banner';
+import WindowAnimation from '../WindowAnimation/WindowAnimation';
 
 interface Props {
+  appName: string;
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
   startAnimation: boolean;
+  urlsHandler: UrlInfo;
+  setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }
-type AnimationStates = "intro" | "inter";
 
 export default function PhotosPage(props: Props) {
-  const [animationState, setAnimationState] = React.useState<AnimationStates>(props.startAnimation ? "intro" : "inter");
-  const [redirect, setRedirect] = React.useState<boolean | "waiting">(false);
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
-
-  React.useEffect(() => {
-    window.addEventListener("resize", () => setIsMobile(window.matchMedia("(max-width: 34.5rem)").matches));
-    if (props.isLoggedIn) {
-      setAnimationState("inter")
-    }
-  }, [props.isLoggedIn])
-
-  React.useEffect(() => {
-    if (props.startAnimation) {
-      setAnimationState("inter");
-    }
-  }, [props.startAnimation])
-
+  // const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
   return (
     <>
-      {redirect !== false ? <ProtectorOverlay /> : null}
-      {redirect === "waiting" ? <HomePage isLoggedIn={props.isLoggedIn} setIsLoggedIn={props.setIsLoggedIn} /> : null}
-      {redirect === true ? <Navigate to="/" /> : null}
-      <div className={'photosAppBackground windowAnimation ' + animationState} style={{ zIndex: props.startAnimation ? 2 : "" }} >
-        <div className="banner">
-          <h1 className="h1HomePage" onClick={() => {
-            setRedirect("waiting")
-            setAnimationState("intro");
-            setTimeout(() => {
-              setRedirect(true);
-            }, 1100)
-          }}>OSCloud:Photos</h1>
-        </div>
+      <WindowAnimation appName={props.appName} urlsHandler={props.urlsHandler}>
+        <Banner text="OSCloud:Photos" onClick={() => {
+          console.log("i'm ckicked")
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "Home");
+        }} />
         <div className='leftPannel'>
           leftPannel
         </div>
         <div className='contentDiv'>
         </div>
-      </div>
+      </WindowAnimation>
     </>
   )
 }

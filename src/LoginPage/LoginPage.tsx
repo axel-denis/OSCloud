@@ -46,8 +46,8 @@ export default function LoginPage(props: Props) {
       {!props.isLoggedIn &&
         <motion.div className={'backPannel'}
           initial={{ top: "100vh" }}
-          animate={{ top: "0vh", transition: { duration: timeScale, ease: "easeOut"} }}
-          exit={{ top: "100vh", transition: { duration: timeScale, ease: "easeIn"} }}
+          animate={{ top: "0vh", transition: { duration: .6 * timeScale, ease: "easeOut"} }}
+          exit={{ top: "100vh", transition: { duration: .6 * timeScale, ease: "easeIn"} }}
         >
           <form className={'roundedBox centeredForm ' + (errorAnim ? "shake" : "")} onSubmit={handleSubmit}>
             <h1 className="h1LoginPage">
@@ -87,10 +87,10 @@ export default function LoginPage(props: Props) {
           </form>
 
           <motion.div className='roundedBox decorativeFlyers'
-            initial={false}
-            animate={{ left: !props.isLoggedIn ? "calc(50% + 150px)" : "calc(50% + 210px)" }}
+            initial={{left: "calc(50% + 260px)" }}
+            animate={{ left: "calc(50% + 150px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
+            exit={{left: "calc(50% + 260px)" }}
             style={{
-              // left: !props.isLoggedIn ? "calc(50% + 150px)" : "calc(50% + 210px)",
               top: "calc(22% - 100px)",
               width: "150px",
               height: "200px",
@@ -98,10 +98,10 @@ export default function LoginPage(props: Props) {
               zIndex: 3
             }} />
           <motion.div className='roundedBox decorativeFlyers'
-            initial={false}
-            animate={{ left: !props.isLoggedIn ? "calc(50% - 400px)" : "calc(50% - 500px)" }}
+            initial={{left: "calc(50% - 550px)" }}
+            animate={{ left: "calc(50% - 400px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
+            exit={{left: "calc(50% - 550px)" }}
             style={{
-              // left: !props.isLoggedIn ? "calc(50% - 400px)" : "calc(50% - 500px)",
               top: "calc(70% - 200px)",
               width: "300px",
               height: "400px",

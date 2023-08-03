@@ -28,7 +28,7 @@ export default function WindowAnimation(props: Props) {
       borderRadius: 0, // desktop only
       transform: "perspective(500px) rotateX(0deg) scale(1.0)",
       transition: {
-        duration: timeScale,
+        duration: .75 * timeScale,
         ease: "easeOut"
       }
     },
@@ -38,7 +38,7 @@ export default function WindowAnimation(props: Props) {
       borderRadius: "6rem", // desktop only
       transform: "perspective(1000px) rotateX(-20deg) scale(0.3)",
       transition: {
-        duration: timeScale,
+        duration: .75 * timeScale,
         ease: "easeIn"
       }
     }

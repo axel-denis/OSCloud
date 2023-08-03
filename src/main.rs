@@ -2,8 +2,6 @@ mod auth_middleware;
 mod jwt_manager;
 mod network;
 mod services;
-mod users;
-mod register;
 mod database;
 
 use database::UserDatabase;
@@ -18,7 +16,5 @@ fn main() {
         return;
     }
     userbase.pretty_print();
-    return;
-
     network::launch_actix(userbase).expect("actix launch crashed");
 }

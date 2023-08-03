@@ -1,11 +1,14 @@
 use actix_web::{web, App, HttpServer, middleware::Logger};
 use actix_cors::Cors;
 
+use crate::database::UserDatabase;
+
 #[actix_web::main]
-pub async fn launch_actix() -> std::io::Result<()> {
+pub async fn launch_actix(userbase: UserDatabase) -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    HttpServer::new(|| {
+    HttpServer::new(move  ||{
         App::new()
+            .app_data(web::Data::new(userbase.clone()))
             .wrap(Cors::permissive())
             .wrap(Logger::default())
             .wrap(crate::auth_middleware::Auth)

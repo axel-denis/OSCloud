@@ -10,7 +10,6 @@ struct ContentFullySerialized {
     users: Vec<UserFullySerialized>,
 }
 
-
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct UserFullySerialized {
     pub id: i64,
@@ -42,7 +41,6 @@ pub fn register_new_user_in_database(name: &str, password: &str, user_type: Type
     }
     match hash(&password, DEFAULT_COST) {
         Ok(hash) => {
-            println!("{new_id}");
             let new_user = UserFullySerialized {
                 name: name.to_string(),
                 password: hash,

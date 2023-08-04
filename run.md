@@ -1,3 +1,5 @@
+**/!\\ Add sudo if process don't work, possible fix /!\\**
+
 - create it:
 ```bash
 docker run --name oscloud-users -e POSTGRES_PASSWORD=password -e POSTGRES_USER=root -e POSTGRES_DB=oscloud-users -p 5432:5432 -v "$(pwd)"/database.sql:/docker-entrypoint-initdb.d/init.sql -d postgres:alpine
@@ -38,4 +40,16 @@ psql -d postgres -U root
 ```bash
 \l  #to list databases
 \dt #to list tables
+```
+
+- add table
+
+```bash
+diesel migration run
+```
+
+- refresh with new table
+
+```bash
+diesel migration redo
 ```

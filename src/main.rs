@@ -3,6 +3,7 @@ mod jwt_manager;
 mod network;
 mod services;
 mod database;
+mod cli;
 
 use database::UserDatabase;
 use dotenv::dotenv;
@@ -15,6 +16,6 @@ fn main() {
         println!("error: {error:?}");
         return;
     }
-    userbase.pretty_print();
+    cli::start_cli(&userbase);
     network::launch_actix(userbase).expect("actix launch crashed");
 }

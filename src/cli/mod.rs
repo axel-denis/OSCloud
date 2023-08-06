@@ -1,4 +1,5 @@
 mod commands;
+mod help;
 
 use std::io::{BufRead, Write};
 use std::thread;
@@ -18,8 +19,9 @@ pub fn start_cli(db: &UserDatabase) {
         loop {
             for maybe_line in std::io::stdin().lock().lines() {
                 if let Ok(line) = maybe_line {
-                    match map.get(&line) {
-                        Some(commands) => commands(Vec::new(), &db),
+                    let parts: Vec<&str> = line.split(" ").collect();
+                    match map.get(parts[0]) {
+                        Some(commands) => commands(parts, &db),
                         None => println!("Unreconnized cmd!"),
                     }
                 }

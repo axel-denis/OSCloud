@@ -21,3 +21,4 @@ diesel = { version = "2.1.0", features = ["postgres", "r2d2", "uuid"] }
 diesel-derive-enum = { version = "2.1.0", features = ["postgres"] }
 tabled = "0.13.0"
 colored = "2.0.4"
+clearscreen = "2.0.1"

@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-
+use colored::Colorize;
 use crate::database::UserDatabase;
 
 pub type CommandsFn = fn(Vec<String>, &UserDatabase) -> ();
@@ -15,14 +15,21 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("users".to_owned(), debug_users);
     map.insert("e".to_owned(), exit);
     map.insert("exit".to_owned(), exit);
+    map.insert("clear".to_owned(), clear);
     map
 }
 
-pub(crate) fn debug_users(_: Vec<String>, db: &UserDatabase) {
+pub(crate) fn clear(_: Vec<String>, _: &UserDatabase) {
+    if let Err(err) = clearscreen::clear() {
+        println!("{}", err.to_string().red().bold());
+    }
+}
+
+fn debug_users(_: Vec<String>, db: &UserDatabase) {
     db.pretty_print()
 }
 
-pub(crate) fn help(_: Vec<String>, _: &UserDatabase) {
+fn help(_: Vec<String>, _: &UserDatabase) {
     println!("Usage:");
     println!("    help, h\tDisplay this usage message");
     println!("    users, u\tDisplay the list of users in the database and all the data they hold\n");
@@ -32,8 +39,7 @@ pub(crate) fn help(_: Vec<String>, _: &UserDatabase) {
 
 pub(crate) fn exit(_: Vec<String>, db: &UserDatabase) {
     if let Err(err) = db.save_to_json() {
-        println!("{err}");
-    } else {
-        std::process::exit(0);
+        println!("{}", err.to_string().red().bold());
     }
+    std::process::exit(0);
 }

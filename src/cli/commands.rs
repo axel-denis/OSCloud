@@ -15,6 +15,7 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("users".to_owned(), debug_users);
     map.insert("e".to_owned(), exit);
     map.insert("exit".to_owned(), exit);
+    map.insert("c".to_owned(), clear);
     map.insert("clear".to_owned(), clear);
     map
 }
@@ -32,9 +33,11 @@ fn debug_users(_: Vec<String>, db: &UserDatabase) {
 fn help(_: Vec<String>, _: &UserDatabase) {
     println!("Usage:");
     println!("    help, h\tDisplay this usage message");
-    println!("    users, u\tDisplay the list of users in the database and all the data they hold\n");
+    println!("    users, u\tDisplay the list of users in the database and all the data they hold");
     println!("    exit, e\tClose the program and save the current data base");
-    print!("See 'help <command>' for more information on a specific command.\n");
+    println!("    clear, c\tClear the current terminal");
+    println!("");
+    println!("See 'help <command>' for more information on a specific command.");
 }
 
 pub(crate) fn exit(_: Vec<String>, db: &UserDatabase) {

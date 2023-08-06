@@ -70,8 +70,14 @@ export default function LoginPage(props: Props) {
                 }} />
 
               </div>
-              <button className='nextButton'>
-                <motion.div className='nextButtonSlider' whileHover={{ left: "-3.7rem" }}>
+              <motion.button
+                className='nextButton'
+                whileHover={{backgroundColor: "#dddddd"}}
+              >
+                <motion.div
+                  className='nextButtonSlider'
+                  whileHover={{ left: "-3.7rem" }}
+                >
                   <div className='flexCenter nextButtonDivision'>
                     <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
                   </div>
@@ -79,10 +85,19 @@ export default function LoginPage(props: Props) {
                     <img src={nextIcon} alt="next" style={{ height: "30px", opacity: ".5" }} />
                   </div>
                 </motion.div>
-              </button>
-              <div className={"loadingFieldsBox " + (waitingValidation ? "loading" : "notLoading")}>
+              </motion.button>
+
+              <motion.div
+                className="loadingFieldsBox"
+                initial = {false}
+                animate = {{
+                  display: waitingValidation ? "" : "none",
+                  backgroundColor: waitingValidation ? "#ffffffcc" : "#ffffff00",
+                  transition: {duration: timeScale * .25}
+                }}
+              >
                 <motion.img src={loadingIcon} alt="loading" className='loadingRotation' />
-              </div>
+              </motion.div>
             </div>
           </form>
 

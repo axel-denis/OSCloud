@@ -1,9 +1,7 @@
 mod commands;
 
 use std::io::BufRead;
-use std::process::Command;
 use std::thread;
-use std::time::Duration;
 use colored::Colorize;
 
 use crate::cli::commands::CommandsMap;

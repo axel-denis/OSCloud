@@ -38,12 +38,12 @@ pub fn get_user_with_password(
 
 pub async fn login(db_pool: web::Data<UserDatabase>, login: web::Json<LoginRequest>) -> impl Responder {
     match get_user_with_password(db_pool.get_ref(), &login.name, &login.password) {
-        Err((code, _)) => HttpResponse::build(code).finish(),
+        Err((code, _)) => HttpResponse::build(code).finish(),  // to ofuscate
         Ok(user) => {
             match encode_jwt(&user) {
                 Ok(token) => HttpResponse::Ok().json(LoginResponse { token }),
                 Err(_) => {
-                    HttpResponse::InternalServerError().finish() // to ofuscate
+                    HttpResponse::InternalServerError().finish()
                 }
             }
         }

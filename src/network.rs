@@ -1,7 +1,7 @@
 use actix_web::{web, App, HttpServer, middleware::Logger};
 use actix_cors::Cors;
 
-use crate::database::UserDatabase;
+use crate::{database::UserDatabase, services::{login, register}};
 
 #[actix_web::main]
 pub async fn launch_actix(userbase: UserDatabase) -> std::io::Result<()> {
@@ -12,7 +12,8 @@ pub async fn launch_actix(userbase: UserDatabase) -> std::io::Result<()> {
             .wrap(Cors::permissive())
             .wrap(Logger::default())
             .wrap(crate::auth_middleware::Auth)
-            .route("/login", web::post().to(crate::services::login::login))
+            .route("/login", web::post().to(login::login))
+            .route("/register", web::post().to(register::register))
             .route(
                 "/userInfo",
                 web::get().to(crate::services::user_info::user_info),

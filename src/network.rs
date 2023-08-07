@@ -18,6 +18,8 @@ pub async fn launch_actix(userbase: UserDatabase) -> std::io::Result<()> {
                 "/userInfo",
                 web::get().to(crate::services::user_info::user_info),
             )
+            .route("/save", web::post().to(crate::services::json::save_to_json))
+            .route("/import", web::post().to(crate::services::json::import_from_json))
             .route("/home", web::get().to(crate::services::home::home))
     })
     .bind(("127.0.0.1", 8888))?

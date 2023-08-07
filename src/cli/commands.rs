@@ -16,6 +16,8 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("users".to_owned(), debug_users);
     map.insert("e".to_owned(), exit);
     map.insert("exit".to_owned(), exit);
+    map.insert("q".to_owned(), exit);
+    map.insert("quit".to_owned(), exit);
     map.insert("c".to_owned(), clear);
     map.insert("clear".to_owned(), clear);
     map

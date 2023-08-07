@@ -1,17 +1,11 @@
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use crate::database::model::{Role, User};
 use crate::database::UserDatabase;
 
 #[derive(Debug, Deserialize)]
 pub struct UserInfoRequest {
     name: String,
-}
-
-#[derive(Serialize)]
-pub struct UserInfoResponse {
-    #[serde(rename = "jwt")]
-    pub token: String,
 }
 
 pub async fn user_info(db: web::Data<UserDatabase>, req: HttpRequest, user_info: web::Json<UserInfoRequest>) -> impl Responder {

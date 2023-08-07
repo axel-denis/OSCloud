@@ -16,7 +16,7 @@ pub(crate) fn users_help() {
 }
 
 pub(crate) fn exit_help() {
-    println!("Usage: alias 'e'");
+    println!("Usage: alias 'e', 'quit', 'q'");
     println!("    exit [option]");
     println!("Exit the program, and save the current database state to the default json folder {}", "'./database/users.json'".black());
     println!("");
@@ -41,6 +41,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("users".to_owned(), users_help);
     map.insert("e".to_owned(), exit_help);
     map.insert("exit".to_owned(), exit_help);
+    map.insert("q".to_owned(), exit_help);
+    map.insert("quit".to_owned(), exit_help);
     map.insert("c".to_owned(), clear_help);
     map.insert("clear".to_owned(), clear_help);
     map
@@ -58,7 +60,7 @@ pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserDatabase) {
     println!("Usage:");
     println!("    help, h\tDisplay this usage message");
     println!("    users, u\tDisplay the list of users in the database and all the data they hold");
-    println!("    exit, e\tClose the program and save the current data base");
+    println!("    exit, quit, e, q\tClose the program and save the current data base");
     println!("    clear, c\tClear the current terminal");
     println!("");
     println!("See 'help <command>' for more information on a specific command.");

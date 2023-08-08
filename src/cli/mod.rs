@@ -8,9 +8,9 @@ use std::thread;
 use colored::Colorize;
 
 use crate::cli::commands::CommandsMap;
-use crate::database::UserDatabase;
+use crate::database::UserData;
 
-pub fn start_cli(db: &UserDatabase) {
+pub fn start_cli(db: &UserData) {
     let db = db.clone();
     thread::spawn(move || {
         println!("Write {} to get the different commands", "help".bold());

@@ -75,7 +75,7 @@ pub(crate) fn create_help_map() -> HelpMap {
     map
 }
 
-pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserDatabase) {
+pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserData) {
     let map = create_help_map();
     if let Some(cmd) = args.get(1) {
         if let Some(function) = map.get(*cmd) {

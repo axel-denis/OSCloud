@@ -1,13 +1,13 @@
-use crate::database::{UserDatabase, model::Role};
+use crate::database::{UserData, model::Role};
 use std::str::FromStr;
 use crate::cli::formating::{err_str, ok_str};
 use std::path::PathBuf;
 
-pub(crate) fn debug_users(_: Vec<&str>, db: &UserDatabase) {
+pub(crate) fn debug_users(_: Vec<&str>, db: &UserData) {
     db.pretty_print()
 }
 
-pub(crate) fn create_user(args: Vec<&str>, db: &UserDatabase) {
+pub(crate) fn create_user(args: Vec<&str>, db: &UserData) {
     if args.len() != 4 {
         println!("{} create_user <name> <password> <(Admin|User)>{} help 'create_user'",
             err_str("Invalid arguments given, should be"),
@@ -33,7 +33,7 @@ pub(crate) fn create_user(args: Vec<&str>, db: &UserDatabase) {
     }
 }
 
-pub(crate) fn save(args: Vec<&str>, db: &UserDatabase) {
+pub(crate) fn save(args: Vec<&str>, db: &UserData) {
     if !(1..3).contains(&args.len()) {
         println!("{} save [path]{} help 'save'",
             err_str("Invalid arguments given, should be"),
@@ -65,7 +65,7 @@ pub(crate) fn save(args: Vec<&str>, db: &UserDatabase) {
     }
 }
 
-pub(crate) fn import(args: Vec<&str>, db: &UserDatabase) {
+pub(crate) fn import(args: Vec<&str>, db: &UserData) {
     if !(1..3).contains(&args.len()) {
         println!("{} import [path]{} help 'import'",
             err_str("Invalid arguments given, should be"),

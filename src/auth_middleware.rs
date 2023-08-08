@@ -2,7 +2,7 @@ use crate::jwt_manager::decode_jwt;
 use actix_web::{body::EitherBody, dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform}, Error, HttpMessage, HttpResponse, web};
 use futures_util::future::LocalBoxFuture;
 use std::future::{ready, Ready};
-use crate::database::UserDatabase;
+use crate::database::UserData;
 
 // There are two steps in middleware processing.
 // 1. Middleware initialization, middleware factory gets called with
@@ -47,7 +47,7 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        let db = req.app_data::<web::Data<UserDatabase>>().unwrap().clone();
+        let db = req.app_data::<web::Data<UserData>>().unwrap().clone();
 
         if let Some(bearer_token) = req.headers().get("authorization") {
             if let Ok(bearer_token) = bearer_token.to_str() {

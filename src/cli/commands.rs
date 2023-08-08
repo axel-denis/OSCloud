@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use colored::Colorize;
-use crate::database::UserDatabase;
+use crate::database::UserData;
 
-pub type CommandsFn = fn(Vec<&str>, &UserDatabase) -> ();
+pub type CommandsFn = fn(Vec<&str>, &UserData) -> ();
 
 pub type CommandsMap = HashMap<String, CommandsFn>;
 
@@ -29,20 +29,20 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map
 }
 
-pub(crate) fn clear(_: Vec<&str>, _: &UserDatabase) {
+pub(crate) fn clear(_: Vec<&str>, _: &UserData) {
     if let Err(err) = clearscreen::clear() {
         println!("{}", err.to_string().red().bold());
     }
 }
 
-pub(crate) fn exit(args: Vec<&str>, db: &UserDatabase) {
+pub(crate) fn exit(args: Vec<&str>, db: &UserData) {
     if let Some(&flag) = args.get(1) {
         if flag == "--no-backup" || flag == "-n" {
             println!("Exiting...");
             std::process::exit(0);
         }
     }
-    crate::cli::users::save(Vec::new(), db);
+    crate::cli::users::save(vec!["save"], db);
     println!("Exiting...");
     std::process::exit(0);
 }

@@ -18,6 +18,7 @@ chrono = "0.4.26"
 env_logger = "0.10.0"
 actix-cors = "0.6.4"
 bcrypt = "0.15.0"
+directories = "5.0.1"
 
 # Database access
 

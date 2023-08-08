@@ -1,4 +1,4 @@
-use crate::{jwt_manager::encode_jwt, database::{UserDatabase, model::Role}};
+use crate::{jwt_manager::encode_jwt, database::{UserData, model::Role}};
 use actix_web::{web, Responder, HttpResponse};
 use serde::{Deserialize, Serialize};
 
@@ -16,7 +16,7 @@ pub struct RegisterResponse {
 }
 
 
-pub async fn register(db: web::Data<UserDatabase>, register: web::Json<RegisterRequest>) -> impl Responder {
+pub async fn register(db: web::Data<UserData>, register: web::Json<RegisterRequest>) -> impl Responder {
     match db.create_user(&register.name, &register.password, Role::User) {
         Err(err) => {
             if err.is::<std::io::Error>() {

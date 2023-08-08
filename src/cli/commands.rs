@@ -12,14 +12,16 @@ pub(crate) fn create_commands_map() -> CommandsMap {
 
     map.insert("h".to_owned(), crate::cli::help::help);
     map.insert("help".to_owned(), crate::cli::help::help);
-    map.insert("u".to_owned(), debug_users);
-    map.insert("users".to_owned(), debug_users);
+    map.insert("u".to_owned(), crate::cli::users::debug_users);
+    map.insert("users".to_owned(), crate::cli::users::debug_users);
     map.insert("e".to_owned(), exit);
     map.insert("exit".to_owned(), exit);
     map.insert("q".to_owned(), exit);
     map.insert("quit".to_owned(), exit);
     map.insert("c".to_owned(), clear);
     map.insert("clear".to_owned(), clear);
+    map.insert("cu".to_owned(), crate::cli::users::create_user);
+    map.insert("create_user".to_owned(), crate::cli::users::create_user);
     map
 }
 
@@ -29,17 +31,11 @@ pub(crate) fn clear(_: Vec<&str>, _: &UserDatabase) {
     }
 }
 
-fn debug_users(_: Vec<&str>, db: &UserDatabase) {
-    db.pretty_print()
-}
-
 pub(crate) fn exit(args: Vec<&str>, db: &UserDatabase) {
     println!("Exiting...");
     if let Some(&flag) = args.get(1) {
         if flag == "--no-backup" || flag == "-n" {
-            if let Err(err) = db.save_to_json() {
-                println!("{}", err.to_string().red().bold());
-            }
+            crate::cli::users::save(args, db);
         }
     }
     std::process::exit(0);

@@ -32,6 +32,12 @@ pub(crate) fn clear_help() {
     println!("{}", "Please report if machine does not support".black());
 }
 
+pub(crate) fn create_user_help() {
+    println!("Usage: alias 'cu'");
+    println!("    create_user <unique_username> <secure_password> <(Admin|User)>");
+    println!("Create an new user in the database using the selected crentials");
+}
+
 pub(crate) fn create_help_map() -> HelpMap {
     let mut map = HelpMap::new();
 
@@ -45,6 +51,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("quit".to_owned(), exit_help);
     map.insert("c".to_owned(), clear_help);
     map.insert("clear".to_owned(), clear_help);
+    map.insert("cu".to_owned(), create_user_help);
+    map.insert("create_user".to_owned(), create_user_help);
     map
 }
 
@@ -62,6 +70,7 @@ pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserDatabase) {
     println!("    users, u\tDisplay the list of users in the database and all the data they hold");
     println!("    exit, quit, e, q\tClose the program and save the current data base");
     println!("    clear, c\tClear the current terminal");
+    println!("    create_user, cu\tCreate new user");
     println!("");
     println!("See 'help <command>' for more information on a specific command.");
 }

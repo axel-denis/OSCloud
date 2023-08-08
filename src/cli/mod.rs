@@ -1,5 +1,7 @@
 mod commands;
 mod help;
+mod users;
+mod formating;
 
 use std::io::{BufRead, Write};
 use std::thread;

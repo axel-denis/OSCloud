@@ -38,6 +38,21 @@ pub(crate) fn create_user_help() {
     println!("Create an new user in the database using the selected crentials");
 }
 
+pub(crate) fn save_help() {
+    println!("Usage: alias 's'");
+    println!("    save [path]");
+    println!("Save the user database content to selected file");
+    println!("{}", "Default path: './database/users.json'".black());
+    println!("{}", "Save as users.json if the file name is not specified".black());
+}
+
+pub(crate) fn import_help() {
+    println!("Usage: alias 'i'");
+    println!("    import [path]");
+    println!("Import the user database from the selected file");
+    println!("{}", "Default path: './database/users.json'".black());
+}
+
 pub(crate) fn create_help_map() -> HelpMap {
     let mut map = HelpMap::new();
 
@@ -53,6 +68,10 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("clear".to_owned(), clear_help);
     map.insert("cu".to_owned(), create_user_help);
     map.insert("create_user".to_owned(), create_user_help);
+    map.insert("s".to_owned(), save_help);
+    map.insert("save".to_owned(), save_help);
+    map.insert("i".to_owned(), import_help);
+    map.insert("import".to_owned(), import_help);
     map
 }
 
@@ -71,6 +90,8 @@ pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserDatabase) {
     println!("    exit, quit, e, q\tClose the program and save the current data base");
     println!("    clear, c\tClear the current terminal");
     println!("    create_user, cu\tCreate new user");
+    println!("    save, s\tSave database to file");
+    println!("    import, i\tImport database from file");
     println!("");
     println!("See 'help <command>' for more information on a specific command.");
 }

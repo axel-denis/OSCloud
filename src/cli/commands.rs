@@ -22,6 +22,10 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("clear".to_owned(), clear);
     map.insert("cu".to_owned(), crate::cli::users::create_user);
     map.insert("create_user".to_owned(), crate::cli::users::create_user);
+    map.insert("s".to_owned(), crate::cli::users::save);
+    map.insert("save".to_owned(), crate::cli::users::save);
+    map.insert("i".to_owned(), crate::cli::users::import);
+    map.insert("import".to_owned(), crate::cli::users::import);
     map
 }
 
@@ -32,11 +36,13 @@ pub(crate) fn clear(_: Vec<&str>, _: &UserDatabase) {
 }
 
 pub(crate) fn exit(args: Vec<&str>, db: &UserDatabase) {
-    println!("Exiting...");
     if let Some(&flag) = args.get(1) {
         if flag == "--no-backup" || flag == "-n" {
-            crate::cli::users::save(args, db);
+            println!("Exiting...");
+            std::process::exit(0);
         }
     }
+    crate::cli::users::save(Vec::new(), db);
+    println!("Exiting...");
     std::process::exit(0);
 }

@@ -8,3 +8,7 @@ pub(crate) fn err_str<T: ToString>(text: T) -> ColoredString {
 pub(crate) fn ok_str<T: ToString>(text: T) -> ColoredString {
     text.to_string().green().bold()
 }
+
+pub(crate) fn info_str<T: ToString>(text: T) -> ColoredString {
+    text.to_string().bright_black()
+}

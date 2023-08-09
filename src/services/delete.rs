@@ -15,10 +15,10 @@ pub async fn delete_user(db: web::Data<UserData>, req: HttpRequest, delete_info:
             return HttpResponse::Unauthorized().body("Bad permission");
         }
 
-        match db.delete_user(&delete_info.name) {
+        return match db.delete_user(&delete_info.name) {
             Ok(_) => {HttpResponse::Ok().body("User deleted")}
             Err(_) => {HttpResponse::Unauthorized().finish()}
-        }
+        };
     }
     HttpResponse::Unauthorized().finish()
 }

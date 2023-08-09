@@ -45,6 +45,14 @@ impl UserData {
     pub fn get_users(&self) -> Result<Vec<User>> {
         Ok(users.load::<User>(&mut self.pool.get()?)?)
     }
+/*
+    pub fn delete_by_id(&self, id: i64) -> Result<()> {
+        if users.find(id).count().first::<i64>(&mut self.pool.get()?)? <= 0 {
+            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotFound, "User not found")));
+        }
+        diesel::delete(users.find(id)).execute(&mut self.pool.get()?)?;
+        Ok(())
+    }*/
 
     pub fn delete_user(&self, user_name: &str) -> Result<()> {
         if users.filter(name.eq(user_name)).count().first::<i64>(&mut self.pool.get()?)? <= 0 {

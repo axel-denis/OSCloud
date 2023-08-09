@@ -14,11 +14,13 @@ pub async fn launch_actix(userdata: UserData) -> std::io::Result<()> {
             .wrap(crate::auth_middleware::Auth)
             .route("/login", web::post().to(login::login))
             .route("/register", web::post().to(register::register))
+            .route("/delete", web::post().to(crate::services::delete::delete_user))
             .route(
                 "/userInfo",
                 web::get().to(crate::services::user_info::user_info),
             )
             .route("/save", web::post().to(crate::services::json::save_to_json))
+            .route("/import", web::post().to(crate::services::json::import_from_json))
             .route("/import", web::post().to(crate::services::json::import_from_json))
             .route("/home", web::get().to(crate::services::home::home))
     })

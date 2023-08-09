@@ -2,7 +2,6 @@ use crate::{jwt_manager::encode_jwt, database::{UserData, model::Role}};
 use actix_web::{web, Responder, HttpResponse};
 use serde::{Deserialize, Serialize};
 
-
 #[derive(Debug, Deserialize)]
 pub struct RegisterRequest {
     name: String,
@@ -14,7 +13,6 @@ pub struct RegisterResponse {
     #[serde(rename = "jwt")]
     pub token: String,
 }
-
 
 pub async fn register(db: web::Data<UserData>, register: web::Json<RegisterRequest>) -> impl Responder {
     match db.create_user(&register.name, &register.password, Role::User) {

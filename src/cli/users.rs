@@ -9,7 +9,7 @@ pub(crate) fn debug_users(_: Vec<&str>, db: &UserData) {
 
 pub(crate) fn create_user(args: Vec<&str>, db: &UserData) {
     if args.len() != 4 {
-        println!("{} create_user <name> <password> <(Admin|User)>{} help 'create_user'",
+        println!("{} create_user <username> <password> <(Admin|User)>{} help 'create_user'",
             err_str("Invalid arguments given, should be"),
             err_str(", for more informations try")
         );
@@ -29,6 +29,21 @@ pub(crate) fn create_user(args: Vec<&str>, db: &UserData) {
 
     match db.create_user(args[1], args[2], role) {
         Ok(user) => println!("User {} created!", ok_str(user.name)),
+        Err(err) => println!("{}", err_str(&err.to_string())),
+    }
+}
+
+pub(crate) fn delete_user(args: Vec<&str>, db: &UserData) {
+    if args.len() != 2 {
+        println!("{} delete_user <username>{} help 'delete_user'",
+                 err_str("Invalid arguments given, should be"),
+                 err_str(", for more informations try")
+        );
+        return
+    }
+
+    match db.delete_user(args[1]) {
+        Ok(_) => println!("User {} deleted!", ok_str(args[1])),
         Err(err) => println!("{}", err_str(&err.to_string())),
     }
 }

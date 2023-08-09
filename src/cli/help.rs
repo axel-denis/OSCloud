@@ -19,9 +19,9 @@ pub(crate) fn exit_help() {
     println!("Usage: alias 'e', 'quit', 'q'");
     println!("    exit [option]");
     println!("Exit the program, and save the current database state to the default json folder {}", "'./database/users.json'".black());
-    println!("");
+    println!();
     println!("    -n, --no-backup: disable the saving");
-    println!("");
+    println!();
     println!("{}", "This keeps the default behaviour, each route thread have the default timout duration to finish their process".black())
 }
 
@@ -30,6 +30,12 @@ pub(crate) fn clear_help() {
     println!("    clear");
     println!("Clear the current terminal");
     println!("{}", "Please report if machine does not support".black());
+}
+
+pub(crate) fn delete_user_help() {
+    println!("Usage: alias 'du'");
+    println!("    delete_user <username>");
+    println!("Delete the user from the database that matches the username");
 }
 
 pub(crate) fn create_user_help() {
@@ -66,12 +72,14 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("quit".to_owned(), exit_help);
     map.insert("c".to_owned(), clear_help);
     map.insert("clear".to_owned(), clear_help);
-    map.insert("cu".to_owned(), create_user_help);
-    map.insert("create_user".to_owned(), create_user_help);
     map.insert("s".to_owned(), save_help);
     map.insert("save".to_owned(), save_help);
     map.insert("i".to_owned(), import_help);
     map.insert("import".to_owned(), import_help);
+    map.insert("cu".to_owned(), create_user_help);
+    map.insert("create_user".to_owned(), create_user_help);
+    map.insert("du".to_owned(), delete_user_help);
+    map.insert("delete_user".to_owned(), delete_user_help);
     map
 }
 
@@ -92,6 +100,6 @@ pub(crate) fn help(args: Vec<&str>, _: &crate::database::UserData) {
     println!("    create_user, cu\tCreate new user");
     println!("    save, s\tSave database to file");
     println!("    import, i\tImport database from file");
-    println!("");
+    println!();
     println!("See 'help <command>' for more information on a specific command.");
 }

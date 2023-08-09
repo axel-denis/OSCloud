@@ -20,12 +20,14 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("quit".to_owned(), exit);
     map.insert("c".to_owned(), clear);
     map.insert("clear".to_owned(), clear);
-    map.insert("cu".to_owned(), crate::cli::users::create_user);
-    map.insert("create_user".to_owned(), crate::cli::users::create_user);
     map.insert("s".to_owned(), crate::cli::users::save);
     map.insert("save".to_owned(), crate::cli::users::save);
     map.insert("i".to_owned(), crate::cli::users::import);
     map.insert("import".to_owned(), crate::cli::users::import);
+    map.insert("cu".to_owned(), crate::cli::users::create_user);
+    map.insert("create_user".to_owned(), crate::cli::users::create_user);
+    map.insert("du".to_owned(), crate::cli::users::delete_user);
+    map.insert("delete_user".to_owned(), crate::cli::users::delete_user);
     map
 }
 

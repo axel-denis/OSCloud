@@ -1,8 +1,12 @@
+use crate::database::UserData;
 use crate::jwt_manager::decode_jwt;
-use actix_web::{body::EitherBody, dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform}, Error, HttpMessage, HttpResponse, web};
+use actix_web::{
+    body::EitherBody,
+    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
+    web, Error, HttpMessage, HttpResponse,
+};
 use futures_util::future::LocalBoxFuture;
 use std::future::{ready, Ready};
-use crate::database::UserData;
 
 // There are two steps in middleware processing.
 // 1. Middleware initialization, middleware factory gets called with
@@ -62,7 +66,9 @@ where
                         let response = HttpResponse::Unauthorized().finish().map_into_right_body();
                         let (request, _pl) = req.into_parts();
 
-                        return Box::pin(async move { Ok(ServiceResponse::new(request, response)) });
+                        return Box::pin(
+                            async move { Ok(ServiceResponse::new(request, response)) },
+                        );
                     }
                 }
             }

@@ -1,6 +1,6 @@
+use crate::cli::commands::CmdStatus;
 use crate::cli::formating::info_str;
 use crate::database::UserData;
-use crate::cli::commands::CmdStatus;
 
 pub type HelpFn = fn(&UserData) -> ();
 pub type HelpMap = std::collections::HashMap<String, HelpFn>;
@@ -20,7 +20,10 @@ pub(crate) fn users_help(_: &UserData) {
 pub(crate) fn exit_help(_: &UserData) {
     println!("Usage: alias 'e', 'quit', 'q'");
     println!("    exit [option]");
-    println!("Exit the program, and save the current database state to the default json folder {}", info_str("'./database/users.json'"));
+    println!(
+        "Exit the program, and save the current database state to the default json folder {}",
+        info_str("'./database/users.json'")
+    );
     println!();
     println!("    -n, --no-backup: disable the saving");
     println!();
@@ -55,7 +58,10 @@ pub(crate) fn save_help(db: &UserData) {
     path.push("database/users.json");
     let str = info_str(format!("Default path: '{path:?}'"));
     println!("{str}");
-    println!("{}", info_str("Save as users.json if the file name is not specified"));
+    println!(
+        "{}",
+        info_str("Save as users.json if the file name is not specified")
+    );
 }
 
 pub(crate) fn import_help(db: &UserData) {

@@ -1,5 +1,8 @@
-use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder, web};
-use crate::database::{model::{User, Role}, UserData};
+use crate::database::{
+    model::{Role, User},
+    UserData,
+};
+use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 
 pub async fn save_to_json(db: web::Data<UserData>, req: HttpRequest) -> impl Responder {
     if let Some(local_user) = req.extensions().get::<User>() {

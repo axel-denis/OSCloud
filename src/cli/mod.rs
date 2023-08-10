@@ -1,24 +1,27 @@
 mod commands;
+mod formating;
 mod help;
 mod users;
-mod formating;
 
-use rustyline::DefaultEditor;
 use rustyline::error::ReadlineError;
-use crate::cli::commands::CmdStatus;
+use rustyline::DefaultEditor;
 
-use std::thread;
 use colored::Colorize;
+use std::thread;
 
 use crate::cli::commands::CommandsMap;
+use crate::cli::commands::CmdStatus;
 use crate::cli::formating::err_str;
 use crate::database::UserData;
 
 pub fn execute_command(db: &UserData, line: String, map: &CommandsMap) -> CmdStatus {
-    let parts: Vec<&str> = line.split(" ").collect();
+    let parts: Vec<&str> = line.split(' ').collect();
     match map.get(parts[0]) {
-        Some(commands) => commands(parts, &db),
-        None => {println!("Unrecognized cmd!"); CmdStatus::Ok},
+        Some(commands) => commands(parts, db),
+        None => {
+            println!("Unrecognized cmd!");
+            CmdStatus::Ok
+        }
     }
 }
 
@@ -43,34 +46,33 @@ pub fn start_cli(db: &UserData) {
                     }
                     let status = execute_command(&db, line, &map);
                     if status == CmdStatus::Exit {
-                        break
-                        have_to_save = false;
+                        break have_to_save = false;
                     }
                     if status == CmdStatus::ExitWithBackup {
-                        break
+                        break;
                     }
-                },
+                }
                 Err(ReadlineError::Interrupted) => {
                     println!("CTRL-C");
-                    break
-                },
+                    break;
+                }
                 Err(ReadlineError::Eof) => {
                     println!("CTRL-D");
-                    break
-                },
+                    break;
+                }
                 Err(err) => {
                     println!("Error: {:?}", err);
-                    break
+                    break;
                 }
             }
         }
         if let Err(err) = rl.save_history(&path) {
             println!("{}", err_str(err.to_string()));
         }
-        println!("Exiting...");
         if have_to_save {
             crate::cli::users::save(vec!["save"], &db);
         }
+        println!("Exiting...");
         std::process::exit(0);
     });
 }

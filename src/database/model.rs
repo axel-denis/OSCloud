@@ -1,8 +1,8 @@
-use std::fmt::Formatter;
+use diesel::{AsChangeset, Insertable, Queryable};
 use serde::{Deserialize, Serialize};
-use diesel::{Queryable, Insertable, AsChangeset};
-use tabled::Tabled;
+use std::fmt::Formatter;
 use std::str::FromStr;
+use tabled::Tabled;
 
 #[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::database::schema::sql_types::Role"]
@@ -16,27 +16,29 @@ pub enum Role {
 impl std::fmt::Display for Role {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Role::Admin => {write!(f, "Admin")}
-            Role::User => {write!(f, "User")}
+            Role::Admin => {
+                write!(f, "Admin")
+            }
+            Role::User => {
+                write!(f, "User")
+            }
         }
     }
 }
 
 impl FromStr for Role {
-
     type Err = ();
 
     fn from_str(input: &str) -> Result<Role, Self::Err> {
         match &*input.to_lowercase() {
-            "admin"  => Ok(Role::Admin),
+            "admin" => Ok(Role::Admin),
             "user" => Ok(Role::User),
-            _      => Err(()),
+            _ => Err(()),
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
-
 #[diesel(table_name = crate::database::schema::users)]
 pub struct NewUser {
     pub name: String,

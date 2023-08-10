@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::database::model::User;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Claims {

@@ -1,5 +1,8 @@
-use crate::{jwt_manager::encode_jwt, database::{UserData, model::Role}};
-use actix_web::{web, Responder, HttpResponse};
+use crate::{
+    database::{model::Role, UserData},
+    jwt_manager::encode_jwt,
+};
+use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
@@ -14,7 +17,10 @@ pub struct RegisterResponse {
     pub token: String,
 }
 
-pub async fn register(db: web::Data<UserData>, register: web::Json<RegisterRequest>) -> impl Responder {
+pub async fn register(
+    db: web::Data<UserData>,
+    register: web::Json<RegisterRequest>,
+) -> impl Responder {
     match db.create_user(&register.name, &register.password, Role::User) {
         Err(err) => {
             if err.is::<std::io::Error>() {
@@ -23,13 +29,9 @@ pub async fn register(db: web::Data<UserData>, register: web::Json<RegisterReque
                 HttpResponse::InternalServerError().finish()
             }
         }
-        Ok(user) => {
-            return match encode_jwt(&user) {
-                Ok(token) => HttpResponse::Ok().json(RegisterResponse { token }),
-                Err(_) => {
-                    HttpResponse::InternalServerError().finish()
-                }
-            }
-        }
+        Ok(user) => match encode_jwt(&user) {
+            Ok(token) => HttpResponse::Ok().json(RegisterResponse { token }),
+            Err(_) => HttpResponse::InternalServerError().finish(),
+        },
     }
 }

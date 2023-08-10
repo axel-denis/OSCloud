@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::database::model::{NewUser, User};
 use crate::database::schema::users::dsl::users;
-use crate::database::UserData;
-use crate::database::Result;
 use crate::database::schema::users::name;
+use crate::database::Result;
+use crate::database::UserData;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(transparent)]
@@ -30,7 +30,9 @@ impl UserData {
     }
 
     pub fn save_to_json(&self, path: &PathBuf) -> Result<()> {
-        let content = Content { users: self.get_users()? };
+        let content = Content {
+            users: self.get_users()?,
+        };
         let serde_json = serde_json::to_string_pretty(&content)?;
 
         if let Some(p) = path.parent() {
@@ -53,10 +55,15 @@ impl UserData {
         let content: ImportContent = serde_json::from_str(&data)?;
 
         for user in content.users {
-            match users.filter(name.eq(user.name.clone())).first::<User>(&mut self.pool.get()?) {
-                Ok(_) => {continue;}
+            match users
+                .filter(name.eq(user.name.clone()))
+                .first::<User>(&mut self.pool.get()?)
+            {
+                Ok(_) => {
+                    continue;
+                }
                 Err(diesel::result::Error::NotFound) => {}
-                Err(err) => { return Err(Box::new(err)) }
+                Err(err) => return Err(Box::new(err)),
             }
             diesel::insert_into(users)
                 .values(&user)

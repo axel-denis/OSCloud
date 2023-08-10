@@ -1,9 +1,9 @@
 mod auth_middleware;
+mod cli;
+mod database;
 mod jwt_manager;
 mod network;
 mod services;
-mod database;
-mod cli;
 
 use database::UserData;
 use dotenv::dotenv;

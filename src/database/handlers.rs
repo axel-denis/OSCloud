@@ -1,16 +1,16 @@
 use std::process::exit;
 
-use bcrypt::{DEFAULT_COST, hash};
+use bcrypt::{hash, DEFAULT_COST};
 
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use dotenv::dotenv;
 
-use crate::database::{PostgresPool, UserData};
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
+use crate::database::{PostgresPool, UserData};
 
 impl UserData {
     pub fn new() -> Self {
@@ -45,7 +45,7 @@ impl UserData {
     pub fn get_users(&self) -> Result<Vec<User>> {
         Ok(users.load::<User>(&mut self.pool.get()?)?)
     }
-/*
+    /*
     pub fn delete_by_id(&self, id: i64) -> Result<()> {
         if users.find(id).count().first::<i64>(&mut self.pool.get()?)? <= 0 {
             return Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotFound, "User not found")));
@@ -55,18 +55,33 @@ impl UserData {
     }*/
 
     pub fn delete_user(&self, user_name: &str) -> Result<()> {
-        if users.filter(name.eq(user_name)).count().first::<i64>(&mut self.pool.get()?)? <= 0 {
-            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotFound, "User not found")));
+        if users
+            .filter(name.eq(user_name))
+            .count()
+            .first::<i64>(&mut self.pool.get()?)?
+            <= 0
+        {
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                "User not found",
+            )));
         }
         diesel::delete(users.filter(name.eq(user_name))).execute(&mut self.pool.get()?)?;
         Ok(())
     }
 
     pub fn create_user(&self, user_name: &str, user_password: &str, role: Role) -> Result<User> {
-        if !users.filter(name.eq(user_name.clone())).get_results::<User>(&mut self.pool.get()?)?.is_empty() {
-            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::AlreadyExists, "User already exist")));
+        if !users
+            .filter(name.eq(user_name.clone()))
+            .get_results::<User>(&mut self.pool.get()?)?
+            .is_empty()
+        {
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::AlreadyExists,
+                "User already exist",
+            )));
         }
-        let hashed_password = hash(&user_password, DEFAULT_COST)?;
+        let hashed_password = hash(user_password, DEFAULT_COST)?;
 
         diesel::insert_into(users)
             .values(&NewUser {
@@ -75,13 +90,14 @@ impl UserData {
                 user_role: role,
             })
             .execute(&mut self.pool.get()?)?;
-        Ok(self.get_user_by_name(&user_name).ok_or("Not Found")?)
+        Ok(self.get_user_by_name(user_name).ok_or("Not Found")?)
     }
 
     pub fn get_user_by_id(&self, user_id: i64) -> Option<User> {
         users
             .find(user_id)
-            .get_result::<User>(&mut self.pool.get().ok()?).ok()
+            .get_result::<User>(&mut self.pool.get().ok()?)
+            .ok()
     }
 
     pub fn get_user_by_name(&self, user_name: &str) -> Option<User> {

@@ -1,16 +1,16 @@
-use std::collections::HashMap;
-use colored::Colorize;
 use crate::database::UserData;
+use colored::Colorize;
+use std::collections::HashMap;
 
 pub type CommandsFn = fn(Vec<&str>, &UserData) -> CmdStatus;
 
 pub type CommandsMap = HashMap<String, CommandsFn>;
 
 #[derive(PartialEq)]
-pub enum CmdStatus{
+pub enum CmdStatus {
     Exit,
     ExitWithBackup,
-    Ok
+    Ok,
 }
 
 pub(crate) fn create_commands_map() -> CommandsMap {

@@ -1,11 +1,11 @@
-use crate::{jwt_manager::encode_jwt, database::UserData};
-use actix_web::{web, HttpResponse, Responder};
-use serde::{Deserialize, Serialize};
-use actix_web::http;
-use std::io::{Error, ErrorKind};
-use actix_web::http::StatusCode;
-use bcrypt::verify;
 use crate::database::model::User;
+use crate::{database::UserData, jwt_manager::encode_jwt};
+use actix_web::http;
+use actix_web::http::StatusCode;
+use actix_web::{web, HttpResponse, Responder};
+use bcrypt::verify;
+use serde::{Deserialize, Serialize};
+use std::io::{Error, ErrorKind};
 
 #[derive(Debug, Deserialize)]
 pub struct LoginRequest {
@@ -25,27 +25,30 @@ pub fn get_user_with_password(
     password: &str,
 ) -> Result<User, (http::StatusCode, Error)> {
     match db.get_user_by_name(username) {
-        None => {Err((StatusCode::UNAUTHORIZED, Error::new(ErrorKind::NotFound,"User doesn't exist!")))}
-        Some(user) => {
-            match verify(password, &*user.password) {
-                Ok(true) => {Ok(user)}
-                Ok(false) => {Err((StatusCode::UNAUTHORIZED, Error::new(ErrorKind::PermissionDenied,"Wrong password!")))}
-                Err(_) => {Err((StatusCode::INTERNAL_SERVER_ERROR, Error::new(ErrorKind::InvalidInput,"Invalid hash!")))}
-            }
-        }
+        None => Err((
+            StatusCode::UNAUTHORIZED,
+            Error::new(ErrorKind::NotFound, "User doesn't exist!"),
+        )),
+        Some(user) => match verify(password, &user.password) {
+            Ok(true) => Ok(user),
+            Ok(false) => Err((
+                StatusCode::UNAUTHORIZED,
+                Error::new(ErrorKind::PermissionDenied, "Wrong password!"),
+            )),
+            Err(_) => Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Error::new(ErrorKind::InvalidInput, "Invalid hash!"),
+            )),
+        },
     }
 }
 
 pub async fn login(db_pool: web::Data<UserData>, login: web::Json<LoginRequest>) -> impl Responder {
     match get_user_with_password(db_pool.get_ref(), &login.name, &login.password) {
-        Err((code, _)) => HttpResponse::build(code).finish(),  // to ofuscate
-        Ok(user) => {
-            match encode_jwt(&user) {
-                Ok(token) => HttpResponse::Ok().json(LoginResponse { token }),
-                Err(_) => {
-                    HttpResponse::InternalServerError().finish()
-                }
-            }
-        }
+        Err((code, _)) => HttpResponse::build(code).finish(), // to ofuscate
+        Ok(user) => match encode_jwt(&user) {
+            Ok(token) => HttpResponse::Ok().json(LoginResponse { token }),
+            Err(_) => HttpResponse::InternalServerError().finish(),
+        },
     }
 }

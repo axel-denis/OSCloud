@@ -1,5 +1,6 @@
 use crate::cli::formating::info_str;
 use crate::database::UserData;
+use crate::cli::commands::CmdStatus;
 
 pub type HelpFn = fn(&UserData) -> ();
 pub type HelpMap = std::collections::HashMap<String, HelpFn>;
@@ -13,7 +14,7 @@ pub(crate) fn help_help(_: &UserData) {
 pub(crate) fn users_help(_: &UserData) {
     println!("Usage: alias 'u'");
     println!("    users");
-    println!("Display a formated table containing information about all the registered users");
+    println!("Display a formatted table containing information about all the registered users");
 }
 
 pub(crate) fn exit_help(_: &UserData) {
@@ -42,7 +43,7 @@ pub(crate) fn delete_user_help(_: &UserData) {
 pub(crate) fn create_user_help(_: &UserData) {
     println!("Usage: alias 'cu'");
     println!("    create_user <unique_username> <secure_password> <(Admin|User)>");
-    println!("Create an new user in the database using the selected crentials");
+    println!("Create an new user in the database using the selected credentials");
 }
 
 pub(crate) fn save_help(db: &UserData) {
@@ -92,11 +93,12 @@ pub(crate) fn create_help_map() -> HelpMap {
     map
 }
 
-pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) {
+pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) -> CmdStatus {
     let map = create_help_map();
     if let Some(cmd) = args.get(1) {
         if let Some(function) = map.get(*cmd) {
-            return function(db);
+            function(db);
+            return CmdStatus::Ok;
         } else {
             println!("Command selected don't exist");
         }
@@ -109,6 +111,8 @@ pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) {
     println!("    create_user, cu\tCreate new user");
     println!("    save, s\tSave database to file");
     println!("    import, i\tImport database from file");
+    println!("    delete_user, du\tDelete user");
     println!();
     println!("See 'help <command>' for more information on a specific command.");
+    CmdStatus::Ok
 }

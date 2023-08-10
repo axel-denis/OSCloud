@@ -2,10 +2,16 @@ use std::collections::HashMap;
 use colored::Colorize;
 use crate::database::UserData;
 
-pub type CommandsFn = fn(Vec<&str>, &UserData) -> ();
+pub type CommandsFn = fn(Vec<&str>, &UserData) -> CmdStatus;
 
 pub type CommandsMap = HashMap<String, CommandsFn>;
 
+#[derive(PartialEq)]
+pub enum CmdStatus{
+    Exit,
+    ExitWithBackup,
+    Ok
+}
 
 pub(crate) fn create_commands_map() -> CommandsMap {
     let mut map = CommandsMap::new();
@@ -31,20 +37,18 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map
 }
 
-pub(crate) fn clear(_: Vec<&str>, _: &UserData) {
+pub(crate) fn clear(_: Vec<&str>, _: &UserData) -> CmdStatus {
     if let Err(err) = clearscreen::clear() {
         println!("{}", err.to_string().red().bold());
     }
+    CmdStatus::Ok
 }
 
-pub(crate) fn exit(args: Vec<&str>, db: &UserData) {
+pub(crate) fn exit(args: Vec<&str>, _: &UserData) -> CmdStatus {
     if let Some(&flag) = args.get(1) {
         if flag == "--no-backup" || flag == "-n" {
-            println!("Exiting...");
-            std::process::exit(0);
+            return CmdStatus::Exit;
         }
     }
-    crate::cli::users::save(vec!["save"], db);
-    println!("Exiting...");
-    std::process::exit(0);
+    CmdStatus::ExitWithBackup
 }

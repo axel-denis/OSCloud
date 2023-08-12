@@ -15,20 +15,20 @@ interface Props {
 }
 
 export default function PhotosPage(props: Props) {
-  // const [isMobile, setIsMobile] = React.useState(window.matchMedia("(max-width: 34.5rem)").matches);
   return (
-    <>
-      <WindowAnimation appName={props.appName} urlsHandler={props.urlsHandler}>
-        <Banner text="OSCloud:Photos" onClick={() => {
-          console.log("i'm ckicked")
-          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "Home");
-        }} />
-        <div className='leftPannel'>
-          leftPannel
-        </div>
-        <div className='contentDiv'>
-        </div>
-      </WindowAnimation>
-    </>
+    <WindowAnimation
+      appName={props.appName}
+      urlsHandler={props.urlsHandler}
+    >
+      <Banner text="OSCloud:Photos" onClick={() => {
+        console.log("i'm ckicked")
+        transitionToUrl(props.urlsHandler, props.setUrlsHandler, "Home");
+      }} />
+      <div className='leftPannel'>
+        leftPannel
+      </div>
+      <div className='contentDiv'>
+      </div>
+    </WindowAnimation>
   )
 }

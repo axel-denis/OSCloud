@@ -4,80 +4,21 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.2);
-  /* animation-name: windowTransition; */
 }
 
-.windowAnimation.intro {
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-iteration-count: 1;
-  animation-direction: normal;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  animation-duration: 500ms;
-  /* animation: 500ms ease-out 0s 1 normal forwards running windowTransition; */
-}
-
-.windowAnimation.outro {
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-iteration-count: 1;
-  animation-direction: reverse;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  animation-duration: 500ms;
-  /* animation: 500ms ease-out 0s 1 reverse forwards running windowTransition; */
-}
-
-/*
-.windowAnimation.intro {
-  opacity: 0;
-  top: 80vh;
+.windowInnerDiv {
+  position: relative;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
-  box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
-  transition: all 1s, opacity 250ms 350ms, box-shadow 300ms;
+  display: flex;
 }
 
-.windowAnimation.inter {
-  transform: rotateX(0) scale(1);
-  top: 0;
-}
-*/
-
-/* mobile */
-@keyframes windowTransition {
-  from {
-    opacity: 0;
-    top: 50vh;
-    overflow: hidden;
-    box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  to {
-    top: 0;
-    opacity: 100%;
-  }
-}
-
-/* for desktop only*/
-@media (min-width: 34.5rem) {
-  @keyframes windowTransition {
-    from {
-      opacity: 0;
-      top: 50vh;
-      overflow: hidden;
-      box-shadow: 0px 0px 35px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 6rem;
-      transform: perspective(500px) rotateX(-30deg) scale(0.3);
-    }
-
-    to {
-      top: 0;
-      opacity: 100%;
-      transform: rotateX(0) scale(1);
-      border-radius: 0px;
-    }
-  }
+.AppBackground {
+  background: rgb(211, 239, 255);
+  background: -moz-radial-gradient(circle at bottom left, rgba(211, 239, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: -webkit-radial-gradient(circle at bottom left, rgba(211, 239, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background: radial-gradient(circle at bottom left, rgba(211, 239, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  /* filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d3efff", endColorstr="#ffffff", GradientType=1); */
 }

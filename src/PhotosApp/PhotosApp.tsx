@@ -1,5 +1,5 @@
 import React from 'react';
-import "./PhotosPage.css"
+import "./PhotosApp.css"
 import "../Window/Window.css"
 import { transitionToUrl, AnimationStates, getAnimationState, UrlInfo } from '../UrlGestion';
 import Banner from '../Banner/Banner';
@@ -14,7 +14,7 @@ interface Props {
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }
 
-export default function PhotosPage(props: Props) {
+export default function PhotosApp(props: Props) {
   return (
     <Window
       appName={props.appName}

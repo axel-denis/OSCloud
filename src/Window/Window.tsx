@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { AnimationStates, getAnimationState, UrlInfo } from "../UrlGestion";
-import "./WindowAnimation.css"
+import "./Window.css"
 import { timeScale } from "../consts";
 import { motion, AnimatePresence } from "framer-motion";
 import { MobileDevice } from "../App";
@@ -11,7 +11,7 @@ type Props = {
   children: ReactNode;
 }
 
-export default function WindowAnimation(props: Props) {
+export default function Window(props: Props) {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const isMobile = React.useContext(MobileDevice);
 
@@ -50,7 +50,7 @@ export default function WindowAnimation(props: Props) {
     <AnimatePresence>
       {isOpen &&
         <motion.div
-          className={'AppBackground windowAnimation'}
+          className={'appBackground windowAnimation'}
           initial={variants.closed}
           animate={variants.open}
           exit={variants.closed}

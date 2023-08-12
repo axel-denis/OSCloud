@@ -1,9 +1,9 @@
 import React from 'react';
 import "./PhotosPage.css"
-import "../WindowAnimation/WindowAnimation.css"
+import "../Window/Window.css"
 import { transitionToUrl, AnimationStates, getAnimationState, UrlInfo } from '../UrlGestion';
 import Banner from '../Banner/Banner';
-import WindowAnimation from '../WindowAnimation/WindowAnimation';
+import Window from '../Window/Window';
 
 interface Props {
   appName: string;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function PhotosPage(props: Props) {
   return (
-    <WindowAnimation
+    <Window
       appName={props.appName}
       urlsHandler={props.urlsHandler}
     >
@@ -29,6 +29,6 @@ export default function PhotosPage(props: Props) {
       </div>
       <div className='contentDiv'>
       </div>
-    </WindowAnimation>
+    </Window>
   )
 }

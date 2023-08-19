@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
-import PhotosPage from './PhotosPage/PhotosPage';
+import PhotosApp from './PhotosApp/PhotosApp';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import { timeScale } from './consts';
 
@@ -35,7 +35,7 @@ export default function App() {
       <div className="App">
         <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <PhotosPage appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        <PhotosApp appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
       </div>
     </MobileDevice.Provider>
   );

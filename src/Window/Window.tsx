@@ -25,8 +25,6 @@ export default function Window(props: Props) {
       opacity: 1,
       borderRadius: 0,
       transform: isMobile ? "" : "perspective(500px) rotateX(0deg) scale(1.0)",
-      //having an invisible transform rule in isMobile allow the banner to be fixed to the window
-      //even though the window is itself fixed. Not certain this is the best way to do it.
       transition: {
         duration: .75 * timeScale,
         ease: "easeOut"
@@ -37,8 +35,6 @@ export default function Window(props: Props) {
       opacity: 0,
       borderRadius: isMobile ? 0 : "6rem", // desktop only
       transform: isMobile ? "" : "perspective(1000px) rotateX(-20deg) scale(0.3)",
-      //having an invisible transform rule in isMobile allow the banner to be fixed to the window
-      //even though the window is itself fixed. Not certain this is the best way to do it.
       transition: {
         duration: .75 * timeScale,
         ease: "easeIn"

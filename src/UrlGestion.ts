@@ -17,12 +17,13 @@ export function urlToInfo(url: string): UrlInfo {
   return { app: splitted[0], parameters: splitted.slice(1) };
 }
 
-export function transitionToUrl(handler: UrlInfo, setHandler: React.Dispatch<React.SetStateAction<UrlInfo>>, newUrl: string) {
-  setHandler(urlToInfo(newUrl));
-}
-
 export function discreetlyChangeUrlPath(path: string) {
   window.history.replaceState(null, "", path)
+}
+
+export function transitionToUrl(handler: UrlInfo, setHandler: React.Dispatch<React.SetStateAction<UrlInfo>>, newUrl: string) {
+  setHandler(urlToInfo(newUrl));
+  discreetlyChangeUrlPath(newUrl);
 }
 
 export function getAnimationState(urlsHandler: UrlInfo[], appName: string): AnimationStates {

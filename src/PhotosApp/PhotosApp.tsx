@@ -21,8 +21,7 @@ export default function PhotosApp(props: Props) {
       urlsHandler={props.urlsHandler}
     >
       <Banner text="OSCloud:Photos" onClick={() => {
-        console.log("i'm ckicked")
-        transitionToUrl(props.urlsHandler, props.setUrlsHandler, "Home");
+        transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home");
       }} />
       <div className='leftPannel'>
         leftPannel

@@ -1,4 +1,4 @@
-import React from "react";
+import Folder from "../assets/folder.svg";
 
 interface Props {
   launchPhotosPage: Function,
@@ -19,7 +19,15 @@ export default function DesktopAppLayout(props: Props) {
     <>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
         <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchFilesPage()}>app</div>
+        <div className="app" onClick={() => props.launchFilesPage()}>
+          <img src={Folder} alt="Folder"
+            style={{
+              width: "80%",
+              height: "80%",
+              padding: "10%"
+            }}
+          />
+        </div>
         <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
       </div>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>

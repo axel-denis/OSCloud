@@ -9,7 +9,6 @@ interface Props {
   appName: string;
   isLoggedIn: boolean;
   setIsLoggedIn: Function;
-  startAnimation: boolean;
   urlsHandler: UrlInfo;
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }

@@ -1,0 +1,12 @@
+.leftPannel {
+  flex-shrink: 0;
+  flex-grow: 0;
+  padding-top: 65px;
+  box-shadow: -10px 0px 15px 15px rgba(0, 0, 0, 0.2);
+}
+
+.contentDiv {
+  padding-top: 65px;
+  width: 100%;
+  overflow: auto;
+}

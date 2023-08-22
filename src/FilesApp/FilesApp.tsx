@@ -42,17 +42,20 @@ export default function FilesApp(props: Props) {
         {lpOpen &&
           <motion.div
             className='leftPannel'
+            style={{
+              width: isMobile ? "80vw" : "450px",
+            }}
             initial={{
-              width: 0,
+              left: isMobile ? "-80vw" : "-450px",
             }}
             animate={{
-              width: isMobile ? "80vw" : "450px",
+              left: 0,
               transition: {
                 duration: timeScale * 0.25
               }
             }}
             exit={{
-              width: 0,
+              left: isMobile ? "-80vw" : "-450px",
               transition: {
                 duration: timeScale * 0.25
               }
@@ -63,6 +66,7 @@ export default function FilesApp(props: Props) {
         }
       </AnimatePresence>
       <div className='contentDiv'>
+        coucou
       </div>
     </Window>
   )

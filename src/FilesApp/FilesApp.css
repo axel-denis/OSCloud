@@ -1,4 +1,7 @@
 .leftPannel {
+  z-index: -1;
+  position: fixed;
+  height: 100vh;
   overflow: hidden;
   flex-shrink: 0;
   flex-grow: 0;

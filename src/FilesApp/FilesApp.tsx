@@ -26,30 +26,41 @@ export default function FilesApp(props: Props) {
       appName={props.appName}
       urlsHandler={props.urlsHandler}
     >
-      <Banner text="OSCloud:Files" onClick={() => {
-        transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home");
-      }} />
+      <Banner
+        text="OSCloud:Files"
+        onClick={() => {
+          transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home");
+        }}
+        leftChildren={
+          <button
+            style={{ marginLeft: "1rem", height: "3rem" }}
+            onClick={() => { setLpOpen(!lpOpen) }}
+          >menu</button>
+        }
+      />
       <AnimatePresence>
-        <motion.div
-          className='leftPannel'
-          initial={{
-            width: isMobile ? "80vw" : "450px",
-          }}
-          animate={{
-            width: isMobile ? "80vw" : "450px",
-            transition: {
-              duration: timeScale * 0.25
-            }
-          }}
-          exit={{
-            width: 0,
-            transition: {
-              duration: timeScale * 0.25
-            }
-          }}
-        >
-          leftPannel
-        </motion.div>
+        {lpOpen &&
+          <motion.div
+            className='leftPannel'
+            initial={{
+              width: 0,
+            }}
+            animate={{
+              width: isMobile ? "80vw" : "450px",
+              transition: {
+                duration: timeScale * 0.25
+              }
+            }}
+            exit={{
+              width: 0,
+              transition: {
+                duration: timeScale * 0.25
+              }
+            }}
+          >
+            leftPannel
+          </motion.div>
+        }
       </AnimatePresence>
       <div className='contentDiv'>
       </div>

@@ -1,5 +1,5 @@
 .leftPannel {
-  z-index: -1;
+  background-color: aliceblue;
   position: fixed;
   height: 100vh;
   overflow: hidden;

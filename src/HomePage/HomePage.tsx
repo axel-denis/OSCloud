@@ -44,27 +44,9 @@ export default function HomePage(props: Props) {
     <AnimatePresence>
       {isOpen && props.isLoggedIn &&
         <>
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 100,
-              transition: {
-                duration: timeScale * .25
-              }
-            }}
-            exit={{
-              opacity: 0,
-              transition: {
-                duration: timeScale * .25
-              }
-            }}
-          >
-            <Banner text="OSCloud" onClick={() => {
-              props.setIsLoggedIn(false);
-            }} />
-          </motion.div>
+          <Banner text="OSCloud" onClick={() => {
+            props.setIsLoggedIn(false);
+          }} />
           <div className="centerContent">
             <motion.div
               className={"widgetAera"}

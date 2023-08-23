@@ -14,3 +14,16 @@
   width: 100%;
   overflow: auto;
 }
+
+.filesGrid {
+  display: grid;
+  justify-content: space-between;
+  grid-gap: 30px;
+}
+
+.iconImg {
+  width: 80%;
+  height: 80%;
+  padding: 10%;
+  filter: drop-shadow(0px 3px 6px rgb(0 0 0 / 0.3));
+}

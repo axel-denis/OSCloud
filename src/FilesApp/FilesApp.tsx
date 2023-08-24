@@ -1,12 +1,4 @@
 import React from 'react';
-import Folder from "../assets/folder.svg";
-import TextFile from "../assets/textFile.svg";
-import CodeFile from "../assets/codeFile.svg";
-import BlendFile from "../assets/blendFile.svg";
-import ImageFile from "../assets/imageFile.svg";
-import VideoFile from "../assets/videoFile.svg";
-import SoundFile from "../assets/soundFile.svg";
-import UnknownFile from "../assets/unknownFile.svg";
 import "./FilesApp.css"
 import "../Window/Window.css"
 import { transitionToUrl, UrlInfo } from '../UrlGestion';
@@ -15,6 +7,7 @@ import Window from '../Window/Window';
 import { MobileDevice } from '../App';
 import { AnimatePresence, motion } from 'framer-motion';
 import { timeScale } from '../consts';
+import SelectableFile from './SelectableFile';
 
 
 interface Props {
@@ -25,7 +18,7 @@ interface Props {
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }
 
-type FileType =
+export type FileType =
   "folder" |
   "unknown" |
   "prog" |
@@ -36,7 +29,7 @@ type FileType =
   "sound" |
   "compressed";
 
-interface FileInfo {
+export interface FileInfo {
   name: string;
   type: FileType;
   size: number;
@@ -100,28 +93,6 @@ const sample_data: FileInfo[] = [
   },
 ]
 
-function selectFileIcon(info: FileInfo) {
-  switch (info.type) {
-    case "folder":
-      return <img src={Folder} alt="Folder" className='iconImg' />;
-    case "prog":
-      return <img src={CodeFile} alt="programmation file" className='iconImg' />;
-    case "text":
-      return <img src={TextFile} alt="text file" className='iconImg' />;
-    case "blend":
-      return <img src={BlendFile} alt="Blender file" className='iconImg' />;
-    case "image":
-      return <img src={ImageFile} alt="Image" className='iconImg' />;
-    case "video":
-      return <img src={VideoFile} alt="Video" className='iconImg' />;
-    case "sound":
-      return <img src={SoundFile} alt="Sound" className='iconImg' />;
-    default:
-      return <img src={UnknownFile} alt="unknown file" className='iconImg' />;
-    // TODO - compressed file type not made yet
-  }
-}
-
 interface DisplayProps {
   files: FileInfo[],
   size: number | string,
@@ -135,18 +106,7 @@ function MosaicDisplay(props: DisplayProps) {
       }}
     >
       {props.files.map((file: FileInfo) => {
-        return (
-          <div className='fileDiv' style={{
-            height: `${props.size}px`,
-          }}>
-            {selectFileIcon(file)}
-            <div className='fileName' style={{
-              fontSize: "1.25rem", // TODO - adapt to display size changes ?
-            }}>
-              {file.name}
-            </div>
-          </div>
-        )
+        return <SelectableFile file={file} size={props.size} />
       })}
     </div>
   )

@@ -31,9 +31,8 @@
 }
 
 .fileDiv {
-  width: 100%;
   border-radius: 1rem;
-  transition-duration: .25s;
+  /* transition-duration: .25s; */
 }
 .fileDiv:hover {
   background-color: rgba(0, 0, 0, 0.05);

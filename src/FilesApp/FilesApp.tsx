@@ -1,5 +1,12 @@
 import React from 'react';
 import Folder from "../assets/folder.svg";
+import TextFile from "../assets/textFile.svg";
+import CodeFile from "../assets/codeFile.svg";
+import BlendFile from "../assets/blendFile.svg";
+import ImageFile from "../assets/imageFile.svg";
+import VideoFile from "../assets/videoFile.svg";
+import SoundFile from "../assets/soundFile.svg";
+import UnknownFile from "../assets/unknownFile.svg";
 import "./FilesApp.css"
 import "../Window/Window.css"
 import { transitionToUrl, UrlInfo } from '../UrlGestion';
@@ -20,13 +27,13 @@ interface Props {
 
 type FileType =
   "folder" |
-  string /* unknown file type*/ |
-  "prog" |
-  "text" |
-  "blend" |
-  "image" |
-  "video" |
-  "sound" |
+  "unknown"|
+  "prog"   |
+  "text"   |
+  "blend"  |
+  "image"  |
+  "video"  |
+  "sound"  |
   "compressed";
 
 interface FileInfo {
@@ -51,47 +58,69 @@ const sample_data: FileInfo[] = [
   },
   {
     name: "nowrite.txt",
-    type: "prog",
+    type: "text",
     size: 42,
     rights: "read",
   },
   {
-    name: "folder1",
-    type: "folder",
+    name: "project.blend",
+    type: "blend",
     size: 1024,
     rights: "write",
   },
   {
-    name: "file1.js",
-    type: "prog",
+    name: "photo.png",
+    type: "image",
     size: 256,
     rights: "write",
   },
   {
-    name: "nowrite.txt",
-    type: "prog",
+    name: "video.mp4",
+    type: "video",
     size: 42,
     rights: "read",
   },
   {
-    name: "folder1",
-    type: "folder",
+    name: "music.mp3",
+    type: "sound",
     size: 1024,
     rights: "write",
   },
   {
-    name: "file1.js",
-    type: "prog",
+    name: "file1.wtf",
+    type: "unknown",
     size: 256,
     rights: "write",
   },
   {
-    name: "nowrite.txt",
+    name: "code.rs",
     type: "prog",
     size: 42,
     rights: "read",
   },
 ]
+
+function selectFileIcon(info: FileInfo) {
+  switch (info.type) {
+    case "folder":
+      return <img src={Folder} alt="Folder" className='iconImg' />;
+    case "prog":
+      return <img src={CodeFile} alt="programmation file" className='iconImg' />;
+    case "text":
+      return <img src={TextFile} alt="text file" className='iconImg' />;
+    case "blend":
+      return <img src={BlendFile} alt="Blender file" className='iconImg' />;
+    case "image":
+      return <img src={ImageFile} alt="Image" className='iconImg' />;
+    case "video":
+      return <img src={VideoFile} alt="Video" className='iconImg' />;
+    case "sound":
+      return <img src={SoundFile} alt="Sound" className='iconImg' />;
+    default:
+      return <img src={UnknownFile} alt="Sound" className='iconImg' />;
+    // TODO - compressed file type not made yet
+  }
+}
 
 interface DisplayProps {
   files: FileInfo[],
@@ -109,10 +138,9 @@ function MosaicDisplay(props: DisplayProps) {
         return <div style={{
           width: "100%",
           height: `${props.size}px`,
-          backgroundColor: "white",
           borderRadius: "1rem"
         }}>
-          <img src={Folder} alt="Folder" className='iconImg'/>
+          {selectFileIcon(file)}
         </div>
       })}
     </div>

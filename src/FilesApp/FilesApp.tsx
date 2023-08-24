@@ -27,13 +27,13 @@ interface Props {
 
 type FileType =
   "folder" |
-  "unknown"|
-  "prog"   |
-  "text"   |
-  "blend"  |
-  "image"  |
-  "video"  |
-  "sound"  |
+  "unknown" |
+  "prog" |
+  "text" |
+  "blend" |
+  "image" |
+  "video" |
+  "sound" |
   "compressed";
 
 interface FileInfo {
@@ -87,7 +87,7 @@ const sample_data: FileInfo[] = [
     rights: "write",
   },
   {
-    name: "file1.wtf",
+    name: "file1_with_long_name_and_unknown_type.wtf",
     type: "unknown",
     size: 256,
     rights: "write",
@@ -117,7 +117,7 @@ function selectFileIcon(info: FileInfo) {
     case "sound":
       return <img src={SoundFile} alt="Sound" className='iconImg' />;
     default:
-      return <img src={UnknownFile} alt="Sound" className='iconImg' />;
+      return <img src={UnknownFile} alt="unknown file" className='iconImg' />;
     // TODO - compressed file type not made yet
   }
 }
@@ -135,13 +135,18 @@ function MosaicDisplay(props: DisplayProps) {
       }}
     >
       {props.files.map((file: FileInfo) => {
-        return <div style={{
-          width: "100%",
-          height: `${props.size}px`,
-          borderRadius: "1rem"
-        }}>
-          {selectFileIcon(file)}
-        </div>
+        return (
+          <div className='fileDiv' style={{
+            height: `${props.size}px`,
+          }}>
+            {selectFileIcon(file)}
+            <div style={{
+              fontSize: "1.25rem", // TODO - adapt to display size changes ?
+            }}>
+              {file.name}
+            </div>
+          </div>
+        )
       })}
     </div>
   )
@@ -151,7 +156,7 @@ function MosaicDisplay(props: DisplayProps) {
 export default function FilesApp(props: Props) {
   const isMobile = React.useContext(MobileDevice); // FIXME - pas encore mis la condition
   const [lpOpen, setLpOpen] = React.useState(isMobile); // is left panel opened
-  const [sliderValue, setSliderValue] = React.useState("100"); //FIXME - just for testing
+  const [sliderValue, setSliderValue] = React.useState("177"); //FIXME - just for testing
 
   return (
     <Window

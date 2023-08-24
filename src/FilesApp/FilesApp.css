@@ -10,7 +10,8 @@
 }
 
 .contentDiv {
-  padding-top: 65px;
+  padding: 30px;
+  padding-top: 95px;
   width: 100%;
   overflow: auto;
 }
@@ -23,7 +24,27 @@
 
 .iconImg {
   width: 80%;
-  height: 80%;
+  height: 60%;
   padding: 10%;
   filter: drop-shadow(0px 3px 6px rgb(0 0 0 / 0.3));
+}
+
+.fileDiv {
+  width: 100%;
+  border-radius: 1rem;
+  transition-duration: .25s;
+}
+.fileDiv:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.fileName {
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+  height: 20%;
+  min-height: 1.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.8);
 }

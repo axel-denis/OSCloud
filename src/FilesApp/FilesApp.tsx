@@ -140,7 +140,7 @@ function MosaicDisplay(props: DisplayProps) {
             height: `${props.size}px`,
           }}>
             {selectFileIcon(file)}
-            <div style={{
+            <div className='fileName' style={{
               fontSize: "1.25rem", // TODO - adapt to display size changes ?
             }}>
               {file.name}

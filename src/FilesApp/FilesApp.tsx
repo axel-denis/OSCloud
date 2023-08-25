@@ -116,7 +116,7 @@ function MosaicDisplay(props: DisplayProps) {
 export default function FilesApp(props: Props) {
   const isMobile = React.useContext(MobileDevice); // FIXME - pas encore mis la condition
   const [lpOpen, setLpOpen] = React.useState(isMobile); // is left panel opened
-  const [sliderValue, setSliderValue] = React.useState("177"); //FIXME - just for testing
+  const [sliderValue, setSliderValue] = React.useState(177); //FIXME - just for testing
 
   return (
     <Window
@@ -136,8 +136,8 @@ export default function FilesApp(props: Props) {
         }
         rightChildren={
           <>
-            <input type="range" min="50" max="500" value={sliderValue} onChange={
-              (event) => { setSliderValue(event.target.value) }
+            <input type="range" min={50} max={500} value={sliderValue} onChange={
+              (event) => { setSliderValue(+event.target.value) }
             }
               style={{
                 height: ".5rem",

@@ -8,7 +8,9 @@ import VideoFile from "../assets/videoFile.svg";
 import SoundFile from "../assets/soundFile.svg";
 import UnknownFile from "../assets/unknownFile.svg";
 import React from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import BackBlur from "./BackBlur";
+import { timeScale } from "../consts";
 
 export function selectFileIcon(type: FileType) {
   switch (type) {
@@ -41,22 +43,37 @@ export default function SelectableFile(props: Props) {
   const [isRightClick, setIsRightClick] = React.useState(false);
 
   return (
-    <motion.div
-      className='fileDiv'
-      style={{
-        height: `${props.size}px`,
-        width: `${props.size}px`,
-        position: isRightClick ? "fixed" : "relative",
-      }}
-      layout="position"
-      onClick={() => setIsRightClick(!isRightClick)}
-    >
-      {selectFileIcon(props.file.type)}
-      <div className='fileName' style={{
-        fontSize: "1.25rem", // TODO - adapt to size changes ?
-      }}>
-        {props.file.name}
-      </div>
-    </motion.div>
+    <>
+      {isRightClick &&
+        <div style={{ //place holder div when changing apparent location
+          height: `${props.size}px`,
+          width: `${props.size}px`,
+        }} />
+      }
+      <AnimatePresence>
+        {isRightClick &&
+          <BackBlur blur={"20px"} zIndex={3} />
+        }
+      </AnimatePresence>
+      <motion.div
+        className={isRightClick ? '' : 'fileDiv'}
+        style={{
+          height: isRightClick ? "20rem" : `${props.size}px`,
+          width: isRightClick ? "20rem" : `${props.size}px`,
+          position: isRightClick ? "fixed" : "relative",
+          zIndex: isRightClick ? 4 : 1,
+        }}
+        layout
+        transition={{duration: timeScale / 2}}
+        onClick={() => setIsRightClick(!isRightClick)}
+      >
+        {selectFileIcon(props.file.type)}
+        <div className='fileName' style={{
+          fontSize: "1.25rem", // TODO - adapt to size changes ?
+        }}>
+          {props.file.name}
+        </div>
+      </motion.div>
+    </>
   )
 }

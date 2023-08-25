@@ -20,13 +20,13 @@ export default function BackBlur(props: Props) {
         animate={{
           backdropFilter: "blur(20px)",
           transition: {
-            duration: timeScale / 2,
+            duration: timeScale / 3,
           }
         }}
         exit={{
           backdropFilter: "blur(0px)",
           transition: {
-            duration: timeScale / 2,
+            duration: timeScale / 3,
             ease: circOut,
           }
         }}

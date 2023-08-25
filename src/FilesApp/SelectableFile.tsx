@@ -10,7 +10,7 @@ import UnknownFile from "../assets/unknownFile.svg";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import BackBlur from "./BackBlur";
-import { timeScale } from "../consts";
+import { easeInOutCubic, timeScale } from "../consts";
 
 export function selectFileIcon(type: FileType) {
   switch (type) {
@@ -64,7 +64,11 @@ export default function SelectableFile(props: Props) {
           zIndex: isRightClick ? 4 : 1,
         }}
         layout
-        transition={{duration: timeScale / 2}}
+        transition={{
+          duration: timeScale / 3,
+          ease: easeInOutCubic,
+          type: "spring"
+        }}
         onClick={() => setIsRightClick(!isRightClick)}
       >
         {selectFileIcon(props.file.type)}

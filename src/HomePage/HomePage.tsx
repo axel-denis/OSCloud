@@ -6,7 +6,7 @@ import { UrlsHandler, transitionToUrl } from "../UrlGestion";
 import Banner from "../Banner/Banner";
 import { MobileDevice } from "../App";
 import { AnimatePresence, motion } from 'framer-motion';
-import { timeScale } from "../consts";
+import { easeOutCirc, timeScale } from "../consts";
 
 interface Props {
   appName: string;
@@ -35,10 +35,6 @@ export default function HomePage(props: Props) {
   //   console.log("mounted");
   //   return (() => { console.log("unmounted ?") })
   // }, [])
-
-  function easeOutCirc(x: number): number { // https://easings.net/#easeOutCirc
-    return Math.sqrt(1 - Math.pow(x - 1, 2));
-  }
 
   return (
     <AnimatePresence>

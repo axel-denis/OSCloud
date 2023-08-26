@@ -1,0 +1,21 @@
+.filePropertiesLayout {
+  flex: 1;
+  background-color: white;
+  -webkit-box-shadow: 1vw 0px 2vw -0.2vw #00000030;
+  box-shadow: 1vw 0px 2vw -0.2vw #00000030;
+  border-radius: 1vw;
+  padding: 6%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2vw;
+  overflow-y: scroll;
+}
+
+.filePropertiesTitle {
+  margin-top: 0;
+  border-bottom: 1.5px solid #ccc;
+  text-align: start;
+  border-bottom-left-radius: 8px;
+  padding: 3px;
+  padding-left: 5px;
+}

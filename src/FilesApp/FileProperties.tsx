@@ -1,3 +1,5 @@
+import "./FileProperties.css"
+
 interface Props {
   file_id: number;
 }

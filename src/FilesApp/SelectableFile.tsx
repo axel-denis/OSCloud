@@ -11,6 +11,7 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import BackBlur from "./BackBlur";
 import { easeInOutCubic, timeScale } from "../consts";
+import FileRightClick from "./FileRightClick";
 
 export function selectFileIcon(type: FileType) {
   switch (type) {
@@ -52,7 +53,7 @@ export default function SelectableFile(props: Props) {
       }
       <AnimatePresence>
         {isRightClick &&
-          <BackBlur blur={"20px"} zIndex={3} />
+          <FileRightClick zIndex={3} />
         }
       </AnimatePresence>
       <motion.div

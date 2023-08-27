@@ -8,6 +8,7 @@ if [ "$yesorno" = y ]; then
   rustup component add rustfmt
   cargo install --force cargo-make
   cargo install --force cargo-watch
+  cargo install diesel_cli --no-default-features --features postgres
   # sudo apt-get install libpq-dev
 fi
 

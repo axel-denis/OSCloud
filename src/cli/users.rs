@@ -5,7 +5,10 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 pub(crate) fn debug_users(_: Vec<&str>, db: &UserData) -> CmdStatus {
-    db.pretty_print();
+    match db.pretty_format() {
+        Ok(str) => println!("{str}"),
+        Err(err) => println!("{}", err_str(err)),
+    }
     CmdStatus::Ok
 }
 

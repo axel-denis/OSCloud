@@ -37,11 +37,11 @@ impl UserData {
         }
         data
     }
-
+    /*
     pub fn users(&self) -> Vec<User> {
         self.get_users().unwrap()
     }
-
+    */
     pub fn get_users(&self) -> Result<Vec<User>> {
         Ok(users.load::<User>(&mut self.pool.get()?)?)
     }

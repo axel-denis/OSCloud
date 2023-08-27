@@ -8,6 +8,7 @@ if [ "$yesorno" = y ]; then
   rustup component add rustfmt
   cargo install --force cargo-make
   cargo install --force cargo-watch
+  # sudo apt-get install libpq-dev
 fi
 
 mkdir -p database

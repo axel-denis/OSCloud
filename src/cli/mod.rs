@@ -33,8 +33,14 @@ pub fn start_cli(db: &UserData) {
         let mut rl = DefaultEditor::new().unwrap();
         let mut have_to_save = true;
         let mut path = db.dirs.config_dir().to_path_buf();
+        std::fs::create_dir_all(&path).expect("Can't create path to history storage!");
         path.push("history");
-        rl.load_history(&path).unwrap();
+        if let Err(error) = std::fs::OpenOptions::new().create_new(true).write(true).open(&path) {
+            if error.kind() != std::io::ErrorKind::AlreadyExists {
+                println!("{}", err_str(error.to_string()))
+            }
+        }
+        rl.load_history(&path).expect("Can't load history!");
 
         let map: CommandsMap = commands::create_commands_map();
         loop {

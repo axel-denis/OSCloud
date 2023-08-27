@@ -1,10 +1,11 @@
 use crate::database::UserData;
-use tabled::settings::Style;
-use tabled::Table;
-use crate::database::Result;
 
 impl UserData {
-    pub fn pretty_format(&self) -> Result<String> {
+    #[cfg(feature = "cli")]
+    pub fn pretty_format(&self) -> crate::database::Result<String> {
+        use tabled::settings::Style;
+        use tabled::Table;
+
         let users = self.get_users()?;
         if users.is_empty() {
             return Ok("No users registered, the database is empty".to_string());

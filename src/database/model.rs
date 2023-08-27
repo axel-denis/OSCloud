@@ -2,7 +2,6 @@ use diesel::{AsChangeset, Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 use std::str::FromStr;
-use tabled::Tabled;
 
 #[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::database::schema::sql_types::Role"]
@@ -46,8 +45,8 @@ pub struct NewUser {
     #[serde(rename = "type")]
     pub user_role: Role,
 }
-
-#[derive(Serialize, Deserialize, Debug, Clone, Queryable, Tabled)]
+#[derive(Serialize, Deserialize, Debug, Clone, Queryable)]
+#[cfg_attr(feature = "cli", derive(tabled::Tabled))]
 #[diesel(table_name = crate::database::schema::users)]
 pub struct User {
     #[serde(skip_serializing)]

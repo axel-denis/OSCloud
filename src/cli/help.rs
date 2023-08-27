@@ -56,7 +56,7 @@ pub(crate) fn save_help(db: &UserData) {
     let mut path = db.dirs.config_dir().to_path_buf();
 
     path.push("database/users.json");
-    let str = info_str(format!("Default path: '{path:?}'"));
+    let str = info_str(format!("Default path: {path:?}"));
     println!("{str}");
     println!(
         "{}",
@@ -71,7 +71,7 @@ pub(crate) fn import_help(db: &UserData) {
     let mut path = db.dirs.config_dir().to_path_buf();
 
     path.push("database/users.json");
-    let str = info_str(format!("Default path: '{path:?}'"));
+    let str = info_str(format!("Default path: {path:?}"));
     println!("{str}");
 }
 

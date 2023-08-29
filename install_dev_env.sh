@@ -9,6 +9,9 @@ if [ "$yesorno" = y ]; then
   cargo install --force cargo-make
   cargo install --force cargo-watch
   cargo install diesel_cli --no-default-features --features postgres
+  sudo apt-get install libpq-dev
+  pip3 install -r requirements.txt
+  pip3 install -r locust/requirements.txt
   # sudo apt-get install libpq-dev
 fi
 

@@ -10,3 +10,6 @@ args = ["clippy", "--", "-W", "clippy::nursery", "-W", "clippy::unwrap_used"]
 [tasks.run]
 command = "cargo"
 args = ["watch", "-x", "'run'"]
+
+[tasks.locust]
+command = "./locust/launch_tests.py"

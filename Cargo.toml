@@ -19,6 +19,7 @@ env_logger = "0.10.0"
 actix-cors = "0.6.4"
 bcrypt = "0.15.0"
 directories = "5.0.1"
+actix-multipart = "0.6.1"
 
 # Database access
 

@@ -71,9 +71,10 @@ impl UserData {
     }
 
     pub fn create_user(&self, user_name: &str, user_password: &str, role: Role) -> Result<User> {
+        let mut pool = self.pool.get()?;
         if !users
             .filter(name.eq(user_name.clone()))
-            .get_results::<User>(&mut self.pool.get()?)?
+            .get_results::<User>(&mut pool)?
             .is_empty()
         {
             return Err(Box::new(std::io::Error::new(
@@ -89,7 +90,7 @@ impl UserData {
                 password: hashed_password,
                 user_role: role,
             })
-            .execute(&mut self.pool.get()?)?;
+            .execute(&mut pool)?;
         Ok(self.get_user_by_name(user_name).ok_or("Not Found")?)
     }
 

@@ -1,7 +1,7 @@
-use std::{io::Write, cell::{RefCell}, sync::{Arc, Mutex}};
+use std::{io::Write, sync::{Arc, Mutex}};
 
 use crate::database::{
-    model::{Role, User},
+    model::User,
     UserData,
 };
 use actix_multipart::Multipart;

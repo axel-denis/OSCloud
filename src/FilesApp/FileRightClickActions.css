@@ -1,0 +1,46 @@
+.fileRightClickActionsBody {
+  background-color: rgba(0, 0, 0, .5);
+  height: 100%;
+  border-radius: max(2.5rem, 5vh);
+  position: relative;
+  overflow-y: hidden;
+}
+
+.fileRightClickActionsBanner {
+  color: white;
+  width: 100%;
+  margin: 0;
+  padding-top: max(1rem, 2vh);
+  padding-bottom: max(1rem, 2vh);
+  font-size: max(1.5rem, 3vh);
+  border-bottom: 1.5px solid #bbb;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  position: absolute;
+}
+
+.fileRightClickActionsList {
+  overflow-y: scroll;
+  height: calc(100% - max(3.5rem, 7vh));
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-top: max(3.5rem, 7vh);
+}
+
+.fileRightClickActionsLine {
+  all: unset;
+  user-select: none;
+  margin: 0;
+  padding-top: max(1rem, 2vh);
+  display: block;
+  padding-bottom: max(1rem, 2vh);
+  font-size: max(1.5rem, 3vh);
+  color: white;
+  border-bottom: 1.5px solid #bbb;
+  transition: background-color .2s;
+}
+
+.fileRightClickActionsLine:hover {
+  background-color: rgba(0, 0, 0, .2);
+}

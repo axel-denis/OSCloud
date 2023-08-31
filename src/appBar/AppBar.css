@@ -6,6 +6,7 @@
   transform: translate(-50%, calc(100vh));
   border-radius: 25px;
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   display: flex;
   align-items: center;
   justify-content: center;

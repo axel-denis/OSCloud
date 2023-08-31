@@ -1,10 +1,13 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, lazy, Suspense } from 'react';
 import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosApp from './PhotosApp/PhotosApp';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import { timeScale } from './consts';
+// import FilesApp from './FilesApp/FilesApp';
+const FilesApp = lazy(() => import('./FilesApp/FilesApp'))
+import LoadingOverlay from './LoadingOverlay/LoadingOverlay';
 
 export const MobileDevice = React.createContext<boolean>(false);
 
@@ -35,7 +38,8 @@ export default function App() {
       <div className="App">
         <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <PhotosApp appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} startAnimation={false} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        <PhotosApp appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
       </div>
     </MobileDevice.Provider>
   );

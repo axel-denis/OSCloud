@@ -70,7 +70,10 @@ export default function SelectableFile(props: Props) {
           ease: easeInOutCubic,
           type: "spring"
         }}
-        onClick={() => setIsRightClick(!isRightClick)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setIsRightClick(true);
+        }}
       >
         {selectFileIcon(props.file.type)}
         <div className='fileName' style={{

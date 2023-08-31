@@ -18,7 +18,7 @@ pub struct RegisterResponse {
 }
 
 
-pub async fn register_not_opti(
+pub async fn _register_not_opti(
     db: web::Data<UserData>,
     register: web::Json<RegisterRequest>,
 ) -> impl Responder {
@@ -39,25 +39,34 @@ pub async fn register_not_opti(
     }
 }
 
+enum RegisterOutcome {
+    Connected(String),
+    AlreadyExist,
+    Error
+}
+
 pub async fn register(
     db: web::Data<UserData>,
     register: web::Json<RegisterRequest>,
-) -> actix_web::Result<impl Responder> {
-    let user = web::block(move || {
-        db.create_user(&register.name, &register.password, Role::User)
-    }).await.map_err(actix_web::error::ErrorInternalServerError)?;
-
-    match user {
-        Err(err) => {
-            if err.is::<std::io::Error>() {
-                Ok(HttpResponse::Conflict().body("User already exist"))
-            } else {
-                Err(actix_web::error::ErrorInternalServerError(501))
+) -> impl Responder {
+    let outcome: RegisterOutcome = web::block(move || {
+        match db.create_user(&register.name, &register.password, Role::User) {
+            Err(err) => {
+                if err.is::<std::io::Error>() {
+                    RegisterOutcome::AlreadyExist
+                } else {
+                    RegisterOutcome::Error
+                }
             }
+            Ok(user) => match encode_jwt(&user) {
+                Ok(token) => RegisterOutcome::Connected(token),
+                Err(_) => RegisterOutcome::Error,
+            },
         }
-        Ok(user) => match encode_jwt(&user) {
-            Ok(token) => Ok(HttpResponse::Ok().json(RegisterResponse { token })),
-            Err(_) => Err(actix_web::error::ErrorInternalServerError(500)),
-        },
+    }).await.unwrap_or(RegisterOutcome::Error);
+    match outcome {
+        RegisterOutcome::Connected(token) => HttpResponse::Ok().json(RegisterResponse { token }),
+        RegisterOutcome::AlreadyExist => HttpResponse::Conflict().body("User already exist"),
+        _ => HttpResponse::InternalServerError().finish()
     }
 }

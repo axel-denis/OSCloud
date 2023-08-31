@@ -38,6 +38,8 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("create_tag".to_owned(), crate::cli::tags::create_tag);
     map.insert("du".to_owned(), crate::cli::users::delete_user);
     map.insert("delete_user".to_owned(), crate::cli::users::delete_user);
+    map.insert("dt".to_owned(), crate::cli::tags::delete_tag);
+    map.insert("delete_tag".to_owned(), crate::cli::tags::delete_tag);
     map
 }
 

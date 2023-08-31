@@ -55,6 +55,18 @@ pub(crate) fn create_user_help(_: &UserData) {
     println!("Create an new user in the database using the selected credentials");
 }
 
+pub(crate) fn delete_tag_help(_: &UserData) {
+    println!("Usage: alias 'dt'");
+    println!("    delete_tag <name>");
+    println!("Delete the tag from the database that matches the name");
+}
+
+pub(crate) fn create_tag_help(_: &UserData) {
+    println!("Usage: alias 'ct'");
+    println!("    create_tag <name>");
+    println!("Create an new tag in the database");
+}
+
 pub(crate) fn save_help(db: &UserData) {
     println!("Usage: alias 's'");
     println!("    save [path]");
@@ -104,6 +116,10 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("create_user".to_owned(), create_user_help);
     map.insert("du".to_owned(), delete_user_help);
     map.insert("delete_user".to_owned(), delete_user_help);
+    map.insert("ct".to_owned(), create_tag_help);
+    map.insert("create_tag".to_owned(), create_tag_help);
+    map.insert("dt".to_owned(), delete_tag_help);
+    map.insert("delete_tag".to_owned(), delete_tag_help);
     map
 }
 

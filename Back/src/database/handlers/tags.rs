@@ -39,4 +39,20 @@ impl UserData {
             .first::<Tag>(&mut self.pool.get().ok()?)
             .ok()
     }
+
+    pub fn delete_tag(&self, tag_name: &str) -> Result<()> {
+        if tags
+            .filter(name.eq(tag_name))
+            .count()
+            .first::<i64>(&mut self.pool.get()?)?
+            <= 0
+        {
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                "User not found",
+            )));
+        }
+        diesel::delete(tags.filter(name.eq(tag_name))).execute(&mut self.pool.get()?)?;
+        Ok(())
+    }
 }

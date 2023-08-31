@@ -27,3 +27,20 @@ pub(crate) fn create_tag(args: Vec<&str>, db: &UserData) -> CmdStatus {
     }
     CmdStatus::Ok
 }
+
+pub(crate) fn delete_tag(args: Vec<&str>, db: &UserData) -> CmdStatus {
+    if args.len() != 2 {
+        println!(
+            "{} delete_tag <name> {} help 'delete_tag'",
+            err_str("Invalid arguments given, should be"),
+            err_str(", for more informations try")
+        );
+        return CmdStatus::Ok;
+    }
+
+    match db.delete_tag(args[1]) {
+        Ok(_) => println!("Tag {} deleted!", ok_str(args[1])),
+        Err(err) => println!("{}", err_str(err)),
+    }
+    CmdStatus::Ok
+}

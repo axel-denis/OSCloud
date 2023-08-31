@@ -20,6 +20,8 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("help".to_owned(), crate::cli::help::help);
     map.insert("u".to_owned(), crate::cli::users::debug_users);
     map.insert("users".to_owned(), crate::cli::users::debug_users);
+    map.insert("t".to_owned(), crate::cli::tags::debug_tags);
+    map.insert("tags".to_owned(), crate::cli::tags::debug_tags);
     map.insert("e".to_owned(), exit);
     map.insert("exit".to_owned(), exit);
     map.insert("q".to_owned(), exit);

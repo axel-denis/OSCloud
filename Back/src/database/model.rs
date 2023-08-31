@@ -56,3 +56,12 @@ pub struct User {
     #[serde(rename = "type")]
     pub user_role: Role,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, Queryable)]
+#[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+#[diesel(table_name = crate::database::schema::users)]
+pub struct Tag {
+    #[serde(skip_serializing)]
+    pub id: i64,
+    pub name: String,
+}

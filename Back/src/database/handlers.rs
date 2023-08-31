@@ -9,8 +9,12 @@ use dotenv::dotenv;
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
+use crate::database::schema::tags::dsl::tags;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
+
+use super::model::Tag;
+
 
 impl UserData {
     pub fn new() -> Self {
@@ -37,11 +41,11 @@ impl UserData {
         }
         data
     }
-    /*
-    pub fn users(&self) -> Vec<User> {
-        self.get_users().unwrap()
+
+    pub fn get_tags(&self) -> Result<Vec<Tag>> {
+        Ok(tags.load::<Tag>(&mut self.pool.get()?)?)
     }
-    */
+
     pub fn get_users(&self) -> Result<Vec<User>> {
         Ok(users.load::<User>(&mut self.pool.get()?)?)
     }

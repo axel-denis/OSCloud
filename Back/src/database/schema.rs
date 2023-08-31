@@ -7,6 +7,13 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    tags (id) {
+        id -> Int8,
+        name -> Text,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::Role;
 
@@ -17,3 +24,8 @@ diesel::table! {
         user_role -> Role,
     }
 }
+
+diesel::allow_tables_to_appear_in_same_query!(
+    tags,
+    users,
+);

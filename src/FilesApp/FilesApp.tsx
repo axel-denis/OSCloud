@@ -6,7 +6,7 @@ import Banner from '../Banner/Banner';
 import Window from '../Window/Window';
 import { MobileDevice } from '../App';
 import { AnimatePresence, motion } from 'framer-motion';
-import { timeScale } from '../consts';
+import { backIp, timeScale } from '../consts';
 import SelectableFile from './SelectableFile';
 
 

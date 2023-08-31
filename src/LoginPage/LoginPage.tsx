@@ -96,7 +96,7 @@ export default function LoginPage(props: Props) {
                   transition: {duration: timeScale * .25}
                 }}
               >
-                <motion.img src={loadingIcon} alt="loading" className='loadingRotation' />
+                <img src={loadingIcon} alt="loading" className='loadingRotation' />
               </motion.div>
             </div>
           </form>

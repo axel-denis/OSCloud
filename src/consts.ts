@@ -1,4 +1,4 @@
-export const backIp = "http://127.0.0.1:8080"
+export const backIp = "http://localhost:8080"
 export const timeScale = 1;
 
 export function easeOutCirc(x: number): number { // https://easings.net/#easeOutCirc

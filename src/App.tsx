@@ -1,11 +1,13 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, lazy, Suspense } from 'react';
 import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosApp from './PhotosApp/PhotosApp';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import { timeScale } from './consts';
-import FilesApp from './FilesApp/FilesApp';
+// import FilesApp from './FilesApp/FilesApp';
+const FilesApp = lazy(() => import('./FilesApp/FilesApp'))
+import LoadingOverlay from './LoadingOverlay/LoadingOverlay';
 
 export const MobileDevice = React.createContext<boolean>(false);
 

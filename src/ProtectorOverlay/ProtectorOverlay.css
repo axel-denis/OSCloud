@@ -1,0 +1,11 @@
+.ProtectorOverlay {
+  /*opacity: 25%;
+  background-color: red;*/
+  opacity: 0;
+  z-index: 5;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}

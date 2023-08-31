@@ -1,0 +1,189 @@
+.backPannel {
+  position: fixed;
+  top: 0vh;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(250, 250, 255, 0.9);
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.h1LoginPage {
+  margin-top: 4.5rem;
+}
+
+.centeredForm {
+  width: 30rem;
+  height: 35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.roundedBox {
+  border-radius: 1.25rem;
+  background-color: white;
+  -webkit-box-shadow: -1px 4px 10px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -1px 4px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.decorativeFlyers {
+  position: fixed;
+}
+
+.fieldsBox {
+  margin-top: 8rem;
+  border-radius: 1rem;
+  width: 19rem;
+  overflow: hidden;
+  border: solid rgba(190, 190, 190, 255) 1px;
+  display: flex;
+  position: relative;
+}
+
+.loadingFieldsBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+input {
+  all: unset;
+  text-align: left;
+  width: 100%;
+  height: 3rem;
+  border: 0ch;
+  padding-left: 20px;
+  font-size: medium;
+  transition: all .5s;
+}
+
+input:hover {
+  background-color: #dddddd;
+}
+
+input:focus {
+  outline: none;
+  background-color: #dddddd;
+}
+
+.nextButton {
+  all: unset;
+  flex: 1;
+  border-left: solid rgba(190, 190, 190, 255) 1px;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.nextButtonSlider {
+  position: absolute;
+  top: 0px;
+  width: 7.5rem;
+  height: 100%;
+  display: flex;
+}
+
+.nextButtonDivision {
+  height: 100%;
+  width: 50%;
+}
+
+@media (max-width: 510px) {
+  .centeredForm {
+    position: absolute;
+    border-radius: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .decorativeFlyers {
+    display: none
+  }
+
+  .fieldsBox {
+    margin-top: min(calc(20vh - 50px), 170px);
+  }
+
+  .h1LoginPage {
+    margin-top: clamp(4rem, 20vh, 10rem);
+  }
+}
+
+.loadingRotation {
+  opacity: 1;
+  animation: loadingLogo-spin 500ms steps(12, end) infinite;
+  height: 30px;
+  opacity: .5;
+}
+
+@keyframes loadingLogo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ^^^ */
+
+@media (max-height: 500px) {
+  .centeredForm {
+    position: absolute;
+    border-radius: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .decorativeFlyers {
+    display: none;
+  }
+
+  .fieldsBox {
+    margin-top: min(calc(20vh - 50px), 170px);
+  }
+}
+
+@keyframes shaking {
+  0% {
+    transform: translate(0px, 0px)
+  }
+
+  20% {
+    transform: translate(5px, 0px)
+  }
+
+  40% {
+    transform: translate(0px, 5px)
+  }
+
+  60% {
+    transform: translate(5px, -5px)
+  }
+
+  80% {
+    transform: translate(-5px, -5px)
+  }
+
+  100% {
+    transform: translate(-5px, -5px)
+  }
+}
+
+.shake {
+  animation: shaking 0.1s infinite;
+}

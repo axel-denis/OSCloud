@@ -17,6 +17,12 @@ pub(crate) fn users_help(_: &UserData) {
     println!("Display a formatted table containing information about all the registered users");
 }
 
+pub(crate) fn tags_help(_: &UserData) {
+    println!("Usage: alias 't'");
+    println!("    tags");
+    println!("Display a formatted table containing information about all the registered file tags");
+}
+
 pub(crate) fn exit_help(_: &UserData) {
     println!("Usage: alias 'e', 'quit', 'q'");
     println!("    exit [option]");
@@ -82,6 +88,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("help".to_owned(), help_help);
     map.insert("u".to_owned(), users_help);
     map.insert("users".to_owned(), users_help);
+    map.insert("t".to_owned(), tags_help);
+    map.insert("tags".to_owned(), tags_help);
     map.insert("e".to_owned(), exit_help);
     map.insert("exit".to_owned(), exit_help);
     map.insert("q".to_owned(), exit_help);
@@ -112,6 +120,7 @@ pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) -> CmdStatus
     println!("Usage:");
     println!("    help, h\tDisplay this usage message");
     println!("    users, u\tDisplay the list of users in the database and all the data they hold");
+    println!("    tags, t\tDisplay the list of users in the database and all the data they hold");
     println!("    exit, quit, e, q\tClose the program and save the current data base");
     println!("    clear, c\tClear the current terminal");
     println!("    create_user, cu\tCreate new user");

@@ -57,9 +57,16 @@ pub struct User {
     pub user_role: Role,
 }
 
+
+#[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
+#[diesel(table_name = crate::database::schema::tags)]
+pub struct NewTag {
+    pub name: String,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
-#[diesel(table_name = crate::database::schema::users)]
+#[diesel(table_name = crate::database::schema::tags)]
 pub struct Tag {
     #[serde(skip_serializing)]
     pub id: i64,

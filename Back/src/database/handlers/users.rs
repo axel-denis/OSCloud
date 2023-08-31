@@ -1,62 +1,17 @@
-use std::process::exit;
 
 use bcrypt::{hash, DEFAULT_COST};
 
 use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
-use dotenv::dotenv;
-
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
-use crate::database::schema::tags::dsl::tags;
 use crate::database::Result;
-use crate::database::{PostgresPool, UserData};
-
-use super::model::Tag;
-
+use crate::database::UserData;
 
 impl UserData {
-    pub fn new() -> Self {
-        dotenv().ok();
-        let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-        let manager = ConnectionManager::<PgConnection>::new(database_url);
-        let pool: PostgresPool = r2d2::Pool::builder()
-            .build(manager)
-            .expect("Failed to create pool.");
-
-        let dirs = directories::ProjectDirs::from("", "OsCloud", "oscloud")
-            .expect("No project directory could be found on this OS, please report the bug as an issue on github: 'https://github.com/axel-denis/OSCloud-Back'");
-
-        let mut path = dirs.config_dir().to_path_buf();
-        path.push("./database/users.json");
-
-        let data = UserData { pool, dirs };
-
-        if path.exists() {
-            if let Some(error) = data.import_default().err() {
-                println!("import error: {error:?}");
-                exit(0);
-            }
-        }
-        data
-    }
-
-    pub fn get_tags(&self) -> Result<Vec<Tag>> {
-        Ok(tags.load::<Tag>(&mut self.pool.get()?)?)
-    }
-
     pub fn get_users(&self) -> Result<Vec<User>> {
         Ok(users.load::<User>(&mut self.pool.get()?)?)
     }
-    /*
-    pub fn delete_by_id(&self, id: i64) -> Result<()> {
-        if users.find(id).count().first::<i64>(&mut self.pool.get()?)? <= 0 {
-            return Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotFound, "User not found")));
-        }
-        diesel::delete(users.find(id)).execute(&mut self.pool.get()?)?;
-        Ok(())
-    }*/
 
     pub fn delete_user(&self, user_name: &str) -> Result<()> {
         if users

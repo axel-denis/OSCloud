@@ -7,6 +7,13 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    files (path) {
+        path -> Text,
+        tags -> Nullable<Array<Nullable<Int8>>>,
+    }
+}
+
+diesel::table! {
     tags (id) {
         id -> Int8,
         name -> Text,
@@ -26,6 +33,7 @@ diesel::table! {
 }
 
 diesel::allow_tables_to_appear_in_same_query!(
+    files,
     tags,
     users,
 );

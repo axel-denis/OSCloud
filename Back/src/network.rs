@@ -21,7 +21,7 @@ pub async fn launch_actix(userdata: UserData) -> std::io::Result<()> {
             .route("/user", web::get().to(user_info::user_info))
             .route("/save", web::post().to(json::save_to_json))
             .route("/import", web::post().to(json::import_from_json))
-            .route("/file", web::post().to(upload::get_file))
+            .route("/file", web::post().to(upload::upload))
             .route("/home", web::get().to(home::home))
     })
     .bind(("127.0.0.1", 8888))?

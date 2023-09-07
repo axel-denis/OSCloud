@@ -93,6 +93,15 @@ pub(crate) fn import_help(db: &UserData) {
     println!("{str}");
 }
 
+pub(crate) fn tree_help(data: &UserData) {
+    println!("Usage: alias 't'");
+    println!("    tree");
+    let str = info_str(format!("Default path: {}/data", data.dirs.config_dir().display()));
+
+    println!("Display a tree of the files present in the data app");
+    println!("{str}");
+}
+
 pub(crate) fn create_help_map() -> HelpMap {
     let mut map = HelpMap::new();
 
@@ -120,6 +129,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("create_tag".to_owned(), create_tag_help);
     map.insert("dt".to_owned(), delete_tag_help);
     map.insert("delete_tag".to_owned(), delete_tag_help);
+    map.insert("t".to_owned(), tree_help);
+    map.insert("tree".to_owned(), tree_help);
     map
 }
 
@@ -143,6 +154,7 @@ pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) -> CmdStatus
     println!("    save, s\tSave database to file");
     println!("    import, i\tImport database from file");
     println!("    delete_user, du\tDelete user");
+    println!("    tree, t\tDisplay tree of hosted data");
     println!();
     println!("See 'help <command>' for more information on a specific command.");
     CmdStatus::Ok

@@ -1,12 +1,13 @@
-
-pub(crate) mod users;
 pub(crate) mod tags;
+pub(crate) mod users;
 
-use super::{UserData, PostgresPool};
-use std::process::exit;
-use diesel::{r2d2::{self, ConnectionManager}, PgConnection};
+use super::{PostgresPool, UserData};
+use diesel::{
+    r2d2::{self, ConnectionManager},
+    PgConnection,
+};
 use dotenv::dotenv;
-
+use std::process::exit;
 
 impl UserData {
     pub fn new() -> Self {
@@ -33,5 +34,4 @@ impl UserData {
         }
         data
     }
-
 }

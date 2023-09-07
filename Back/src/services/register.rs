@@ -17,7 +17,6 @@ pub struct RegisterResponse {
     pub token: String,
 }
 
-
 pub async fn _register_not_opti(
     db: web::Data<UserData>,
     register: web::Json<RegisterRequest>,
@@ -42,31 +41,34 @@ pub async fn _register_not_opti(
 enum RegisterOutcome {
     Connected(String),
     AlreadyExist,
-    Error
+    Error,
 }
 
 pub async fn register(
     db: web::Data<UserData>,
     register: web::Json<RegisterRequest>,
 ) -> impl Responder {
-    let outcome: RegisterOutcome = web::block(move || {
-        match db.create_user(&register.name, &register.password, Role::User) {
-            Err(err) => {
-                if err.is::<std::io::Error>() {
-                    RegisterOutcome::AlreadyExist
-                } else {
-                    RegisterOutcome::Error
+    let outcome: RegisterOutcome =
+        web::block(
+            move || match db.create_user(&register.name, &register.password, Role::User) {
+                Err(err) => {
+                    if err.is::<std::io::Error>() {
+                        RegisterOutcome::AlreadyExist
+                    } else {
+                        RegisterOutcome::Error
+                    }
                 }
-            }
-            Ok(user) => match encode_jwt(&user) {
-                Ok(token) => RegisterOutcome::Connected(token),
-                Err(_) => RegisterOutcome::Error,
+                Ok(user) => match encode_jwt(&user) {
+                    Ok(token) => RegisterOutcome::Connected(token),
+                    Err(_) => RegisterOutcome::Error,
+                },
             },
-        }
-    }).await.unwrap_or(RegisterOutcome::Error);
+        )
+        .await
+        .unwrap_or(RegisterOutcome::Error);
     match outcome {
         RegisterOutcome::Connected(token) => HttpResponse::Ok().json(RegisterResponse { token }),
         RegisterOutcome::AlreadyExist => HttpResponse::Conflict().body("User already exist"),
-        _ => HttpResponse::InternalServerError().finish()
+        _ => HttpResponse::InternalServerError().finish(),
     }
 }

@@ -12,3 +12,7 @@ pub(crate) fn ok_str<T: ToString>(text: T) -> ColoredString {
 pub(crate) fn info_str<T: ToString>(text: T) -> ColoredString {
     text.to_string().bright_black()
 }
+
+pub(crate) fn alt_str<T: ToString>(text: T) -> ColoredString {
+    text.to_string().blue().italic()
+}

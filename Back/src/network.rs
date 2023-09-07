@@ -3,7 +3,7 @@ use actix_web::{middleware::Logger, web, App, HttpServer};
 
 use crate::{
     database::UserData,
-    services::{login, register, delete, user_info, json, home, upload},
+    services::{delete, home, json, login, register, upload, user_info},
 };
 
 #[actix_web::main]
@@ -17,7 +17,7 @@ pub async fn launch_actix(userdata: UserData) -> std::io::Result<()> {
             .wrap(crate::auth_middleware::Auth)
             .route("/login", web::post().to(login::login))
             .route("/user", web::post().to(register::register))
-            .route("/user",web::delete().to(delete::delete_user))
+            .route("/user", web::delete().to(delete::delete_user))
             .route("/user", web::get().to(user_info::user_info))
             .route("/save", web::post().to(json::save_to_json))
             .route("/import", web::post().to(json::import_from_json))

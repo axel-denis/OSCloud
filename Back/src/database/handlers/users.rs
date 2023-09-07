@@ -1,12 +1,11 @@
-
 use bcrypt::{hash, DEFAULT_COST};
 
-use diesel::prelude::*;
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::UserData;
+use diesel::prelude::*;
 
 impl UserData {
     pub fn get_users(&self) -> Result<Vec<User>> {

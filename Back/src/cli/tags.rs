@@ -1,7 +1,9 @@
 use crate::database::UserData;
 
-use super::{commands::CmdStatus, formating::{err_str, ok_str}};
-
+use super::{
+    commands::CmdStatus,
+    formating::{err_str, ok_str},
+};
 
 pub(crate) fn debug_tags(_: Vec<&str>, db: &UserData) -> CmdStatus {
     match db.pretty_format_tags() {

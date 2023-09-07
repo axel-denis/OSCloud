@@ -57,7 +57,6 @@ pub struct User {
     pub user_role: Role,
 }
 
-
 #[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
 #[diesel(table_name = crate::database::schema::tags)]
 pub struct NewTag {

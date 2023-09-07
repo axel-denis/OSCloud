@@ -19,25 +19,23 @@ enum LoginOutcome {
     Connected(String),
     WrongPassword,
     UserNotFound,
-    Error
+    Error,
 }
 
 pub async fn login(db_pool: web::Data<UserData>, login: web::Json<LoginRequest>) -> impl Responder {
-    let outcome: LoginOutcome = web::block(move || {
-        match db_pool.get_user_by_name(&login.name) {
-            Some(user) => {
-                match verify(&login.password, &user.password) {
-                    Ok(true) => match encode_jwt(&user) {
-                        Ok(token) => LoginOutcome::Connected(token),
-                        Err(_) => LoginOutcome::Error,
-                    },
-                    Ok(false) => LoginOutcome::WrongPassword,
-                    Err(_) => LoginOutcome::Error,
-                }
+    let outcome: LoginOutcome = web::block(move || match db_pool.get_user_by_name(&login.name) {
+        Some(user) => match verify(&login.password, &user.password) {
+            Ok(true) => match encode_jwt(&user) {
+                Ok(token) => LoginOutcome::Connected(token),
+                Err(_) => LoginOutcome::Error,
             },
-            None => LoginOutcome::UserNotFound,
-        }
-    }).await.unwrap_or(LoginOutcome::Error);
+            Ok(false) => LoginOutcome::WrongPassword,
+            Err(_) => LoginOutcome::Error,
+        },
+        None => LoginOutcome::UserNotFound,
+    })
+    .await
+    .unwrap_or(LoginOutcome::Error);
 
     match outcome {
         LoginOutcome::Connected(str) => HttpResponse::Ok().json(LoginResponse { token: str }),

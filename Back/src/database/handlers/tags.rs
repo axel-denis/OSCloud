@@ -1,9 +1,9 @@
+use crate::database::model::{NewTag, Tag};
 use crate::database::UserData;
-use crate::database::model::{Tag, NewTag};
 
 use crate::database::schema::tags::dsl::tags;
-use crate::database::Result;
 use crate::database::schema::tags::name;
+use crate::database::Result;
 
 use diesel::prelude::*;
 
@@ -26,7 +26,7 @@ impl UserData {
             )));
         }
         diesel::insert_into(tags)
-            .values(&NewTag{
+            .values(&NewTag {
                 name: tag_name.to_string(),
             })
             .execute(&mut pool)?;
@@ -34,8 +34,7 @@ impl UserData {
     }
 
     pub fn get_tag_by_name(&self, tag_name: &str) -> Option<Tag> {
-        tags
-            .filter(name.eq(tag_name))
+        tags.filter(name.eq(tag_name))
             .first::<Tag>(&mut self.pool.get().ok()?)
             .ok()
     }

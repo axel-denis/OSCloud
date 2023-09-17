@@ -1,6 +1,6 @@
 # OSCloud
 
-OSCloud is a all in one Home Server software. It aims to provide easy files gestion / share / viewing across the network and will in it's near future implement decentralized files storage (storage across many differents servers without one central entity). The project is still under heavy developpement and far form is objectives.
+OSCloud is an all in one Home Server software. It aims to provide easy files gestion / share / viewing across the network and will in it's near future implement decentralized files storage (storage across many differents servers without one central entity). The project is still under heavy developpement and far form is objectives.
 The Front uses React TS, and the Back uses Rust !
 
 ## Front

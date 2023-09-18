@@ -7,7 +7,7 @@ use crate::database::{model::User, UserData};
 use actix_multipart::{Field, Multipart};
 use actix_web::{
     web::{self, Buf},
-    HttpMessage, HttpRequest, HttpResponse, Responder,
+    Error, Result, HttpMessage, HttpRequest, HttpResponse, error::{ErrorInternalServerError, ErrorUnauthorized},
 };
 use futures_util::{StreamExt, TryStreamExt};
 
@@ -59,26 +59,23 @@ pub async fn upload(
     data: web::Data<UserData>,
     mut payload: Multipart,
     req: HttpRequest,
-) -> impl Responder {
+)  -> Result<HttpResponse, Error> {
     if let Some(_) = req.extensions().get::<User>() {
         let mut last_path: Option<String> = None;
         while let Ok(Some(field)) = payload.try_next().await {
-            if field.name() == "path" {
-                match get_path(field).await {
-                    Ok(str) => last_path = Some(str),
-                    Err(_) => return HttpResponse::InternalServerError().finish(),
-                };
-            } else if field.name() == "file" {
-                if let Some(path) = &last_path {
-                    if get_file(&data, field, path).await.is_err() {
-                        return HttpResponse::InternalServerError().finish();
-                    };
-                } else {
-                    return HttpResponse::InternalServerError().finish();
-                }
+            match field.name() {
+                "path" => last_path = Some(get_path(field).await?),
+                "file" => {
+                    if let Some(path) = &last_path {
+                        get_file(&data, field, path).await?;
+                    } else {
+                        return Err(ErrorInternalServerError("path field must be selected before file upload"));
+                    }
+                },
+                _ => return Err(ErrorInternalServerError("unreconnized field name, try 'file' or 'path'")),
             }
         }
-        return HttpResponse::Created().finish();
+        return Ok(HttpResponse::Created().finish());
     }
-    HttpResponse::Unauthorized().finish()
+    Err(ErrorUnauthorized(""))
 }

@@ -43,19 +43,15 @@ export default function Window(props: Props) {
   }
 
   return (
-    <AnimatePresence>
-      {isOpen &&
-        <motion.div
-          className={'appBackground windowAnimation'}
-          initial={variants.closed}
-          animate={variants.open}
-          exit={variants.closed}
-        >
-          <div className='windowInnerDiv'>
-            {props.children}
-          </div>
-        </motion.div>
-      }
-    </AnimatePresence>
+    <motion.div
+      className={'appBackground windowAnimation'}
+      initial={variants.closed}
+      animate={variants.open}
+      exit={variants.closed}
+    >
+      <div className='windowInnerDiv'>
+        {props.children}
+      </div>
+    </motion.div>
   )
 }

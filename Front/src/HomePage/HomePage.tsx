@@ -37,46 +37,42 @@ export default function HomePage(props: Props) {
   // }, [])
 
   return (
-    <AnimatePresence>
-      {isOpen && props.isLoggedIn &&
-        <>
-          <Banner text="OSCloud" onClick={() => {
-            props.setIsLoggedIn(false);
-          }} />
-          <div className="centerContent">
-            <motion.div
-              className={"widgetAera"}
-              initial={{
-                opacity: isMobile ? 1 : 0,
-                paddingTop: isMobile ? "100vh" : "0vh",
-                transform: isMobile ? "" : "perspective(500px) rotateX(8deg) rotateY(8deg) scale(1.05) rotate(-1deg)",
-              }}
-              animate={{
-                opacity: 1,
-                transform: isMobile ? "" : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.0) rotate(0deg)",
-                paddingTop: "0vh",
-                transition: {
-                  duration: timeScale * (isMobile ? 0.5 : 1),
-                  delay: timeScale * 0.25,
-                  ease: easeOutCirc
-                }
-              }}
-              exit={{
-                opacity: isMobile ? 1 : 0,
-                transform: isMobile ? "" : "perspective(500px) rotateX(-20deg) rotateY(-20deg) scale(0.7) rotate(1deg)",
-                paddingTop: isMobile ? "100vh" : "0vh",
-                transition: {
-                  duration: timeScale * (isMobile ? 0.5 : 1),
-                  ease: "easeIn"
-                }
-              }}
-            >
-              {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
-              {isMobile === true ? <MobileAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
-            </motion.div>
-          </div>
-        </>
-      }
-    </AnimatePresence>
+    <>
+      <Banner text="OSCloud" onClick={() => {
+        props.setIsLoggedIn(false);
+      }} />
+      <div className="centerContent">
+        <motion.div
+          className={"widgetAera"}
+          initial={{
+            opacity: isMobile ? 1 : 0,
+            paddingTop: isMobile ? "100vh" : "0vh",
+            transform: isMobile ? "" : "perspective(500px) rotateX(8deg) rotateY(8deg) scale(1.05) rotate(-1deg)",
+          }}
+          animate={{
+            opacity: 1,
+            transform: isMobile ? "" : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.0) rotate(0deg)",
+            paddingTop: "0vh",
+            transition: {
+              duration: timeScale * (isMobile ? 0.5 : 1),
+              delay: timeScale * 0.25,
+              ease: easeOutCirc
+            }
+          }}
+          exit={{
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "" : "perspective(500px) rotateX(-20deg) rotateY(-20deg) scale(0.7) rotate(1deg)",
+            paddingTop: isMobile ? "100vh" : "0vh",
+            transition: {
+              duration: timeScale * (isMobile ? 0.5 : 1),
+              ease: "easeIn"
+            }
+          }}
+        >
+          {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
+          {isMobile === true ? <MobileAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
+        </motion.div>
+      </div>
+    </>
   )
 }

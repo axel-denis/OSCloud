@@ -8,6 +8,8 @@ import { timeScale } from './consts';
 // import FilesApp from './FilesApp/FilesApp';
 const FilesApp = lazy(() => import('./FilesApp/FilesApp'))
 import LoadingOverlay from './LoadingOverlay/LoadingOverlay';
+import { AnimatePresence } from 'framer-motion';
+import CustomRouter from './CustomRouter/CustomRouter';
 
 export const MobileDevice = React.createContext<boolean>(false);
 
@@ -37,9 +39,13 @@ export default function App() {
     <MobileDevice.Provider value={isMobile}>
       <div className="App">
         <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        <HomePage appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <PhotosApp appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-        <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+        <CustomRouter openedApps={urlsHandler}>
+          <HomePage key={"Home"} appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+          <PhotosApp key={"Photos"} appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+          <Suspense key={"Files"} fallback={<LoadingOverlay />}>
+            <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+          </Suspense>
+        </CustomRouter>
       </div>
     </MobileDevice.Provider>
   );

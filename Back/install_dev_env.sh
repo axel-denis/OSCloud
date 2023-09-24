@@ -33,6 +33,6 @@ printf "[
 ]" > database/users.json
 
 printf "ACCESS_TOKEN_SECRET=$(uuidgen)" > ".env"
-printf 'DATABASE_URL="postgres://root:password@localhost:5432/oscloud-users' > ".env"
+printf '\nDATABASE_URL="postgres://root:password@localhost:5432/oscloud-users"' >> ".env"
 echo "installed. Your actual access token secret is an uuid. \
 You can change it to your own if needed"

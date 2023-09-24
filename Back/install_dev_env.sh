@@ -12,6 +12,7 @@ if [ "$yesorno" = y ]; then
   sudo apt-get install libpq-dev
   pip3 install -r requirements.txt
   pip3 install -r locust/requirements.txt
+  sudo apt-get install uuid-runtime
   # sudo apt-get install libpq-dev
 fi
 
@@ -32,6 +33,6 @@ printf "[
 ]" > database/users.json
 
 printf "ACCESS_TOKEN_SECRET=$(uuidgen)" > ".env"
-printf "DATABASE_URL="postgres://root:password@localhost:5432/oscloud-users" > ".env"
+printf 'DATABASE_URL="postgres://root:password@localhost:5432/oscloud-users' > ".env"
 echo "installed. Your actual access token secret is an uuid. \
 You can change it to your own if needed"

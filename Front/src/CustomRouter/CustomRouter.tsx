@@ -13,6 +13,7 @@ type Child = string | number | boolean
 export default function CustomRouter(props: Props) {
   let render: Child[] = [];
 
+  // NOTE - maybe set the window element here instead of in the app
   React.Children.forEach(props.children, child => {
     if (React.isValidElement(child) && child.props) {
       if (child.key === props.openedApps.app) {

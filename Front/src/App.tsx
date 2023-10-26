@@ -1,14 +1,10 @@
-import React, { useReducer, lazy, Suspense } from 'react';
+import React from 'react';
 import './App.css';
 import LoginPage from './LoginPage/LoginPage';
 import HomePage from './HomePage/HomePage';
 import PhotosApp from './PhotosApp/PhotosApp';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
-import { timeScale } from './consts';
-// import FilesApp from './FilesApp/FilesApp';
-const FilesApp = lazy(() => import('./FilesApp/FilesApp'))
-import LoadingOverlay from './LoadingOverlay/LoadingOverlay';
-import { AnimatePresence } from 'framer-motion';
+import FilesApp from './FilesApp/FilesApp';
 import CustomRouter from './CustomRouter/CustomRouter';
 
 export const MobileDevice = React.createContext<boolean>(false);
@@ -42,9 +38,7 @@ export default function App() {
         <CustomRouter openedApps={urlsHandler}>
           <HomePage key={"Home"} appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
           <PhotosApp key={"Photos"} appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-          <Suspense key={"Files"} fallback={<LoadingOverlay />}>
-            <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-          </Suspense>
+          <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
         </CustomRouter>
       </div>
     </MobileDevice.Provider>

@@ -6,18 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MobileDevice } from "../App";
 
 type Props = {
-  appName: string;
-  urlsHandler: UrlInfo;
   children: ReactNode;
 }
 
 export default function Window(props: Props) {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const isMobile = React.useContext(MobileDevice);
-
-  React.useEffect(() => {
-    setIsOpen(props.urlsHandler.app === props.appName);
-  }, [props.urlsHandler]);
 
   const variants = {
     open: {

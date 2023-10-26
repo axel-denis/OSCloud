@@ -38,7 +38,7 @@ export default function App() {
         <CustomRouter openedApps={urlsHandler}>
           <HomePage key={"Home"} appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
           <PhotosApp key={"Photos"} appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
-          <FilesApp appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+          <FilesApp key={"Files"} appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
         </CustomRouter>
       </div>
     </MobileDevice.Provider>

@@ -119,10 +119,7 @@ export default function FilesApp(props: Props) {
   const [sliderValue, setSliderValue] = React.useState(177); //FIXME - just for testing
 
   return (
-    <Window
-      appName={props.appName}
-      urlsHandler={props.urlsHandler}
-    >
+    <Window>
       <Banner
         text="OSCloud:Files"
         onClick={() => {

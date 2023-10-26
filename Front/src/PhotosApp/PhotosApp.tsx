@@ -15,10 +15,7 @@ interface Props {
 
 export default function PhotosApp(props: Props) {
   return (
-    <Window
-      appName={props.appName}
-      urlsHandler={props.urlsHandler}
-    >
+    <Window>
       <Banner text="OSCloud:Photos" onClick={() => {
         transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Home");
       }} />

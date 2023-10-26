@@ -23,8 +23,8 @@ export default function DragDropFile() {
     e.stopPropagation();
     console.log("handle drop");
     setDragActive(false);
-    setDropActive(true);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setDropActive(true);
       console.log(e.dataTransfer.files);
     } else {
       console.log(e.dataTransfer);

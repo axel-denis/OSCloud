@@ -8,6 +8,7 @@ import { MobileDevice } from '../App';
 import { AnimatePresence, motion } from 'framer-motion';
 import { backIp, timeScale } from '../consts';
 import SelectableFile from './SelectableFile';
+import DragDropFile from './DragDropFile';
 
 
 interface Props {
@@ -120,6 +121,7 @@ export default function FilesApp(props: Props) {
 
   return (
     <Window>
+      <DragDropFile/>
       <Banner
         text="OSCloud:Files"
         onClick={() => {

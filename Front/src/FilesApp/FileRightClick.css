@@ -1,0 +1,7 @@
+.rightClickLayoutDiv {
+  margin: 1vw;
+  margin-top: calc(65px + 1vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}

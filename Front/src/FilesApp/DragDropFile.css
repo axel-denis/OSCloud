@@ -1,0 +1,10 @@
+.dragAndDrop {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  transition: all .2s;
+}
+
+.dragActive {
+  background-color: cornflowerblue;
+}

@@ -4,7 +4,7 @@
 // mod database;
 // mod jwt_manager;
 // mod network;
-// mod services;
+mod services;
 
 // use database::UserData;
 // use dotenv::dotenv;
@@ -21,8 +21,10 @@
 // }
 
 use std::sync::Arc;
+mod jwt_manager;
 
-use axum::{routing::delete, routing::get, routing::post, Router};
+use axum::{routing::get, routing::post, Router};
+use services::login::login ;
 use tokio;
 
 mod cli;
@@ -30,7 +32,7 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
-struct AppState {
+pub struct AppState {
     userdata: UserData,
 }
 
@@ -49,10 +51,13 @@ async fn main() {
     cli::start_cli(&shared_state.userdata);
 
     let app = Router::new()
-        .route("/login", post(|| async { "Hello, World!" }))
-        .route("/user", post(|| async { "Hello, World!" }))
-        .route("/user", delete(|| async { "Hello, World!" }))
-        .route("/user", get(|| async { "Hello, World!" }))
+        .route("/login", post(login))
+        .route(
+            "/user",
+            post(|| async { "Hello, World!" })
+                .delete(|| async { "Hello, World!" })
+                .get(|| async { "Hello, World!" }),
+        )
         .route("/save", post(|| async { "Hello, World!" }))
         .route("/import", post(|| async { "Hello, World!" }))
         .route("/file", post(|| async { "Hello, World!" }))

@@ -73,7 +73,7 @@ impl UserData {
     pub fn create_user(&self, user_name: &str, user_password: &str, role: Role) -> Result<User> {
         let mut pool = self.pool.get()?;
         if !users
-            .filter(name.eq(user_name.clone()))
+            .filter(name.eq(user_name))
             .get_results::<User>(&mut pool)?
             .is_empty()
         {

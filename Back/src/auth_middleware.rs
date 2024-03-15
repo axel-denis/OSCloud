@@ -84,11 +84,7 @@ use std::sync::Arc;
 use crate::{jwt_manager, AppState};
 
 use axum::{
-    extract::Request,
-    extract::State,
-    http::StatusCode,
-    middleware::Next,
-    response::Response,
+    extract::Request, extract::State, http::StatusCode, middleware::Next, response::Response,
 };
 
 // check if authenticated and add the local_user to the request
@@ -122,5 +118,4 @@ pub async fn auth_middleware(
         };
     }
     Err(StatusCode::UNAUTHORIZED)
-
 }

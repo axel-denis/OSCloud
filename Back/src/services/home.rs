@@ -1,12 +1,8 @@
-use crate::database::model::{Role, User};
+use crate::database::model::User;
 // use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
-use crate::AppState;
-use axum::extract::{Json, Query, State};
-use axum::http::StatusCode;
+use axum::extract::Json;
 use axum::response::{IntoResponse, Response};
 use axum::Extension;
-use serde::Deserialize;
-use std::sync::Arc;
 
 // use crate::database::model::User;
 // use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder};
@@ -19,8 +15,6 @@ use std::sync::Arc;
 //     }
 // }
 
-pub async fn home(
-    Extension(local_user): Extension<User>,
-) -> Response {
+pub async fn home(Extension(local_user): Extension<User>) -> Response {
     Json(local_user).into_response()
 }

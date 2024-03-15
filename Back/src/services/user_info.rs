@@ -34,7 +34,6 @@ pub struct UserInfoRequest {
 //     }
 // }
 
-
 pub async fn user_info(
     State(app_state): State<Arc<AppState>>,
     Extension(local_user): Extension<User>,

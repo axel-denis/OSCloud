@@ -4,6 +4,7 @@ use crate::AppState;
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+use axum::Extension;
 use serde::Deserialize;
 use std::sync::Arc;
 
@@ -33,12 +34,11 @@ pub struct UserInfoRequest {
 //     }
 // }
 
-// NOTE - should be checked. Why is there local_user (req) and a json body user object ?
-// Is the json one given to show the actual user ?
+
 pub async fn user_info(
     State(app_state): State<Arc<AppState>>,
+    Extension(local_user): Extension<User>,
     Json(user_info): Json<UserInfoRequest>,
-    local_user: Query<User>,
 ) -> Response {
     match app_state.userdata.get_user_by_name(&user_info.name) {
         None => StatusCode::NOT_FOUND.into_response(),

@@ -25,11 +25,12 @@ mod jwt_manager;
 
 use axum::middleware;
 use axum::{routing::get, routing::post, Router};
+use services::delete::delete_user;
+use services::home::home;
+use services::json::import_from_json;
+use services::json::save_to_json;
 use services::login::login;
 use services::register::register;
-use services::json::save_to_json;
-use services::json::import_from_json;
-use services::home::home;
 use services::user_info::user_info;
 use tokio;
 
@@ -64,7 +65,7 @@ async fn main() {
         .route(
             "/user",
             post(|| async { "Hello, World!" })
-                .delete(|| async { "Hello, World!" })
+                .delete(delete_user)
                 .get(user_info),
         )
         .route("/save", post(save_to_json))
@@ -72,7 +73,10 @@ async fn main() {
         .route("/file", post(|| async { "Hello, World!" }))
         .route("/home", get(home))
         .with_state(shared_state.clone())
-        .route_layer(middleware::from_fn_with_state(shared_state.clone(), auth_middleware::auth_middleware));
+        .route_layer(middleware::from_fn_with_state(
+            shared_state.clone(),
+            auth_middleware::auth_middleware,
+        ));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await

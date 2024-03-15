@@ -27,6 +27,9 @@ use axum::middleware;
 use axum::{routing::get, routing::post, Router};
 use services::login::login;
 use services::register::register;
+use services::json::save_to_json;
+use services::json::import_from_json;
+use services::home::home;
 use services::user_info::user_info;
 use tokio;
 
@@ -64,10 +67,10 @@ async fn main() {
                 .delete(|| async { "Hello, World!" })
                 .get(user_info),
         )
-        .route("/save", post(|| async { "Hello, World!" }))
-        .route("/import", post(|| async { "Hello, World!" }))
+        .route("/save", post(save_to_json))
+        .route("/import", post(import_from_json))
         .route("/file", post(|| async { "Hello, World!" }))
-        .route("/home", get(|| async { "Hello, World!" }))
+        .route("/home", get(home))
         .with_state(shared_state.clone())
         .route_layer(middleware::from_fn_with_state(shared_state.clone(), auth_middleware::auth_middleware));
 

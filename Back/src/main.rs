@@ -1,4 +1,4 @@
-// mod auth_middleware;
+mod auth_middleware;
 // #[cfg(feature = "cli")]
 // mod cli;
 // mod database;
@@ -23,8 +23,11 @@ mod services;
 use std::sync::Arc;
 mod jwt_manager;
 
+use axum::middleware;
 use axum::{routing::get, routing::post, Router};
-use services::login::login ;
+use services::login::login;
+use services::register::register;
+use services::user_info::user_info;
 use tokio;
 
 mod cli;
@@ -50,24 +53,28 @@ async fn main() {
     #[cfg(feature = "cli")]
     cli::start_cli(&shared_state.userdata);
 
-    let app = Router::new()
+    let all_router = Router::new()
+        .route("/login", post(login))
+        .with_state(shared_state.clone());
+    let registered_router = Router::new()
         .route("/login", post(login))
         .route(
             "/user",
             post(|| async { "Hello, World!" })
                 .delete(|| async { "Hello, World!" })
-                .get(|| async { "Hello, World!" }),
+                .get(user_info),
         )
         .route("/save", post(|| async { "Hello, World!" }))
         .route("/import", post(|| async { "Hello, World!" }))
         .route("/file", post(|| async { "Hello, World!" }))
         .route("/home", get(|| async { "Hello, World!" }))
-        .with_state(shared_state);
+        .with_state(shared_state.clone())
+        .route_layer(middleware::from_fn_with_state(shared_state.clone(), auth_middleware::auth_middleware));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await
         .expect("failed to launch server");
-    axum::serve(listener, app)
+    axum::serve(listener, all_router.merge(registered_router))
         .await
         .expect("failed to launch server");
 }

@@ -48,6 +48,7 @@ pub struct NewUser {
 #[derive(Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
 #[diesel(table_name = crate::database::schema::users)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct User {
     #[serde(skip_serializing)]
     pub id: i64,

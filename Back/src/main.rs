@@ -48,15 +48,9 @@ pub struct AppState {
 async fn main() {
     dotenv().ok();
 
-    std::env::set_var("RUST_LOG", "actix_web=debug");
-
     let shared_state = Arc::new(AppState {
         userdata: UserData::new(),
     });
-    let one_state = AppState {
-        userdata: UserData::new(),
-    };
-    // let userdata = UserData::new();
 
     #[cfg(feature = "cli")]
     cli::start_cli(&shared_state.userdata);

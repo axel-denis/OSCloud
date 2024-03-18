@@ -30,7 +30,7 @@ use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
-use services::register::register;
+//use services::register::register;
 use services::user_info::user_info;
 use tokio;
 
@@ -39,6 +39,7 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
+#[derive(Clone)]
 pub struct AppState {
     userdata: UserData,
 }
@@ -52,6 +53,9 @@ async fn main() {
     let shared_state = Arc::new(AppState {
         userdata: UserData::new(),
     });
+    let one_state = AppState {
+        userdata: UserData::new(),
+    };
     // let userdata = UserData::new();
 
     #[cfg(feature = "cli")]
@@ -61,7 +65,6 @@ async fn main() {
         .route("/login", post(login))
         .with_state(shared_state.clone());
     let registered_router = Router::new()
-        .route("/login", post(login))
         .route(
             "/user",
             post(|| async { "Hello, World!" })
@@ -72,11 +75,11 @@ async fn main() {
         .route("/import", post(import_from_json))
         .route("/file", post(|| async { "Hello, World!" }))
         .route("/home", get(home))
-        .with_state(shared_state.clone())
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::auth_middleware,
-        ));
+        ))
+        .with_state(shared_state.clone());
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await

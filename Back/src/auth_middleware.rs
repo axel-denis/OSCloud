@@ -84,7 +84,10 @@ use std::sync::Arc;
 use crate::{jwt_manager, AppState};
 
 use axum::{
-    extract::Request, extract::State, http::StatusCode, middleware::Next, response::Response,
+    extract::{Request, State},
+    http::StatusCode,
+    middleware::Next,
+    response::{IntoResponse, Response},
 };
 
 // check if authenticated and add the local_user to the request
@@ -92,30 +95,31 @@ pub async fn auth_middleware(
     State(app_state): State<Arc<AppState>>,
     mut request: Request,
     next: Next,
-) -> Result<Response, StatusCode> {
+) -> Response {
     if let Some(bearer_token) = request
         .headers()
         .get("authorization")
         .and_then(|header| header.to_str().ok())
     {
         let token = bearer_token.trim_start_matches("Bearer ");
-        return match jwt_manager::decode_jwt(token) {
+        match jwt_manager::decode_jwt(token) {
             Ok(id) => {
                 if let Some(local_user) = app_state.userdata.get_user_by_id(id) {
                     request.extensions_mut().insert(local_user);
-                    Ok(next.run(request).await)
+                    next.run(request).await
                 } else {
-                    Err(StatusCode::UNAUTHORIZED)
+                    StatusCode::UNAUTHORIZED.into_response()
                 }
             }
             Err(_) => {
-                Err(StatusCode::UNAUTHORIZED)
+                StatusCode::UNAUTHORIZED.into_response()
                 // let response = HttpResponse::Unauthorized().finish().map_into_right_body();
                 // let (request, _pl) = req.into_parts();
 
                 // return Box::pin(async move { Ok(ServiceResponse::new(request, response)) });
             }
-        };
+        }
+    } else {
+        StatusCode::UNAUTHORIZED.into_response()
     }
-    Err(StatusCode::UNAUTHORIZED)
 }

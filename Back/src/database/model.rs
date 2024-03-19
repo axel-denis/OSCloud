@@ -52,7 +52,7 @@ pub struct NewUser {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct User {
     #[serde(skip_serializing)]
-    pub id: i64,
+    pub id: i32,
     pub name: String,
     pub password: String,
     #[serde(rename = "type")]

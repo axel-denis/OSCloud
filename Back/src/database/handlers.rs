@@ -94,7 +94,7 @@ impl UserData {
         Ok(self.get_user_by_name(user_name).ok_or("Not Found")?)
     }
 
-    pub fn get_user_by_id(&self, user_id: i64) -> Option<User> {
+    pub fn get_user_by_id(&self, user_id: i32) -> Option<User> {
         users
             .find(user_id)
             .get_result::<User>(&mut self.pool.get().ok()?)

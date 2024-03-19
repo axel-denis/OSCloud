@@ -1,27 +1,8 @@
 #![warn(unused_extern_crates)]
 
 mod auth_middleware;
-// #[cfg(feature = "cli")]
-// mod cli;
-// mod database;
-// mod jwt_manager;
-// mod network;
 mod services;
-
-// use database::UserData;
-// use dotenv::dotenv;
-
-// fn main() {
-//     dotenv().ok();
-
-//     std::env::set_var("RUST_LOG", "actix_web=debug");
-//     let userdata = UserData::new();
-
-//     #[cfg(feature = "cli")]
-//     cli::start_cli(&userdata);
-//     network::launch_actix(userdata).expect("actix launch crashed");
-// }
-
+mod utils;
 use std::sync::Arc;
 mod jwt_manager;
 
@@ -34,7 +15,6 @@ use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
-//use services::register::register;
 use services::user_info::user_info;
 
 mod cli;

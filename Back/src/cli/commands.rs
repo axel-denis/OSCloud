@@ -34,6 +34,8 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("create_user".to_owned(), crate::cli::users::create_user);
     map.insert("du".to_owned(), crate::cli::users::delete_user);
     map.insert("delete_user".to_owned(), crate::cli::users::delete_user);
+    map.insert("lf".to_owned(), crate::cli::files::list_files);
+    map.insert("list_files".to_owned(), crate::cli::files::list_files);
     map
 }
 

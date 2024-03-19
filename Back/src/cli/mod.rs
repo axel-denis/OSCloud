@@ -2,6 +2,7 @@ mod commands;
 mod formating;
 mod help;
 mod users;
+mod files;
 
 use rustyline::error::ReadlineError;
 use rustyline::DefaultEditor;

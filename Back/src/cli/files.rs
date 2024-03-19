@@ -16,11 +16,17 @@ pub(crate) fn list_files(args: Vec<&str>, _: &UserData) -> CmdStatus {
             Ok(files) => files,
             Err(e) => {
                 println!("Error while listing files : {}", err_str(e));
-                return CmdStatus::Ok
+                return CmdStatus::Ok;
             }
         };
         for file in files {
-            println!("{}:\t {}", file.file_type, file.name.into_string().unwrap_or("### non unicode data ###".to_string()));
+            println!(
+                "{}:\t {}",
+                file.file_type,
+                file.name
+                    .into_string()
+                    .unwrap_or("### non unicode data ###".to_string())
+            );
         }
         CmdStatus::Ok
     }

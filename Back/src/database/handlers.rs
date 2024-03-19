@@ -12,11 +12,18 @@ use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 
+use crate::database::schema::user_mounts_points;
+
+use super::model::UserMountPoint;
+// use crate::database::schema::user_mounts_points::dsl::user_mounts_points;
+
 impl UserData {
     pub fn new() -> Self {
         dotenv().ok();
         let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         let manager = ConnectionManager::<PgConnection>::new(database_url);
+        let other_manager = PgConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url));
         let pool: PostgresPool = r2d2::Pool::builder()
             .build(manager)
             .expect("Failed to create pool.");
@@ -27,7 +34,7 @@ impl UserData {
         let mut path = dirs.config_dir().to_path_buf();
         path.push("./database/users.json");
 
-        let data = UserData { pool, dirs };
+        let data = UserData { manager: other_manager, pool, dirs };
 
         if path.exists() {
             if let Some(error) = data.import_default().err() {
@@ -106,5 +113,11 @@ impl UserData {
             .filter(name.eq(user_name))
             .first::<User>(&mut self.pool.get().ok()?)
             .ok()
+    }
+
+    pub fn get_user_mounts_points(&self, user: User) -> Option<Vec<String>> {
+        UserMountPoint::belonging_to(&user)
+    .select(UserMountPoint::as_select())
+    .load(&mut self.manager)?.map(|ump| ump.path)
     }
 }

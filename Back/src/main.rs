@@ -41,7 +41,7 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
-use tower_http::cors::{CorsLayer, Any};
+use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Clone)]
 pub struct AppState {
@@ -51,6 +51,8 @@ pub struct AppState {
 #[tokio::main]
 async fn main() {
     dotenv().ok();
+    std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set.");
 
     let shared_state = Arc::new(AppState {
         userdata: UserData::new(),
@@ -61,11 +63,11 @@ async fn main() {
 
     // NOTE - patched to allow dev. Need to be looked into further
     let cors = CorsLayer::new()
-    // allow `GET` and `POST` when accessing the resource
-    .allow_methods(vec![Method::GET, Method::POST])
-    // allow requests from any origin
-    .allow_origin(Any)
-    .allow_headers([CONTENT_TYPE]);
+        // allow `GET` and `POST` when accessing the resource
+        .allow_methods(vec![Method::GET, Method::POST])
+        // allow requests from any origin
+        .allow_origin(Any)
+        .allow_headers([CONTENT_TYPE]);
 
     let all_router = Router::new()
         .route("/login", post(login))

@@ -1,7 +1,7 @@
 **/!\\ Add sudo if process don't work, possible fix /!\\**
 
 - init diesel
-```
+```bash
 diesel migration run
 ```
 - start it:

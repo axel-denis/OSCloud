@@ -23,6 +23,8 @@ mod services;
 use std::sync::Arc;
 mod jwt_manager;
 
+use axum::http::header::CONTENT_TYPE;
+use axum::http::Method;
 use axum::middleware;
 use axum::{routing::get, routing::post, Router};
 use services::delete::delete_user;
@@ -39,6 +41,8 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
+use tower_http::cors::{CorsLayer, Any};
+
 #[derive(Clone)]
 pub struct AppState {
     userdata: UserData,
@@ -54,6 +58,14 @@ async fn main() {
 
     #[cfg(feature = "cli")]
     cli::start_cli(&shared_state.userdata);
+
+    // NOTE - patched to allow dev. Need to be looked into further
+    let cors = CorsLayer::new()
+    // allow `GET` and `POST` when accessing the resource
+    .allow_methods(vec![Method::GET, Method::POST])
+    // allow requests from any origin
+    .allow_origin(Any)
+    .allow_headers([CONTENT_TYPE]);
 
     let all_router = Router::new()
         .route("/login", post(login))
@@ -78,7 +90,7 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await
         .expect("failed to launch server");
-    axum::serve(listener, all_router.merge(registered_router))
+    axum::serve(listener, all_router.merge(registered_router).layer(cors))
         .await
         .expect("failed to launch server");
 }

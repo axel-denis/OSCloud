@@ -1,4 +1,5 @@
-use diesel::{AsChangeset, Insertable, Queryable};
+use diesel::associations::{Associations, Identifiable};
+use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 use std::str::FromStr;
@@ -56,4 +57,15 @@ pub struct User {
     pub password: String,
     #[serde(rename = "type")]
     pub user_role: Role,
+}
+
+#[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[diesel(belongs_to(User))]
+#[diesel(table_name = crate::database::schema::user_mounts_points)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct UserMountPoint {
+    pub id: i32,
+    pub user_id: i32,
+    pub path: String,
 }

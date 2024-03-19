@@ -1,7 +1,7 @@
 use crate::database::model::{Role, User};
 // use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use crate::AppState;
-use axum::extract::{Json, Query, State};
+use axum::extract::{Json, State};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Extension;

@@ -5,7 +5,7 @@
 // use actix_web::{web, HttpResponse, Responder};
 // use serde::{Deserialize, Serialize};
 
-use crate::database::{model::Role, UserData};
+use crate::database::model::Role;
 use crate::{jwt_manager, AppState};
 use axum::extract::{Json, State};
 use axum::http::StatusCode;

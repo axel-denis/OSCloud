@@ -36,7 +36,6 @@ use services::json::save_to_json;
 use services::login::login;
 //use services::register::register;
 use services::user_info::user_info;
-use tokio;
 
 mod cli;
 mod database;

@@ -1,3 +1,5 @@
+#![warn(unused_extern_crates)]
+
 mod auth_middleware;
 // #[cfg(feature = "cli")]
 // mod cli;

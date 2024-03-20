@@ -1,8 +1,9 @@
 use crate::database::UserData;
+use super::model::User;
 
 impl UserData {
     #[cfg(feature = "cli")]
-    pub fn pretty_format(&self) -> crate::database::Result<String> {
+    pub fn users_pretty_format(&self) -> crate::database::Result<String> {
         use tabled::settings::Style;
         use tabled::Table;
 
@@ -14,5 +15,21 @@ impl UserData {
 
         table.with(Style::rounded());
         Ok(table.to_string())
+    }
+
+    #[cfg(feature = "cli")]
+    pub fn users_mount_points_pretty_format(&self, user_name: &str)
+    -> Option<String> {
+
+        use tabled::settings::Style;
+        use tabled::Table;
+
+
+        let user = self.get_user_by_name(user_name)?;
+        let paths = self.get_user_mounts_points(&user)?;
+        let mut table = Table::new(paths);
+
+        table.with(Style::rounded());
+        Some(table.to_string())
     }
 }

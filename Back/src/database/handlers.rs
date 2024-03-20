@@ -12,6 +12,8 @@ use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 
+use super::model::UserMountPoint;
+
 impl UserData {
     pub fn new() -> Self {
         dotenv().ok();
@@ -106,5 +108,17 @@ impl UserData {
             .filter(name.eq(user_name))
             .first::<User>(&mut self.pool.get().ok()?)
             .ok()
+    }
+
+    pub fn get_user_mounts_points(&self, user: User) -> Option<Vec<String>> {
+        let pool = &mut self.pool.get().ok()?;
+        let test: Vec<String> = UserMountPoint::belonging_to(&user)
+            .select(UserMountPoint::as_select())
+            .load::<UserMountPoint>(pool)
+            .ok()?
+            .iter()
+            .map(|ump| ump.path.clone())
+            .collect();
+        Some(test)
     }
 }

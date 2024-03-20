@@ -68,12 +68,10 @@ pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdSta
         );
         return CmdStatus::Ok;
     }
-    for i in 1..args.len() {
-        match db.users_mount_points_pretty_format(args[i]) {
+        match db.users_mount_points_pretty_format(args[1..].to_vec()) {
             Some(str) => println!("{str}"),
-            None => println!("{}", err_str(format!("User {} not found", args[i]))),
+            None => println!("{}", err_str(format!("User {} not found", args[0]))), // FIXME
         }
-    }
     CmdStatus::Ok
 }
 
@@ -89,9 +87,12 @@ pub(crate) fn add_user_mount_point(args: Vec<&str>, db: &UserData) -> CmdStatus 
 
     let user = match db.get_user_by_name(args[1]) {
         Some(user) => user,
-        None => return CmdStatus::Ok,
+        None => {
+            println!("User not found.");
+            return CmdStatus::Ok
+        },
     };
-    match db.add_user_mount_point(&user, args[1].to_string()) {
+    match db.add_user_mount_point(&user, args[2].to_string()) {
         Ok(_) => println!("Mount point added!"),
         Err(err) => println!("{}", err_str(err)),
     };

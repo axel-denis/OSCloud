@@ -1,5 +1,4 @@
 use crate::database::UserData;
-use super::model::User;
 
 impl UserData {
     #[cfg(feature = "cli")]
@@ -18,18 +17,32 @@ impl UserData {
     }
 
     #[cfg(feature = "cli")]
-    pub fn users_mount_points_pretty_format(&self, user_name: &str)
-    -> Option<String> {
-
+    pub fn users_mount_points_pretty_format(&self, usernames: Vec<&str>) -> Option<String> {
         use tabled::settings::Style;
         use tabled::Table;
 
-
-        let user = self.get_user_by_name(user_name)?;
-        let paths = self.get_user_mounts_points(&user)?;
+        #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+        struct Element {
+            username: String,
+            path: String,
+        }
+        let mut paths: Vec<Element> = Vec::new();
+        for i in 1..usernames.len() {
+            let user = self.get_user_by_name(usernames[i])?;
+            match self.get_user_mounts_points(&user)?.iter().map(|pth| {
+                paths.push(Element {
+                    username: usernames[i].to_string(),
+                    path: pth.to_string(),
+                })
+            }) {
+                Some(_) => (),
+                _ => {println!("User not found")}
+            };
+        }
         let mut table = Table::new(paths);
 
         table.with(Style::rounded());
         Some(table.to_string())
     }
 }
+// TODO - faire la boucle des users dedans pour faire un beau tableau

@@ -12,7 +12,7 @@ use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 
-use super::model::UserMountPoint;
+use super::model::{NewUserMountPoint, UserMountPoint};
 
 impl UserData {
     pub fn new() -> Self {
@@ -110,7 +110,24 @@ impl UserData {
             .ok()
     }
 
-    pub fn get_user_mounts_points(&self, user: User) -> Option<Vec<String>> {
+    // pub fn get_user_mount_point_by_id(&self, id: i32) -> Option<UserMountPoint> {
+    //     crate::database::schema::user_mounts_points::dsl::user_mounts_points
+    //         .find(id)
+    //         .get_result::<UserMountPoint>(&mut self.pool.get().ok()?)
+    //         .ok()
+    // }
+
+    pub fn add_user_mount_point(&self, user: &User, path: String) -> Result<UserMountPoint> {
+        let mut pool = self.pool.get()?;
+        Ok(diesel::insert_into(crate::database::schema::user_mounts_points::dsl::user_mounts_points)
+            .values(&NewUserMountPoint {
+                user_id: user.id,
+                path: path,
+            })
+            .get_result::<UserMountPoint>(&mut pool)?)
+    }
+
+    pub fn get_user_mounts_points(&self, user: &User) -> Option<Vec<String>> {
         let pool = &mut self.pool.get().ok()?;
         let test: Vec<String> = UserMountPoint::belonging_to(&user)
             .select(UserMountPoint::as_select())

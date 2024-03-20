@@ -59,6 +59,12 @@ pub struct User {
     pub user_role: Role,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
+#[diesel(table_name = crate::database::schema::user_mounts_points)]
+pub struct NewUserMountPoint {
+    pub user_id: i32,
+    pub path: String,
+}
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
 #[diesel(belongs_to(User, foreign_key = user_id))]

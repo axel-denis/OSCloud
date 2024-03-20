@@ -14,7 +14,6 @@ pub type PostgresPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Clone)]
 pub struct UserData {
-    manager: PgConnection,
     pool: PostgresPool,
     pub(crate) dirs: ProjectDirs,
 }

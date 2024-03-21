@@ -11,6 +11,7 @@ use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
+use crate::utils::files::file_info::check_path_is_folder;
 
 use super::model::{NewUserMountPoint, UserMountPoint};
 
@@ -118,6 +119,9 @@ impl UserData {
     // }
 
     pub fn add_user_mount_point(&self, user: &User, path: String) -> Result<UserMountPoint> {
+        if !check_path_is_folder(&path) {
+            return Err("Mount point need to be a valid folder".into());
+        }
         let mut pool = self.pool.get()?;
         Ok(diesel::insert_into(crate::database::schema::user_mounts_points::dsl::user_mounts_points)
             .values(&NewUserMountPoint {

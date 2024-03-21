@@ -44,4 +44,3 @@ impl UserData {
         Some(table.to_string())
     }
 }
-// TODO - faire la boucle des users dedans pour faire un beau tableau

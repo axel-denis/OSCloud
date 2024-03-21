@@ -1,12 +1,13 @@
 use std::sync::Arc;
 
-use crate::{jwt_manager, AppState};
+use crate::{database::model::User, jwt_manager, AppState};
+use crate::database::model::Role::Admin;
 
 use axum::{
     extract::{Request, State},
     http::StatusCode,
     middleware::Next,
-    response::{IntoResponse, Response},
+    response::{IntoResponse, Response}, Extension,
 };
 
 // check if authenticated and add the local_user to the request
@@ -40,5 +41,18 @@ pub async fn auth_middleware(
         }
     } else {
         StatusCode::UNAUTHORIZED.into_response()
+    }
+}
+
+pub async fn admin_middleware(
+    State(_): State<Arc<AppState>>,
+    Extension(local_user): Extension<User>,
+    request: Request,
+    next: Next,
+) -> Response {
+    if local_user.user_role != Admin {
+        StatusCode::UNAUTHORIZED.into_response()
+    } else {
+        next.run(request).await
     }
 }

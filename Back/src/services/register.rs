@@ -8,8 +8,8 @@ use std::sync::Arc;
 
 #[derive(Debug, Deserialize)]
 pub struct RegisterRequest {
-    name: String,
-    password: String,
+    pub name: String,
+    pub password: String,
 }
 
 #[derive(Serialize)]
@@ -18,7 +18,7 @@ pub struct RegisterResponse {
     pub token: String,
 }
 
-enum RegisterOutcome {
+pub enum RegisterOutcome {
     Connected(String),
     AlreadyExist,
     Error,

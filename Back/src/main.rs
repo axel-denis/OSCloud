@@ -77,7 +77,7 @@ async fn main() {
         ))
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
-            auth_middleware::auth_middleware,
+            auth_middleware::admin_middleware,
         ))
         .with_state(shared_state.clone());
 

@@ -23,21 +23,20 @@ impl UserData {
 
         #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
         struct Element {
-            username: String,
+            user: String,
             path: String,
         }
         let mut paths: Vec<Element> = Vec::new();
         for i in 1..usernames.len() {
             let user = self.get_user_by_name(usernames[i])?;
-            match self.get_user_mounts_points(&user)?.iter().map(|pth| {
-                paths.push(Element {
-                    username: usernames[i].to_string(),
+            let mut paths_to_add: Vec<Element> = self
+                .get_user_mounts_points(&user)?
+                .iter()
+                .map(|pth| Element {
+                    user: usernames[i].to_string(),
                     path: pth.to_string(),
-                })
-            }) {
-                Some(_) => (),
-                _ => {println!("User not found")}
-            };
+                }).collect();
+            paths.append(&mut paths_to_add);
         }
         let mut table = Table::new(paths);
 

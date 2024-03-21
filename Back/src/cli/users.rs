@@ -68,7 +68,7 @@ pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdSta
         );
         return CmdStatus::Ok;
     }
-        match db.users_mount_points_pretty_format(args[1..].to_vec()) {
+        match db.users_mount_points_pretty_format(args[0..].to_vec()) {
             Some(str) => println!("{str}"),
             None => println!("{}", err_str(format!("User {} not found", args[0]))), // FIXME
         }

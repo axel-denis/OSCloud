@@ -92,7 +92,7 @@ pub(crate) fn add_user_mount_point(args: Vec<&str>, db: &UserData) -> CmdStatus 
             return CmdStatus::Ok
         },
     };
-    match db.add_user_mount_point(&user, args[2].to_string()) {
+    match db.add_user_mount_point(&user, &args[2].to_string()) {
         Ok(_) => println!("Mount point added!"),
         Err(err) => println!("{}", err_str(err)),
     };

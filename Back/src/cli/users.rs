@@ -35,7 +35,8 @@ pub(crate) fn create_user(args: Vec<&str>, db: &UserData) -> CmdStatus {
         }
     };
 
-    match db.create_user(args[1], args[2], role) {
+    match db.create_user(args[1], args[2], role, true) {
+        // NOTE - users created in cli are enabled by default. Maybe change
         Ok(user) => println!("User {} created!", ok_str(user.name)),
         Err(err) => println!("{}", err_str(err)),
     }
@@ -68,10 +69,10 @@ pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdSta
         );
         return CmdStatus::Ok;
     }
-        match db.users_mount_points_pretty_format(args[0..].to_vec()) {
-            Some(str) => println!("{str}"),
-            None => println!("{}", err_str(format!("One or more user(s) not found"))),
-        }
+    match db.users_mount_points_pretty_format(args[0..].to_vec()) {
+        Some(str) => println!("{str}"),
+        None => println!("{}", err_str(format!("One or more user(s) not found"))),
+    }
     CmdStatus::Ok
 }
 
@@ -89,8 +90,8 @@ pub(crate) fn add_user_mount_point(args: Vec<&str>, db: &UserData) -> CmdStatus 
         Some(user) => user,
         None => {
             println!("User not found.");
-            return CmdStatus::Ok
-        },
+            return CmdStatus::Ok;
+        }
     };
     match db.add_user_mount_point(&user, &args[2].to_string()) {
         Ok(_) => println!("Mount point added!"),

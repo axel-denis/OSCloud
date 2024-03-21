@@ -8,15 +8,13 @@ pub struct DeleteRequest {
 }
 
 use crate::database::model::User;
-use crate::{jwt_manager, AppState};
+use crate::AppState;
 use axum::extract::{Json, State};
 use axum::http::StatusCode;
 use axum::Extension;
+use std::str::FromStr;
 use std::sync::Arc;
 
-use super::register::RegisterOutcome;
-use super::register::RegisterRequest;
-use super::register::RegisterResponse;
 use crate::database::model::Role;
 
 pub async fn delete_user(
@@ -37,39 +35,36 @@ pub async fn delete_user(
     }
 }
 
+#[derive(Debug, Deserialize)]
+pub struct AddUserRequest {
+    pub name: String,
+    pub password: String,
+    pub role: String,
+}
+
 pub async fn add_user(
     State(app_state): State<Arc<AppState>>,
-    Extension(local_user): Extension<User>,
-    Json(register): Json<RegisterRequest>,
+    Extension(_): Extension<User>,
+    Json(register): Json<AddUserRequest>,
 ) -> Response {
-    if local_user.user_role != Admin {
-        StatusCode::UNAUTHORIZED.into_response()
-    } else {
-        let outcome: RegisterOutcome =
-            match app_state
-                .userdata
-                .create_user(&register.name, &register.password, Role::User)
-            {
-                Err(err) => {
-                    if err.is::<std::io::Error>() {
-                        RegisterOutcome::AlreadyExist
-                    } else {
-                        RegisterOutcome::Error
-                    }
-                }
-                Ok(user) => match jwt_manager::encode_jwt(&user) {
-                    Ok(token) => RegisterOutcome::Connected(token),
-                    Err(_) => RegisterOutcome::Error,
-                },
-            };
-        match outcome {
-            RegisterOutcome::Connected(token) => {
-                (StatusCode::OK, axum::Json(RegisterResponse { token })).into_response()
+    match app_state.userdata.create_user(
+        &register.name,
+        &register.password,
+        match Role::from_str(&register.role) {
+            Ok(role) => role,
+            Err(_) => {
+                return (StatusCode::BAD_REQUEST, "Role should be admin or user").into_response()
             }
-            RegisterOutcome::AlreadyExist => {
+        },
+        true,
+    ) {
+        Err(err) => {
+            if err.is::<std::io::Error>() {
                 (StatusCode::CONFLICT, "User already exists").into_response()
+            } else {
+                StatusCode::INTERNAL_SERVER_ERROR.into_response()
             }
-            _ => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
         }
+        Ok(_) => StatusCode::OK.into_response(),
     }
 }

@@ -45,6 +45,7 @@ pub struct NewUser {
     pub password: String,
     #[serde(rename = "type")]
     pub user_role: Role,
+    pub enabled: bool,
 }
 #[derive(Identifiable, Selectable, PartialEq, Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
@@ -57,6 +58,7 @@ pub struct User {
     pub password: String,
     #[serde(rename = "type")]
     pub user_role: Role,
+    pub enabled: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]

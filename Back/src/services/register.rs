@@ -13,12 +13,12 @@ pub struct RegisterRequest {
 }
 
 #[derive(Serialize)]
-pub struct RegisterResponse {
+struct RegisterResponse {
     #[serde(rename = "jwt")]
     pub token: String,
 }
 
-pub enum RegisterOutcome {
+enum RegisterOutcome {
     Connected(String),
     AlreadyExist,
     Error,
@@ -31,7 +31,7 @@ pub async fn register(
     let outcome: RegisterOutcome =
         match app_state
             .userdata
-            .create_user(&register.name, &register.password, Role::User)
+            .create_user(&register.name, &register.password, Role::User, false)
         {
             Err(err) => {
                 if err.is::<std::io::Error>() {

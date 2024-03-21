@@ -23,6 +23,7 @@ diesel::table! {
         name -> Text,
         password -> Text,
         user_role -> Role,
+        enabled -> Bool,
     }
 }
 

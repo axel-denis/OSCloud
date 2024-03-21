@@ -7,5 +7,6 @@ CREATE TABLE users
     id          SERIAL PRIMARY KEY,
     name        TEXT NOT NULL,
     password    TEXT NOT NULL,
-    user_role   role NOT NULL
+    user_role   role NOT NULL,
+    enabled     BOOLEAN NOT NULL
 );

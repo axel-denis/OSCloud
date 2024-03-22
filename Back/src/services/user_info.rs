@@ -1,4 +1,4 @@
-use crate::database::model::{Role, User};
+use crate::database::model::{Role, ShareableUser, User};
 use crate::AppState;
 use axum::extract::{Json, State};
 use axum::http::StatusCode;
@@ -21,7 +21,16 @@ pub async fn user_info(
         None => StatusCode::NOT_FOUND.into_response(),
         Some(user) => {
             if user.id == local_user.id || local_user.user_role == Role::Admin {
-                (StatusCode::OK, axum::Json(user)).into_response()
+                (
+                    StatusCode::OK,
+                    axum::Json(ShareableUser {
+                        id: user.id,
+                        name: user.name,
+                        user_role: user.user_role,
+                        enabled: user.enabled,
+                    }),
+                )
+                    .into_response()
             } else {
                 StatusCode::UNAUTHORIZED.into_response()
             }

@@ -75,6 +75,12 @@ pub(crate) fn import_help(db: &UserData) {
     println!("{str}");
 }
 
+pub(crate) fn list_files_help(_: &UserData) {
+    println!("Usage: alias 'lf'");
+    println!("    list_files [path]");
+    println!("List files and folders at a given path");
+}
+
 pub(crate) fn create_help_map() -> HelpMap {
     let mut map = HelpMap::new();
 
@@ -96,6 +102,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("create_user".to_owned(), create_user_help);
     map.insert("du".to_owned(), delete_user_help);
     map.insert("delete_user".to_owned(), delete_user_help);
+    map.insert("lf".to_owned(), list_files_help);
+    map.insert("list_files".to_owned(), list_files_help);
     map
 }
 
@@ -118,6 +126,7 @@ pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) -> CmdStatus
     println!("    save, s\tSave database to file");
     println!("    import, i\tImport database from file");
     println!("    delete_user, du\tDelete user");
+    println!("    list_files, lf\tList files & folder at a given path");
     println!();
     println!("See 'help <command>' for more information on a specific command.");
     CmdStatus::Ok

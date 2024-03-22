@@ -10,7 +10,7 @@ use axum::http::header::CONTENT_TYPE;
 use axum::http::Method;
 use axum::middleware;
 use axum::{routing::get, routing::post, Router};
-use services::user_gestion::{add_user, delete_user};
+use services::user_gestion::{add_user, delete_user, enable_user};
 use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
@@ -71,13 +71,14 @@ async fn main() {
         .with_state(shared_state.clone());
     let admin_router = Router::new()
         .route("/add_user", post(add_user))
-        .route_layer(middleware::from_fn_with_state(
-            shared_state.clone(),
-            auth_middleware::auth_middleware,
-        ))
+        .route("/enable_user", post(enable_user))
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::admin_middleware,
+        ))
+        .route_layer(middleware::from_fn_with_state(
+            shared_state.clone(),
+            auth_middleware::auth_middleware,
         ))
         .with_state(shared_state.clone());
 

@@ -4,9 +4,11 @@ use diesel::prelude::*;
 
 use crate::database::model::User;
 use crate::database::model::{NewUserMountPoint, UserMountPoint};
+use crate::database::schema::users::dsl::enabled;
 use crate::database::Result;
 use crate::database::UserData;
 use crate::utils::files::file_info::check_path_is_folder;
+
 impl UserData {
     // pub fn get_user_mount_point_by_id(&self, id: i32) -> Option<UserMountPoint> {
     //     crate::database::schema::user_mounts_points::dsl::user_mounts_points
@@ -44,5 +46,15 @@ impl UserData {
             .map(|ump| ump.path.clone())
             .collect();
         Some(test)
+    }
+
+    // Enables or disable the given user based on the `state` argument
+    pub fn enable_user(&self, user: &User, state: bool) -> Result<bool> {
+        let mut pool = self.pool.get()?;
+
+        Ok(diesel::update(user)
+            .set(enabled.eq(state))
+            .get_result::<User>(&mut pool)?
+            .enabled)
     }
 }

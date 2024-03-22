@@ -7,13 +7,29 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    user_mounts_points (id) {
+        id -> Int4,
+        user_id -> Int4,
+        path -> Text,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::Role;
 
     users (id) {
-        id -> Int8,
+        id -> Int4,
         name -> Text,
         password -> Text,
         user_role -> Role,
+        enabled -> Bool,
     }
 }
+
+diesel::joinable!(user_mounts_points -> users (user_id));
+
+diesel::allow_tables_to_appear_in_same_query!(
+    user_mounts_points,
+    users,
+);

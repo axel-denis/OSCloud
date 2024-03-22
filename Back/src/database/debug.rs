@@ -2,7 +2,7 @@ use crate::database::UserData;
 
 impl UserData {
     #[cfg(feature = "cli")]
-    pub fn pretty_format(&self) -> crate::database::Result<String> {
+    pub fn users_pretty_format(&self) -> crate::database::Result<String> {
         use tabled::settings::Style;
         use tabled::Table;
 
@@ -14,5 +14,33 @@ impl UserData {
 
         table.with(Style::rounded());
         Ok(table.to_string())
+    }
+
+    #[cfg(feature = "cli")]
+    pub fn users_mount_points_pretty_format(&self, usernames: Vec<&str>) -> Option<String> {
+        use tabled::settings::Style;
+        use tabled::Table;
+
+        #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+        struct Element {
+            user: String,
+            path: String,
+        }
+        let mut paths: Vec<Element> = Vec::new();
+        for i in 1..usernames.len() {
+            let user = self.get_user_by_name(usernames[i])?;
+            let mut paths_to_add: Vec<Element> = self
+                .get_user_mounts_points(&user)?
+                .iter()
+                .map(|pth| Element {
+                    user: usernames[i].to_string(),
+                    path: pth.to_string(),
+                }).collect();
+            paths.append(&mut paths_to_add);
+        }
+        let mut table = Table::new(paths);
+
+        table.with(Style::rounded());
+        Some(table.to_string())
     }
 }

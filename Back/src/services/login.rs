@@ -1,7 +1,10 @@
-use crate::{database::UserData, jwt_manager::encode_jwt};
-use actix_web::{web, HttpResponse, Responder};
+use crate::{jwt_manager, AppState};
+use axum::extract::{Json, State};
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
 use bcrypt::verify;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 #[derive(Debug, Deserialize)]
 pub struct LoginRequest {
@@ -19,29 +22,30 @@ enum LoginOutcome {
     Connected(String),
     WrongPassword,
     UserNotFound,
-    Error
+    Error,
 }
 
-pub async fn login(db_pool: web::Data<UserData>, login: web::Json<LoginRequest>) -> impl Responder {
-    let outcome: LoginOutcome = web::block(move || {
-        match db_pool.get_user_by_name(&login.name) {
-            Some(user) => {
-                match verify(&login.password, &user.password) {
-                    Ok(true) => match encode_jwt(&user) {
-                        Ok(token) => LoginOutcome::Connected(token),
-                        Err(_) => LoginOutcome::Error,
-                    },
-                    Ok(false) => LoginOutcome::WrongPassword,
-                    Err(_) => LoginOutcome::Error,
-                }
+pub async fn login(
+    State(app_state): State<Arc<AppState>>,
+    Json(login): Json<LoginRequest>,
+) -> Response {
+    let outcome: LoginOutcome = match app_state.userdata.get_user_by_name(&login.name) {
+        Some(user) => match verify(&login.password, &user.password) {
+            Ok(true) => match jwt_manager::encode_jwt(&user) {
+                Ok(token) => LoginOutcome::Connected(token),
+                Err(_) => LoginOutcome::Error,
             },
-            None => LoginOutcome::UserNotFound,
-        }
-    }).await.unwrap_or(LoginOutcome::Error);
+            Ok(false) => LoginOutcome::WrongPassword,
+            Err(_) => LoginOutcome::Error,
+        },
+        None => LoginOutcome::UserNotFound,
+    };
 
     match outcome {
-        LoginOutcome::Connected(str) => HttpResponse::Ok().json(LoginResponse { token: str }),
-        LoginOutcome::Error => HttpResponse::InternalServerError().finish(),
-        _ => HttpResponse::Unauthorized().finish(),
+        LoginOutcome::Connected(str) => {
+            (StatusCode::OK, axum::Json(LoginResponse { token: str })).into_response()
+        }
+        LoginOutcome::Error => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        _ => StatusCode::UNAUTHORIZED.into_response(),
     }
 }

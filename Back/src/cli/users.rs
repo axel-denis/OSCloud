@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 pub(crate) fn debug_users(_: Vec<&str>, db: &UserData) -> CmdStatus {
-    match db.pretty_format() {
+    match db.users_pretty_format() {
         Ok(str) => println!("{str}"),
         Err(err) => println!("{}", err_str(err)),
     }
@@ -35,7 +35,8 @@ pub(crate) fn create_user(args: Vec<&str>, db: &UserData) -> CmdStatus {
         }
     };
 
-    match db.create_user(args[1], args[2], role) {
+    match db.create_user(args[1], args[2], role, true) {
+        // NOTE - users created in cli are enabled by default. Maybe change
         Ok(user) => println!("User {} created!", ok_str(user.name)),
         Err(err) => println!("{}", err_str(err)),
     }
@@ -56,6 +57,46 @@ pub(crate) fn delete_user(args: Vec<&str>, db: &UserData) -> CmdStatus {
         Ok(_) => println!("User {} deleted!", ok_str(args[1])),
         Err(err) => println!("{}", err_str(err)),
     }
+    CmdStatus::Ok
+}
+
+pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdStatus {
+    if args.len() <= 1 {
+        println!(
+            "{} user_mounts_points [<username>]{} help 'user_mounts_points'",
+            err_str("Invalid arguments given, should be"),
+            err_str(", for more informations try")
+        );
+        return CmdStatus::Ok;
+    }
+    match db.users_mount_points_pretty_format(args[0..].to_vec()) {
+        Some(str) => println!("{str}"),
+        None => println!("{}", err_str(format!("One or more user(s) not found"))),
+    }
+    CmdStatus::Ok
+}
+
+pub(crate) fn add_user_mount_point(args: Vec<&str>, db: &UserData) -> CmdStatus {
+    if args.len() != 3 {
+        println!(
+            "{} add_user_mount_point <username>, <path>{} help 'add_user_mount_point'",
+            err_str("Invalid arguments given, should be"),
+            err_str(", for more informations try")
+        );
+        return CmdStatus::Ok;
+    }
+
+    let user = match db.get_user_by_name(args[1]) {
+        Some(user) => user,
+        None => {
+            println!("User not found.");
+            return CmdStatus::Ok;
+        }
+    };
+    match db.add_user_mount_point(&user, &args[2].to_string()) {
+        Ok(_) => println!("Mount point added!"),
+        Err(err) => println!("{}", err_str(err)),
+    };
     CmdStatus::Ok
 }
 

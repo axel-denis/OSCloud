@@ -1,3 +1,4 @@
+use std::fs;
 use std::process::exit;
 
 use bcrypt::{hash, DEFAULT_COST};
@@ -11,6 +12,9 @@ use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
+use crate::utils::files::file_info::check_path_is_folder;
+
+use super::model::{NewUserMountPoint, UserMountPoint};
 
 impl UserData {
     pub fn new() -> Self {
@@ -70,10 +74,10 @@ impl UserData {
         Ok(())
     }
 
-    pub fn create_user(&self, user_name: &str, user_password: &str, role: Role) -> Result<User> {
+    pub fn create_user(&self, user_name: &str, user_password: &str, role: Role, enable: bool) -> Result<User> {
         let mut pool = self.pool.get()?;
         if !users
-            .filter(name.eq(user_name.clone()))
+            .filter(name.eq(user_name))
             .get_results::<User>(&mut pool)?
             .is_empty()
         {
@@ -89,12 +93,13 @@ impl UserData {
                 name: user_name.to_string(),
                 password: hashed_password,
                 user_role: role,
+                enabled: enable,
             })
             .execute(&mut pool)?;
         Ok(self.get_user_by_name(user_name).ok_or("Not Found")?)
     }
 
-    pub fn get_user_by_id(&self, user_id: i64) -> Option<User> {
+    pub fn get_user_by_id(&self, user_id: i32) -> Option<User> {
         users
             .find(user_id)
             .get_result::<User>(&mut self.pool.get().ok()?)
@@ -106,5 +111,43 @@ impl UserData {
             .filter(name.eq(user_name))
             .first::<User>(&mut self.pool.get().ok()?)
             .ok()
+    }
+
+    // pub fn get_user_mount_point_by_id(&self, id: i32) -> Option<UserMountPoint> {
+    //     crate::database::schema::user_mounts_points::dsl::user_mounts_points
+    //         .find(id)
+    //         .get_result::<UserMountPoint>(&mut self.pool.get().ok()?)
+    //         .ok()
+    // }
+
+    pub fn add_user_mount_point(&self, user: &User, path: &String) -> Result<UserMountPoint> {
+        let pathed_path = match fs::canonicalize(path)?.into_os_string().into_string() {
+            Ok(path) => path,
+            Err(_) => return Err("Mount point could not be resolved into a string".into()),
+        };
+        if !check_path_is_folder(&path) {
+            return Err("Mount point need to be a valid folder".into());
+        }
+        let mut pool = self.pool.get()?;
+        Ok(diesel::insert_into(
+            crate::database::schema::user_mounts_points::dsl::user_mounts_points,
+        )
+        .values(&NewUserMountPoint {
+            user_id: user.id,
+            path: pathed_path,
+        })
+        .get_result::<UserMountPoint>(&mut pool)?)
+    }
+
+    pub fn get_user_mounts_points(&self, user: &User) -> Option<Vec<String>> {
+        let pool = &mut self.pool.get().ok()?;
+        let test: Vec<String> = UserMountPoint::belonging_to(&user)
+            .select(UserMountPoint::as_select())
+            .load::<UserMountPoint>(pool)
+            .ok()?
+            .iter()
+            .map(|ump| ump.path.clone())
+            .collect();
+        Some(test)
     }
 }

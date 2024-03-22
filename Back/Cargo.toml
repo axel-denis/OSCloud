@@ -15,15 +15,14 @@ dotenv = "0.15.0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 futures-util = "0.3.28"
-actix-web = "4.3.1"
 jsonwebtoken = "8.3.0"
 chrono = "0.4.26"
 env_logger = "0.10.0"
-actix-cors = "0.6.4"
 bcrypt = "0.15.0"
 directories = "5.0.1"
-actix-multipart = "0.6.1"
 
+axum = "0.7.4"
+tokio = { version = "1.36.0", features = ["full"] }
 # Database access
 
 diesel = { version = "2.1.0", features = ["postgres", "r2d2", "uuid"] }
@@ -35,6 +34,7 @@ tabled = { version = "0.14.0", optional = true }
 colored = { version = "2.0.4", optional = true }
 clearscreen = { version = "2.0.1", optional = true }
 rustyline = { version = "12.0.0", optional = true }
+tower-http = { version = "0.5.2", features = ["cors"] }
 
 [features]
 default = ["cli"]

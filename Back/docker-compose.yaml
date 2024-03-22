@@ -1,0 +1,14 @@
+services:
+  oscloud-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: oscloud-users
+    expose:
+      - "5433" # Publishes 5433 to other containers but NOT to host machine
+    ports:
+      - "5433:5433"
+    volumes:
+      - ./backups:/home/backups
+    command: -p 5433

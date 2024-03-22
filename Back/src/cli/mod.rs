@@ -2,6 +2,7 @@ mod commands;
 mod formating;
 mod help;
 mod users;
+mod files;
 
 use rustyline::error::ReadlineError;
 use rustyline::DefaultEditor;
@@ -9,8 +10,8 @@ use rustyline::DefaultEditor;
 use colored::Colorize;
 use std::thread;
 
-use crate::cli::commands::CommandsMap;
 use crate::cli::commands::CmdStatus;
+use crate::cli::commands::CommandsMap;
 use crate::cli::formating::err_str;
 use crate::database::UserData;
 
@@ -35,7 +36,11 @@ pub fn start_cli(db: &UserData) {
         let mut path = db.dirs.config_dir().to_path_buf();
         std::fs::create_dir_all(&path).expect("Can't create path to history storage!");
         path.push("history");
-        if let Err(error) = std::fs::OpenOptions::new().create_new(true).write(true).open(&path) {
+        if let Err(error) = std::fs::OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&path)
+        {
             if error.kind() != std::io::ErrorKind::AlreadyExists {
                 println!("{}", err_str(error.to_string()))
             }

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Claims {
-    pub sub: i64,
+    pub sub: i32,
     pub exp: usize,
 }
 
@@ -13,7 +13,7 @@ fn get_secret() -> Vec<u8> {
         .into_bytes()
 }
 
-pub fn decode_jwt(token: &str) -> Result<i64, jsonwebtoken::errors::Error> {
+pub fn decode_jwt(token: &str) -> Result<i32, jsonwebtoken::errors::Error> {
     match jsonwebtoken::decode::<Claims>(
         token,
         &jsonwebtoken::DecodingKey::from_secret(&get_secret()),

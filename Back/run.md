@@ -1,29 +1,22 @@
 **/!\\ Add sudo if process don't work, possible fix /!\\**
 
-- create it:
+- init diesel
 ```bash
-docker run --name oscloud-users -e POSTGRES_PASSWORD=password -e POSTGRES_USER=root -e POSTGRES_DB=oscloud-users -p 5432:5432 -v "$(pwd)"/database.sql:/docker-entrypoint-initdb.d/init.sql -d postgres:alpine
-```
-```
-disel migration run
+diesel migration run
 ```
 - start it:
 ```bash
-docker start oscloud-users
+docker compose up
 ```
 
 - stop it:
 ```bash
-sudo ss -lptn 'sport = :5432'
+docker compose stop
 ```
 
+- remove it:
 ```bash
-docker stop oscloud-users
-```
-
-- delete it:
-```bash
-docker rm oscloud-users
+docker compose down
 ```
 
 - see it:

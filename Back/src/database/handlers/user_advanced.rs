@@ -2,8 +2,8 @@ use std::fs;
 
 use diesel::prelude::*;
 
-use crate::database::model::User;
 use crate::database::model::{NewUserMountPoint, UserMountPoint};
+use crate::database::model::{ShareableUser, User};
 use crate::database::schema::users::dsl::enabled;
 use crate::database::Result;
 use crate::database::UserData;

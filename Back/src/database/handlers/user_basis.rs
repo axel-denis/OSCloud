@@ -2,7 +2,7 @@ use bcrypt::{hash, DEFAULT_COST};
 
 use diesel::prelude::*;
 
-use crate::database::model::{NewUser, Role, User};
+use crate::database::model::{NewUser, Role, ShareableUser, User};
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
@@ -85,5 +85,19 @@ impl UserData {
             .filter(name.eq(user_name))
             .first::<User>(&mut self.pool.get().ok()?)
             .ok()
+    }
+
+    // get the user data without passwords
+    pub fn get_users_public(&self) -> Result<Vec<ShareableUser>> {
+        Ok(self
+            .get_users()?
+            .iter()
+            .map(|user| ShareableUser {
+                id: user.id,
+                name: user.name.clone(),
+                user_role: user.user_role.clone(),
+                enabled: user.enabled,
+            })
+            .collect())
     }
 }

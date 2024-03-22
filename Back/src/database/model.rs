@@ -47,6 +47,17 @@ pub struct NewUser {
     pub user_role: Role,
     pub enabled: bool,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
+#[diesel(table_name = crate::database::schema::users)]
+pub struct ShareableUser {
+    pub id: i32,
+    pub name: String,
+    #[serde(rename = "type")]
+    pub user_role: Role,
+    pub enabled: bool,
+}
+
 #[derive(Identifiable, Selectable, PartialEq, Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
 #[diesel(table_name = crate::database::schema::users)]

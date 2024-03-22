@@ -42,6 +42,7 @@ pub struct AddUserRequest {
     pub role: String,
 }
 
+// Admin
 pub async fn add_user(
     State(app_state): State<Arc<AppState>>,
     Extension(_): Extension<User>,
@@ -68,3 +69,6 @@ pub async fn add_user(
         Ok(_) => StatusCode::OK.into_response(),
     }
 }
+
+// Admin
+// pub async fn enable_user(State)

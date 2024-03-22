@@ -87,6 +87,12 @@ pub(crate) fn user_mounts_points_help(_: &UserData) {
     println!("List the mounts points of the given users");
 }
 
+pub(crate) fn add_user_mount_point_help(_: &UserData) {
+    println!("Usage: alias 'aump'");
+    println!("    add_user_mount_point [user] [folder]");
+    println!("Add a new mount point to the user");
+}
+
 pub(crate) fn create_help_map() -> HelpMap {
     let mut map = HelpMap::new();
 
@@ -112,6 +118,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("list_files".to_owned(), list_files_help);
     map.insert("ump".to_owned(), user_mounts_points_help);
     map.insert("user_mounts_points".to_owned(), user_mounts_points_help);
+    map.insert("aump".to_owned(), add_user_mount_point_help);
+    map.insert("add_user_mount_point".to_owned(), add_user_mount_point_help);
     map
 }
 
@@ -136,6 +144,7 @@ pub(crate) fn help(args: Vec<&str>, db: &crate::database::UserData) -> CmdStatus
     println!("    delete_user, du\tDelete user");
     println!("    list_files, lf\tList files & folder at a given path");
     println!("    user_mounts_points, ump\tList the mounts points of the given users");
+    println!("    add_user_mount_point, aump\tAdd a new mount point to the user");
     println!();
     println!("See 'help <command>' for more information on a specific command.");
     CmdStatus::Ok

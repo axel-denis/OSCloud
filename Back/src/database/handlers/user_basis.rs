@@ -88,7 +88,7 @@ impl UserData {
     }
 
     // get the user data without passwords
-    pub fn get_users_public(&self) -> Result<Vec<ShareableUser>> {
+    pub fn get_users_shareables(&self) -> Result<Vec<ShareableUser>> {
         Ok(self
             .get_users()?
             .iter()

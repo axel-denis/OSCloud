@@ -37,3 +37,44 @@ pub async fn user_info(
         }
     }
 }
+
+#[derive(Debug, Deserialize)]
+pub struct UserEnablenessRequest {
+    sort: String,
+}
+
+// Admin
+pub async fn get_users_enableness(
+    State(app_state): State<Arc<AppState>>,
+    Extension(_): Extension<User>,
+    Json(req): Json<UserEnablenessRequest>,
+) -> Response {
+    let all_users = match app_state.userdata.get_users_shareables() {
+        Ok(users) => users,
+        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
+    match req.sort.as_str() {
+        "none" => (StatusCode::OK, axum::Json(all_users)).into_response(),
+        "enabled" => (
+            StatusCode::OK,
+            axum::Json(
+                all_users
+                    .into_iter()
+                    .filter(|usr| usr.enabled)
+                    .collect::<Vec<ShareableUser>>(),
+            ),
+        )
+            .into_response(),
+        "disabled" => (
+            StatusCode::OK,
+            axum::Json(
+                all_users
+                    .into_iter()
+                    .filter(|usr| !usr.enabled)
+                    .collect::<Vec<ShareableUser>>(),
+            ),
+        )
+            .into_response(),
+        _ => StatusCode::BAD_REQUEST.into_response(),
+    }
+}

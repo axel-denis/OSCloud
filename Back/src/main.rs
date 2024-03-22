@@ -15,7 +15,7 @@ use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
-use services::user_info::user_info;
+use services::user_info::{get_users_enableness, user_info};
 
 mod cli;
 mod database;
@@ -72,6 +72,7 @@ async fn main() {
     let admin_router = Router::new()
         .route("/add_user", post(add_user))
         .route("/enable_user", post(enable_user))
+        .route("/enable_user", get(get_users_enableness))
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::admin_middleware,

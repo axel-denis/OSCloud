@@ -71,7 +71,7 @@ pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdSta
     }
     match db.users_mount_points_pretty_format(args[0..].to_vec()) {
         Some(str) => println!("{str}"),
-        None => println!("{}", err_str(format!("One or more user(s) not found"))),
+        None => println!("{}", err_str("One or more user(s) not found")),
     }
     CmdStatus::Ok
 }

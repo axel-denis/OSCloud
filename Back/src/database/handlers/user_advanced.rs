@@ -2,8 +2,8 @@ use std::fs;
 
 use diesel::prelude::*;
 
+use crate::database::model::User;
 use crate::database::model::{NewUserMountPoint, UserMountPoint};
-use crate::database::model::{ShareableUser, User};
 use crate::database::schema::users::dsl::enabled;
 use crate::database::Result;
 use crate::database::UserData;
@@ -22,7 +22,7 @@ impl UserData {
             Ok(path) => path,
             Err(_) => return Err("Mount point could not be resolved into a string".into()),
         };
-        if !check_path_is_folder(&path) {
+        if !check_path_is_folder(path) {
             return Err("Mount point need to be a valid folder".into());
         }
         let mut pool = self.pool.get()?;

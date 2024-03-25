@@ -27,15 +27,16 @@ impl UserData {
             path: String,
         }
         let mut paths: Vec<Element> = Vec::new();
-        for i in 1..usernames.len() {
-            let user = self.get_user_by_name(usernames[i])?;
+        for item in usernames.iter().skip(1) {
+            let user = self.get_user_by_name(item)?;
             let mut paths_to_add: Vec<Element> = self
                 .get_user_mounts_points(&user)?
                 .iter()
                 .map(|pth| Element {
-                    user: usernames[i].to_string(),
+                    user: item.to_string(),
                     path: pth.to_string(),
-                }).collect();
+                })
+                .collect();
             paths.append(&mut paths_to_add);
         }
         let mut table = Table::new(paths);

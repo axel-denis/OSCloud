@@ -10,11 +10,11 @@ use axum::http::header::CONTENT_TYPE;
 use axum::http::Method;
 use axum::middleware;
 use axum::{routing::get, routing::post, Router};
-use services::user_gestion::{add_user, delete_user, enable_user};
 use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
+use services::user_gestion::{add_user, delete_user, enable_user};
 use services::user_info::{get_users_enableness, user_info};
 
 mod cli;
@@ -86,7 +86,13 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await
         .expect("failed to launch server");
-    axum::serve(listener, all_router.merge(registered_router).merge(admin_router).layer(cors))
-        .await
-        .expect("failed to launch server");
+    axum::serve(
+        listener,
+        all_router
+            .merge(registered_router)
+            .merge(admin_router)
+            .layer(cors),
+    )
+    .await
+    .expect("failed to launch server");
 }

@@ -40,7 +40,7 @@ pub async fn user_info(
 
 #[derive(Debug, Deserialize)]
 pub struct UserEnablenessRequest {
-    sort: String,
+    sort: String, // "none" | "enabled" | "disabled"
 }
 
 // Admin

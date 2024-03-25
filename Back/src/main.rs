@@ -6,15 +6,18 @@ mod utils;
 use std::sync::Arc;
 mod jwt_manager;
 
+use axum::extract::{Request, State};
 use axum::http::header::CONTENT_TYPE;
 use axum::http::Method;
-use axum::middleware;
+use axum::{middleware, Extension};
 use axum::{routing::get, routing::post, Router};
-use services::user_gestion::{add_user, delete_user};
+use database::model::User;
+use services::file_upload::{download, upload};
 use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
+use services::user_gestion::{add_user, delete_user};
 use services::user_info::user_info;
 
 mod cli;
@@ -22,7 +25,9 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
+use tower::ServiceExt;
 use tower_http::cors::{Any, CorsLayer};
+use tower_http::services::ServeDir;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -53,6 +58,13 @@ async fn main() {
     let all_router = Router::new()
         .route("/login", post(login))
         .with_state(shared_state.clone());
+
+    // use tower_http::services::{ServeDir, ServeFile};
+
+    let serve_dir = ServeDir::new("assets");
+
+    // let file_router = Router::new().nest_service("/test", serve_dir);
+
     let registered_router = Router::new()
         .route(
             "/user",
@@ -64,6 +76,13 @@ async fn main() {
         .route("/import", post(import_from_json))
         .route("/file", post(|| async { "Hello, World!" }))
         .route("/home", get(home))
+        .route("/upload", post(upload))
+        .nest_service("/download/:file", get(|request: Request| async {
+            let uri = request.uri().query().unwrap();
+            let service = ServeDir::new("assets");
+            let result = service.oneshot(request).await;
+            result
+        }))
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::auth_middleware,
@@ -84,7 +103,14 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await
         .expect("failed to launch server");
-    axum::serve(listener, all_router.merge(registered_router).merge(admin_router).layer(cors))
-        .await
-        .expect("failed to launch server");
+    axum::serve(
+        listener,
+        all_router
+            .merge(registered_router)
+            .merge(admin_router)
+            .layer(cors),
+    )
+    .await
+    .expect("failed to launch server");
 }
+

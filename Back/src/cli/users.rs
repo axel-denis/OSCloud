@@ -79,7 +79,7 @@ pub(crate) fn debug_user_mounts_points(args: Vec<&str>, db: &UserData) -> CmdSta
 pub(crate) fn add_user_mount_point(args: Vec<&str>, db: &UserData) -> CmdStatus {
     if args.len() != 3 {
         println!(
-            "{} add_user_mount_point <username>, <path>{} help 'add_user_mount_point'",
+            "{} add_user_mount_point <username> <path>{} help 'add_user_mount_point'",
             err_str("Invalid arguments given, should be"),
             err_str(", for more informations try")
         );

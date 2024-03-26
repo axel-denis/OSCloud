@@ -3,6 +3,8 @@ use std::{ffi::OsString, fs::read_dir};
 
 use serde::Serialize;
 
+use crate::utils::users::VerifiedUserPath;
+
 #[derive(Serialize)]
 pub enum FileType {
     FILE,
@@ -26,8 +28,9 @@ pub struct FileInfo {
     pub file_type: FileType,
 }
 
-pub fn list_files(path: String) -> Result<Vec<FileInfo>, std::io::Error> {
-    let paths = read_dir(path)?;
+// Please generate user path only with
+pub fn list_files(user_path: &VerifiedUserPath) -> Result<Vec<FileInfo>, std::io::Error> {
+    let paths = read_dir(user_path.path())?;
 
     Ok(paths
         .flatten()

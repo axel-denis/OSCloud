@@ -19,7 +19,7 @@ pub async fn list_files(
 ) -> Response {
     // TODO check that user has access to file
 
-    let user_path = match path_in_user_mounts_points(app_state, &dir, local_user) {
+    let user_path = match path_in_user_mounts_points(&app_state.userdata, &dir, local_user) {
         Some(path) => path,
         None => return StatusCode::UNAUTHORIZED.into_response(),
     };

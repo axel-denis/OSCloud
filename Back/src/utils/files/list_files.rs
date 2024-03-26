@@ -28,7 +28,7 @@ pub struct FileInfo {
     pub file_type: FileType,
 }
 
-// Please generate user path only with
+// Please generate user path only with path_in_user_mounts_points
 pub fn list_files(user_path: &VerifiedUserPath) -> Result<Vec<FileInfo>, std::io::Error> {
     let paths = read_dir(user_path.path())?;
 

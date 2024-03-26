@@ -1,6 +1,6 @@
-use std::{fs, path::PathBuf, sync::Arc};
+use std::{fs, path::PathBuf};
 
-use crate::{database::model::User, AppState};
+use crate::database::{model::User, UserData};
 
 pub struct VerifiedUserPath {
     _user: User,
@@ -17,11 +17,11 @@ impl VerifiedUserPath {
 }
 
 pub fn path_in_user_mounts_points(
-    appstate: Arc<AppState>,
+    db: &UserData,
     path: &String,
     user: User,
 ) -> Option<VerifiedUserPath> {
-    let mnts = appstate.userdata.get_user_mounts_points(&user)?;
+    let mnts = db.get_user_mounts_points(&user)?;
     for mnt in mnts {
         if path.starts_with(&mnt) {
             return match fs::canonicalize(mnt) {

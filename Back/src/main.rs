@@ -26,6 +26,8 @@ use dotenv::dotenv;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::ServeDir;
 
+use crate::services::list_files::list_files;
+
 #[derive(Clone)]
 pub struct AppState {
     userdata: UserData,
@@ -76,6 +78,7 @@ async fn main() {
         .route("/save", post(save_to_json))
         .route("/import", post(import_from_json))
         .route("/file", post(|| async { "Hello, World!" }))
+        .route("/list_files/:dir", get(list_files))
         .route("/home", get(home))
         .route("/upload", post(upload))
         .nest_service("/download/:file", get(download))

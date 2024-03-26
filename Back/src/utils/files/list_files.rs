@@ -1,6 +1,9 @@
 use core::fmt;
 use std::{ffi::OsString, fs::read_dir};
 
+use serde::Serialize;
+
+#[derive(Serialize)]
 pub enum FileType {
     FILE,
     FOLDER,
@@ -17,6 +20,7 @@ impl fmt::Display for FileType {
     }
 }
 
+#[derive(Serialize)]
 pub struct FileInfo {
     pub name: OsString,
     pub file_type: FileType,

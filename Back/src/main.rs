@@ -6,12 +6,10 @@ mod utils;
 use std::sync::Arc;
 mod jwt_manager;
 
-use axum::extract::{Request, State};
 use axum::http::header::CONTENT_TYPE;
 use axum::http::Method;
-use axum::{middleware, Extension};
+use axum::middleware;
 use axum::{routing::get, routing::post, Router};
-use database::model::User;
 use services::file_upload::{download, upload};
 use services::home::home;
 use services::json::import_from_json;
@@ -25,7 +23,6 @@ mod database;
 use database::UserData;
 use dotenv::dotenv;
 
-use tower::ServiceExt;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::ServeDir;
 
@@ -65,6 +62,10 @@ async fn main() {
 
     // let file_router = Router::new().nest_service("/test", serve_dir);
 
+    pub struct Info {
+        filepath: String,
+    }
+
     let registered_router = Router::new()
         .route(
             "/user",
@@ -77,12 +78,7 @@ async fn main() {
         .route("/file", post(|| async { "Hello, World!" }))
         .route("/home", get(home))
         .route("/upload", post(upload))
-        .nest_service("/download/:file", get(|request: Request| async {
-            let uri = request.uri().query().unwrap();
-            let service = ServeDir::new("assets");
-            let result = service.oneshot(request).await;
-            result
-        }))
+        .nest_service("/download/:file", get(download))
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::auth_middleware,
@@ -113,4 +109,3 @@ async fn main() {
     .await
     .expect("failed to launch server");
 }
-

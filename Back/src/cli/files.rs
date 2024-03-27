@@ -2,12 +2,12 @@ use crate::cli::commands::CmdStatus;
 use crate::cli::formating::err_str;
 use crate::database::UserData;
 use crate::utils::files;
-use crate::utils::users::path_in_user_mounts_points;
+use crate::utils::users::verifiy_user_path;
 
 pub(crate) fn list_files_as(args: Vec<&str>, db: &UserData) -> CmdStatus {
-    if args.len() != 2 {
+    if args.len() != 3 {
         println!(
-            "{} list_files <path>{} help 'list_files'",
+            "{} list_files_as <user> <path>{} help 'list_files_as'",
             err_str("Invalid arguments given, should be"),
             err_str(", for more informations try")
         );
@@ -20,7 +20,7 @@ pub(crate) fn list_files_as(args: Vec<&str>, db: &UserData) -> CmdStatus {
                 return CmdStatus::Ok;
             }
         };
-        let user_path = match path_in_user_mounts_points(db, &args[2].to_owned(), user) {
+        let user_path = match verifiy_user_path(db, &args[2].to_owned(), user) {
             Some(pth) => pth,
             None => {
                 println!("Path not in user mounts points");

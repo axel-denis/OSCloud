@@ -8,7 +8,7 @@ use axum::{extract::Path, http::StatusCode};
 
 use crate::database::model::User;
 use crate::utils::files;
-use crate::utils::users::path_in_user_mounts_points;
+use crate::utils::users::verifiy_user_path;
 use crate::AppState;
 
 // the given path is relative starting at the user mount point
@@ -19,7 +19,7 @@ pub async fn list_files(
 ) -> Response {
     // TODO check that user has access to file
 
-    let user_path = match path_in_user_mounts_points(&app_state.userdata, &dir, local_user) {
+    let user_path = match verifiy_user_path(&app_state.userdata, &dir, local_user) {
         Some(path) => path,
         None => return StatusCode::UNAUTHORIZED.into_response(),
     };

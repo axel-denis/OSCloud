@@ -74,7 +74,13 @@ impl UserData {
         Ok(())
     }
 
-    pub fn create_user(&self, user_name: &str, user_password: &str, role: Role, enable: bool) -> Result<User> {
+    pub fn create_user(
+        &self,
+        user_name: &str,
+        user_password: &str,
+        role: Role,
+        enable: bool,
+    ) -> Result<User> {
         let mut pool = self.pool.get()?;
         if !users
             .filter(name.eq(user_name))

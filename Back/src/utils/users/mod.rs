@@ -24,7 +24,7 @@ pub fn verifiy_user_path(db: &UserData, path: &String, user: User) -> Option<Ver
     };
     for mnt in mnts {
         for ancestor in canonical.ancestors() {
-            if ancestor == PathBuf::from(&mnt){
+            if ancestor == PathBuf::from(&mnt) {
                 return Some(VerifiedUserPath {
                     _user: user,
                     _path: canonical,

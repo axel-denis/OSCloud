@@ -1,13 +1,14 @@
 use std::sync::Arc;
 
-use crate::{database::model::User, jwt_manager, AppState};
 use crate::database::model::Role::Admin;
+use crate::{database::model::User, jwt_manager, AppState};
 
 use axum::{
     extract::{Request, State},
     http::StatusCode,
     middleware::Next,
-    response::{IntoResponse, Response}, Extension,
+    response::{IntoResponse, Response},
+    Extension,
 };
 
 // check if authenticated and add the local_user to the request

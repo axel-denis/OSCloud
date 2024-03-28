@@ -81,7 +81,10 @@ async fn main() {
         .route("/list_files/:dir", get(list_files))
         .route("/home", get(home))
         .route("/upload", post(upload))
-        .nest_service("/download/:file", get(download).with_state(shared_state.clone()))
+        .nest_service(
+            "/download/:file",
+            get(download).with_state(shared_state.clone()),
+        )
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::auth_middleware,

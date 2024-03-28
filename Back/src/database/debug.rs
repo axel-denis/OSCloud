@@ -35,7 +35,8 @@ impl UserData {
                 .map(|pth| Element {
                     user: usernames[i].to_string(),
                     path: pth.to_string(),
-                }).collect();
+                })
+                .collect();
             paths.append(&mut paths_to_add);
         }
         let mut table = Table::new(paths);

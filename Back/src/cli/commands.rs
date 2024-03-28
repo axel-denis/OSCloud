@@ -36,10 +36,19 @@ pub(crate) fn create_commands_map() -> CommandsMap {
     map.insert("delete_user".to_owned(), crate::cli::users::delete_user);
     map.insert("lfa".to_owned(), crate::cli::files::list_files_as);
     map.insert("list_files_as".to_owned(), crate::cli::files::list_files_as);
-    map.insert("ump".to_owned(), crate::cli::users::debug_user_mounts_points);
-    map.insert("user_mounts_points".to_owned(), crate::cli::users::debug_user_mounts_points);
+    map.insert(
+        "ump".to_owned(),
+        crate::cli::users::debug_user_mounts_points,
+    );
+    map.insert(
+        "user_mounts_points".to_owned(),
+        crate::cli::users::debug_user_mounts_points,
+    );
     map.insert("aump".to_owned(), crate::cli::users::add_user_mount_point);
-    map.insert("add_user_mount_point".to_owned(), crate::cli::users::add_user_mount_point);
+    map.insert(
+        "add_user_mount_point".to_owned(),
+        crate::cli::users::add_user_mount_point,
+    );
     map
 }
 

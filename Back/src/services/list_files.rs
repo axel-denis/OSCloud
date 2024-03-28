@@ -16,8 +16,6 @@ pub async fn list_files(
     State(app_state): State<Arc<AppState>>,
     Extension(local_user): Extension<User>,
 ) -> Response {
-    // TODO check that user has access to file
-
     let user_path = match verifiy_user_path(&app_state.userdata, &dir, local_user) {
         Some(path) => path,
         None => return StatusCode::UNAUTHORIZED.into_response(),

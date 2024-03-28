@@ -1,34 +1,48 @@
+use std::path::{Path, PathBuf};
+use std::str::FromStr;
 use std::sync::Arc;
 
-use axum::extract::{Multipart, Path, Request, State};
+use axum::body::Bytes;
+use axum::extract::{Multipart, Request, State};
 use axum::http::StatusCode;
-use axum::response::IntoResponse;
+use axum::response::{IntoResponse, Response};
 use axum::Extension;
+use axum_typed_multipart::{TryFromMultipart, TypedMultipart};
 use tower::ServiceExt;
 
 use crate::database::model::User;
-use crate::utils::users::verifiy_user_path;
+use crate::utils::users::{verifiy_user_path, VerifiedUserPath};
 use crate::AppState;
 
 use tower_http::services::ServeDir;
 
+#[derive(TryFromMultipart)]
+pub struct UploadFileRequest {
+    file_path: String,
+    file: Bytes,
+}
+
 pub async fn upload(
     State(app_state): State<Arc<AppState>>,
     Extension(local_user): Extension<User>,
-    mut multipart: Multipart,
-) {
-    while let Some(field) = multipart.next_field().await.unwrap() {
-        let name = field.name().unwrap().to_string();
-        let data = field.bytes().await.unwrap();
-
-        println!("Length of `{}` is {} bytes", name, data.len());
+    data: TypedMultipart<UploadFileRequest>,
+) -> Response {
+    if let Some(path) = verifiy_user_path(&app_state.userdata, &data.file_path, local_user) {
+        match tokio::fs::write(path.path(), &data.file).await {
+            Ok(_) => StatusCode::OK.into_response(),
+            Err(e) => {
+                (StatusCode::BAD_REQUEST, e.to_string()).into_response()
+            }
+        }
+    } else {
+        StatusCode::UNAUTHORIZED.into_response()
     }
 }
 
 pub async fn download(
     Extension(local_user): Extension<User>,
     State(app_state): State<Arc<AppState>>,
-    Path(file): Path<String>,
+    axum::extract::Path(file): axum::extract::Path<String>,
     request: Request,
 ) -> impl IntoResponse {
     if let Some(path) = verifiy_user_path(&app_state.userdata, &file, local_user) {

@@ -2,6 +2,7 @@ import Folder from "../assets/folder.svg";
 
 interface Props {
   launchPhotosPage: Function,
+  launchAdminPanel: Function,
   launchFilesPage: Function
 }
 
@@ -32,19 +33,19 @@ export default function DesktopAppLayout(props: Props) {
       </div>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
         <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
       </div>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
       </div>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
       </div>
       <div className="doubleWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
         double
@@ -53,9 +54,9 @@ export default function DesktopAppLayout(props: Props) {
         double
       </div>
       <div className="appsWidget" style={{transition: "transform " + String(hoverAnimationDuration) + "ms"}}>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
-        <div className="app" onClick={() => props.launchPhotosPage()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
+        <div className="app" onClick={() => props.launchAdminPanel()}>app</div>
       </div>
     </>
   )

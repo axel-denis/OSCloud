@@ -1,5 +1,5 @@
 export const backIp = "http://localhost:8888"
-export const timeScale = 1;
+export const timeScale = 0.5;
 
 export function easeOutCirc(x: number): number { // https://easings.net/#easeOutCirc
   return Math.sqrt(1 - Math.pow(x - 1, 2));

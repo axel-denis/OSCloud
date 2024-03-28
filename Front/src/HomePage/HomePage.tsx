@@ -27,6 +27,9 @@ export default function HomePage(props: Props) {
   function launchPhotosPage() {
     transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Photos");
   }
+  function launchAdminPanel() {
+    transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/AdminPanel");
+  }
   function launchFilesPage() {
     transitionToUrl(props.urlsHandler, props.setUrlsHandler, "/Files");
   }
@@ -69,7 +72,7 @@ export default function HomePage(props: Props) {
             }
           }}
         >
-          {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
+          {isMobile === false ? <DesktopAppLayout launchPhotosPage={launchPhotosPage} launchAdminPanel={launchAdminPanel} launchFilesPage={launchFilesPage} /> : null}
           {isMobile === true ? <MobileAppLayout launchPhotosPage={launchPhotosPage} launchFilesPage={launchFilesPage} /> : null}
         </motion.div>
       </div>

@@ -6,6 +6,7 @@ import PhotosApp from './PhotosApp/PhotosApp';
 import { urlToInfo, discreetlyChangeUrlPath, UrlInfo } from './UrlGestion';
 import FilesApp from './FilesApp/FilesApp';
 import CustomRouter from './CustomRouter/CustomRouter';
+import AdminPanel from './AdminPanel/AdminPanel';
 
 export const MobileDevice = React.createContext<boolean>(false);
 
@@ -38,6 +39,7 @@ export default function App() {
         <CustomRouter openedApps={urlsHandler}>
           <HomePage key={"Home"} appName="Home" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
           <PhotosApp key={"Photos"} appName="Photos" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
+          <AdminPanel key={"AdminPanel"} appName="AdminPanel" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
           <FilesApp key={"Files"} appName="Files" isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} urlsHandler={urlsHandler} setUrlsHandler={setUrlsHandler} />
         </CustomRouter>
       </div>

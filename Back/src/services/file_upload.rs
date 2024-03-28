@@ -31,16 +31,13 @@ pub async fn download(
     Path(file): Path<String>,
     request: Request,
 ) -> impl IntoResponse {
-    let path = match verifiy_user_path(&app_state.userdata, &file, local_user) {
-        Some(path) => path,
-        None => return StatusCode::UNAUTHORIZED.into_response(),
-    };
-    if !path.path().exists() || !path.path().is_file() {
-        return StatusCode::UNAUTHORIZED.into_response();
+    if let Some(path) = verifiy_user_path(&app_state.userdata, &file, local_user) {
+        if path.path().exists() && path.path().is_file() {
+            return match ServeDir::new(path.path()).oneshot(request).await {
+                Ok(result) => result.into_response(),
+                Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e).into_response(),
+            };
+        }
     }
-    let service = ServeDir::new(path.path());
-    match service.oneshot(request).await {
-        Ok(result) => result.into_response(),
-        Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e).into_response(),
-    }
+    return StatusCode::UNAUTHORIZED.into_response();
 }

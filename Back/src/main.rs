@@ -24,7 +24,6 @@ use database::UserData;
 use dotenv::dotenv;
 
 use tower_http::cors::{Any, CorsLayer};
-use tower_http::services::ServeDir;
 
 use crate::services::list_files::list_files;
 
@@ -57,16 +56,6 @@ async fn main() {
     let all_router = Router::new()
         .route("/login", post(login))
         .with_state(shared_state.clone());
-
-    // use tower_http::services::{ServeDir, ServeFile};
-
-    let serve_dir = ServeDir::new("assets");
-
-    // let file_router = Router::new().nest_service("/test", serve_dir);
-
-    pub struct Info {
-        filepath: String,
-    }
 
     let registered_router = Router::new()
         .route(

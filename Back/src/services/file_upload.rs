@@ -7,6 +7,7 @@ use axum::Extension;
 use tower::ServiceExt;
 
 use crate::database::model::User;
+use crate::utils::users::verifiy_user_path;
 use crate::AppState;
 
 use tower_http::services::ServeDir;
@@ -24,22 +25,22 @@ pub async fn upload(
     }
 }
 
-pub async fn download(Path(file): Path<String>, request: Request) -> impl IntoResponse {
-    // path is valid
-    let path = std::path::Path::new(&file);
-    let mut components = path.components().peekable();
-
-    if let Some(first) = components.peek() {
-        if !matches!(first, std::path::Component::Normal(_)) {
-            StatusCode::BAD_REQUEST.into_response();
-        }
-    }
-
-    if components.count() != 1 {
-        return StatusCode::BAD_REQUEST.into_response();
+pub async fn download(
+    Extension(local_user): Extension<User>,
+    State(app_state): State<Arc<AppState>>,
+    Path(file): Path<String>,
+    request: Request,
+) -> impl IntoResponse {
+    let path = match verifiy_user_path(&app_state.userdata, &file, local_user) {
+        Some(path) => path,
+        None => return StatusCode::UNAUTHORIZED.into_response(),
     };
-    //
-    let service = ServeDir::new("assets");
-    let result = service.oneshot(request).await;
-    result.unwrap().into_response()
+    if !path.path().exists() || !path.path().is_file() {
+        return StatusCode::UNAUTHORIZED.into_response();
+    }
+    let service = ServeDir::new(path.path());
+    match service.oneshot(request).await {
+        Ok(result) => result.into_response(),
+        Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e).into_response(),
+    }
 }

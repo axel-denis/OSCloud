@@ -3,16 +3,16 @@ use std::{fs, path::PathBuf};
 use crate::database::{model::User, UserData};
 
 pub struct VerifiedUserPath {
-    _user: User,
-    _path: PathBuf,
+    user: User,
+    path: PathBuf,
 }
 
 impl VerifiedUserPath {
     pub fn user(&self) -> &User {
-        &self._user
+        &self.user
     }
     pub fn path(&self) -> &PathBuf {
-        &self._path
+        &self.path
     }
 }
 
@@ -26,8 +26,8 @@ pub fn verifiy_user_path(db: &UserData, path: &String, user: User) -> Option<Ver
         for ancestor in canonical.ancestors() {
             if ancestor == PathBuf::from(&mnt) {
                 return Some(VerifiedUserPath {
-                    _user: user,
-                    _path: canonical,
+                    user,
+                    path: canonical,
                 });
             };
         }

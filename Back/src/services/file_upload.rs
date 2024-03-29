@@ -1,9 +1,7 @@
-use std::path::{Path, PathBuf};
-use std::str::FromStr;
 use std::sync::Arc;
 
 use axum::body::Bytes;
-use axum::extract::{Multipart, Request, State};
+use axum::extract::{Request, State};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Extension;
@@ -11,7 +9,7 @@ use axum_typed_multipart::{TryFromMultipart, TypedMultipart};
 use tower::ServiceExt;
 
 use crate::database::model::User;
-use crate::utils::users::{verifiy_user_path, VerifiedUserPath};
+use crate::utils::users::verifiy_user_path;
 use crate::AppState;
 
 use tower_http::services::ServeDir;
@@ -51,5 +49,5 @@ pub async fn download(
             };
         }
     }
-    return StatusCode::UNAUTHORIZED.into_response();
+    StatusCode::UNAUTHORIZED.into_response()
 }

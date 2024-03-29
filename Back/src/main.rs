@@ -15,7 +15,7 @@ use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
-use services::user_gestion::{add_user, delete_user};
+use services::user_management::{add_user, delete_user};
 use services::user_info::user_info;
 
 mod cli;

@@ -94,7 +94,6 @@ pub async fn delete_file(
     }
 }
 
-/*
 #[derive(Debug, Deserialize)]
 pub struct FileMoveRequest {
     file_path: String,
@@ -115,26 +114,22 @@ pub async fn move_file(
         return StatusCode::UNAUTHORIZED.into_response();
     };
 
-    //cheking that file name is valid & accessible
-    let new_path = if let Some(np) = base_path.path().to_str() {
-        if let Some(new_path) = verifiy_user_path(&app_state.userdata, &np.to_string(), local_user)
-        {
+    //cheking that new file name is valid & accessible
+    let new_path =
+        if let Some(new_path) = verifiy_user_path(&app_state.userdata, &req.new_path, local_user) {
             new_path
         } else {
-            return (StatusCode::UNAUTHORIZED, "Innaccessible file name").into_response();
-        }
-    } else {
-        return (StatusCode::BAD_REQUEST, "Invalid file name").into_response();
-    };
+            return (StatusCode::UNAUTHORIZED, "Innaccessible new path").into_response();
+        };
 
     // Checking for conflicts
     if !base_path.path().exists() {
-        return (StatusCode::NOT_FOUND, "Given file to rename does not exist").into_response();
+        return (StatusCode::NOT_FOUND, "Given file to move does not exist").into_response();
     };
     if new_path.path().exists() {
         return (
             StatusCode::CONFLICT,
-            "Given new file name already exists for another file",
+            "Given new path already exists for another file",
         )
             .into_response();
     };
@@ -144,4 +139,3 @@ pub async fn move_file(
         Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
     }
 }
-*/

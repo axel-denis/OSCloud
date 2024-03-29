@@ -3,7 +3,6 @@ use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 use std::str::FromStr;
-
 #[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::database::schema::sql_types::Role"]
 #[serde(rename_all = "snake_case")]
@@ -76,4 +75,78 @@ pub struct UserMountPoint {
     pub id: i32,
     pub user_id: i32,
     pub path: String,
+}
+
+
+#[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
+#[ExistingTypePath = "crate::database::schema::sql_types::ShareType"]
+#[serde(rename_all = "snake_case")]
+pub enum ShareType {
+    Public,
+    #[default]
+    User,
+}
+
+impl std::fmt::Display for ShareType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ShareType::Public => {
+                write!(f, "Public")
+            }
+            ShareType::User => {
+                write!(f, "User")
+            }
+        }
+    }
+}
+
+impl FromStr for ShareType {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<ShareType, Self::Err> {
+        match &*input.to_lowercase() {
+            "public" => Ok(ShareType::Public),
+            "user" => Ok(ShareType::User),
+            _ => Err(()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
+#[diesel(table_name = crate::database::schema::files_shares)]
+pub struct NewFileShare {
+    pub owner_user_id: i32,
+    pub path: String,
+    pub share_type: ShareType,
+    pub link: String,
+}
+#[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[diesel(belongs_to(User, foreign_key = owner_user_id))]
+#[diesel(table_name = crate::database::schema::files_shares)]
+// #[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct FileShare {
+    pub id: i32,
+    pub owner_user_id: i32,
+    pub path: String,
+    pub share_type: ShareType,
+    pub link: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
+#[diesel(table_name = crate::database::schema::files_shares_users)]
+pub struct NewFileShareUsers {
+    pub file_share_id: i32,
+    pub shared_to: i32,
+}
+#[cfg_attr(feature = "cli", derive(tabled::Tabled))]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[diesel(belongs_to(User, foreign_key = shared_to))]
+#[diesel(belongs_to(FileShare, foreign_key = file_share_id))]
+#[diesel(table_name = crate::database::schema::files_shares_users)]
+// #[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct FileShareUsers {
+    pub id: i32,
+    pub file_share_id: i32,
+    pub shared_to: i32,
 }

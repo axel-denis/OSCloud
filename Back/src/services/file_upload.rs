@@ -30,9 +30,7 @@ pub async fn upload(
     if let Some(path) = verifiy_user_path(&app_state.userdata, &data.file_path, local_user) {
         match tokio::fs::write(path.path(), &data.file).await {
             Ok(_) => StatusCode::OK.into_response(),
-            Err(e) => {
-                (StatusCode::BAD_REQUEST, e.to_string()).into_response()
-            }
+            Err(e) => (StatusCode::BAD_REQUEST, e.to_string()).into_response(),
         }
     } else {
         StatusCode::UNAUTHORIZED.into_response()

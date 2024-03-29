@@ -2,14 +2,12 @@ use std::fs;
 use std::sync::Arc;
 
 use axum::extract::State;
+use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::{extract::Path, http::StatusCode};
 use axum::{Extension, Json};
 use serde::Deserialize;
-use serde_json::to_string;
 
 use crate::database::model::User;
-use crate::utils::files;
 use crate::utils::users::verifiy_user_path;
 use crate::AppState;
 
@@ -60,5 +58,36 @@ pub async fn rename_file(
     match fs::rename(base_path.path(), new_path.path()) {
         Ok(_) => StatusCode::OK.into_response(),
         Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct FileDeleteRequest {
+    file_path: String,
+}
+// /!\ remove whole dir if asked !
+pub async fn delete_file(
+    State(app_state): State<Arc<AppState>>,
+    Extension(local_user): Extension<User>,
+    Json(req): Json<FileDeleteRequest>,
+) -> Response {
+    // checking that base path is file
+    match verifiy_user_path(&app_state.userdata, &req.file_path, local_user) {
+        Some(path) => {
+            if path.path().is_file() {
+                match fs::remove_file(path.path()) {
+                    Ok(_) => StatusCode::OK.into_response(),
+                    Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
+                }
+            } else if path.path().is_dir() {
+                match fs::remove_dir_all(path.path()) {
+                    Ok(_) => StatusCode::OK.into_response(),
+                    Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
+                }
+            } else {
+                StatusCode::NOT_FOUND.into_response()
+            }
+        }
+        None => StatusCode::UNAUTHORIZED.into_response(),
     }
 }

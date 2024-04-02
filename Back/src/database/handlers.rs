@@ -13,8 +13,9 @@ use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 use crate::utils::files::file_info::check_path_is_folder;
+use crate::utils::users::VerifiedUserPath;
 
-use super::model::{NewUserMountPoint, UserMountPoint};
+use super::model::{FileShare, NewFileShare, NewUserMountPoint, ShareType, UserMountPoint};
 
 impl UserData {
     pub fn new() -> Self {
@@ -155,5 +156,19 @@ impl UserData {
             .map(|ump| ump.path.clone())
             .collect();
         Some(test)
+    }
+
+    pub fn add_file_share(&self, user: &User, path: &VerifiedUserPath, share_type: ShareType) -> Result<String> {
+        let mut pool = self.pool.get()?;
+        Ok(diesel::insert_into(
+            crate::database::schema::files_shares::dsl::files_shares,
+        )
+        .values(&NewFileShare {
+            owner_user_id: user.id,
+            path: path.path().to_string_lossy().to_string(),
+            share_type,
+            link: "abcdef".to_string(),
+        })
+        .get_result::<FileShare>(&mut pool)?.link)
     }
 }

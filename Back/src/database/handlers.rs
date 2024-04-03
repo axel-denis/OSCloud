@@ -158,17 +158,22 @@ impl UserData {
         Some(test)
     }
 
-    pub fn add_file_share(&self, user: &User, path: &VerifiedUserPath, share_type: ShareType) -> Result<String> {
+    pub fn add_file_share(
+        &self,
+        user: &User,
+        path: &VerifiedUserPath,
+        share_type: ShareType,
+    ) -> Result<String> {
         let mut pool = self.pool.get()?;
-        Ok(diesel::insert_into(
-            crate::database::schema::files_shares::dsl::files_shares,
+        Ok(
+            diesel::insert_into(crate::database::schema::files_shares::dsl::files_shares)
+                .values(&NewFileShare {
+                    owner_user_id: user.id,
+                    path: path.path().to_string_lossy().to_string(),
+                    share_type,
+                    link: "abcdef".to_string(),
+                })
+                .get_result::<FileShare>(&mut pool)?.link,
         )
-        .values(&NewFileShare {
-            owner_user_id: user.id,
-            path: path.path().to_string_lossy().to_string(),
-            share_type,
-            link: "abcdef".to_string(),
-        })
-        .get_result::<FileShare>(&mut pool)?.link)
     }
 }

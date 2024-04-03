@@ -7,7 +7,7 @@ CREATE TABLE files_shares
     id              SERIAL PRIMARY KEY,
     owner_user_id   INTEGER NOT NULL REFERENCES users(id),
     path            TEXT NOT NULL,
-    share_type            share_type,
+    share_type      share_type NOT NULL,
     link            TEXT NOT NULL
 );
 

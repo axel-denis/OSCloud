@@ -3,6 +3,7 @@ use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 use std::str::FromStr;
+
 #[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::database::schema::sql_types::Role"]
 #[serde(rename_all = "snake_case")]
@@ -77,7 +78,6 @@ pub struct UserMountPoint {
     pub path: String,
 }
 
-
 #[derive(Debug, PartialEq, Default, diesel_derive_enum::DbEnum, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::database::schema::sql_types::ShareType"]
 #[serde(rename_all = "snake_case")]
@@ -120,11 +120,11 @@ pub struct NewFileShare {
     pub share_type: ShareType,
     pub link: String,
 }
+#[derive(Identifiable, Selectable, PartialEq, Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
 #[diesel(belongs_to(User, foreign_key = owner_user_id))]
 #[diesel(table_name = crate::database::schema::files_shares)]
-// #[diesel(check_for_backend(diesel::pg::Pg))]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct FileShare {
     pub id: i32,
     pub owner_user_id: i32,
@@ -140,7 +140,7 @@ pub struct NewFileShareUsers {
     pub shared_to: i32,
 }
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[derive(Identifiable, Selectable, PartialEq, Serialize, Deserialize, Debug, Clone, Queryable)]
 #[diesel(belongs_to(User, foreign_key = shared_to))]
 #[diesel(belongs_to(FileShare, foreign_key = file_share_id))]
 #[diesel(table_name = crate::database::schema::files_shares_users)]

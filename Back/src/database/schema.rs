@@ -18,7 +18,7 @@ diesel::table! {
         id -> Int4,
         owner_user_id -> Int4,
         path -> Text,
-        share_type -> Nullable<ShareType>,
+        share_type -> ShareType,
         link -> Text,
     }
 }

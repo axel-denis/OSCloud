@@ -7,15 +7,16 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use dotenv::dotenv;
 
+use super::model::{FileShare, NewFileShare, NewUserMountPoint, ShareType, UserMountPoint};
+use super::schema::files_shares::link;
 use crate::database::model::{NewUser, Role, User};
+use crate::database::schema::files_shares::dsl::files_shares;
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 use crate::utils::files::file_info::check_path_is_folder;
 use crate::utils::users::VerifiedUserPath;
-
-use super::model::{FileShare, NewFileShare, NewUserMountPoint, ShareType, UserMountPoint};
 
 impl UserData {
     pub fn new() -> Self {
@@ -163,7 +164,7 @@ impl UserData {
         user: &User,
         path: &VerifiedUserPath,
         share_type: ShareType,
-    ) -> Result<String> {
+    ) -> Result<FileShare> {
         let mut pool = self.pool.get()?;
         Ok(
             diesel::insert_into(crate::database::schema::files_shares::dsl::files_shares)
@@ -173,7 +174,21 @@ impl UserData {
                     share_type,
                     link: "abcdef".to_string(),
                 })
-                .get_result::<FileShare>(&mut pool)?.link,
+                .get_result::<FileShare>(&mut pool)?,
         )
+    }
+
+    pub fn get_share_from_code(&self, code: &String) -> Option<FileShare> {
+        files_shares
+            .filter(link.eq(code))
+            .first::<FileShare>(&mut self.pool.get().ok()?)
+            .ok()
+    }
+
+    pub fn get_share_from_id(&self, id: i32) -> Option<FileShare> {
+        files_shares
+            .find(id)
+            .get_result::<FileShare>(&mut self.pool.get().ok()?)
+            .ok()
     }
 }

@@ -7,7 +7,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use dotenv::dotenv;
 
-use super::model::{FileShare, NewFileShare, NewUserMountPoint, ShareType, UserMountPoint};
+use super::model::{FileShare, FileShareUser, NewFileShare, NewFileShareUser, NewUserMountPoint, ShareType, UserMountPoint};
 use super::schema::files_shares::link;
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::files_shares::dsl::files_shares;
@@ -190,5 +190,21 @@ impl UserData {
             .find(id)
             .get_result::<FileShare>(&mut self.pool.get().ok()?)
             .ok()
+    }
+
+    pub fn add_file_share_user(
+        &self,
+        share: &FileShare,
+        user_to_share_to: &User,
+    ) -> Result<FileShareUser> {
+        let mut pool = self.pool.get()?;
+        Ok(
+            diesel::insert_into(crate::database::schema::files_shares_users::dsl::files_shares_users)
+                .values(&NewFileShareUser {
+                    file_share_id: share.id,
+                    shared_to: user_to_share_to.id,
+                })
+                .get_result::<FileShareUser>(&mut pool)?,
+        )
     }
 }

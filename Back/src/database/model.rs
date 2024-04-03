@@ -135,7 +135,7 @@ pub struct FileShare {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Insertable, AsChangeset)]
 #[diesel(table_name = crate::database::schema::files_shares_users)]
-pub struct NewFileShareUsers {
+pub struct NewFileShareUser {
     pub file_share_id: i32,
     pub shared_to: i32,
 }
@@ -145,7 +145,7 @@ pub struct NewFileShareUsers {
 #[diesel(belongs_to(FileShare, foreign_key = file_share_id))]
 #[diesel(table_name = crate::database::schema::files_shares_users)]
 // #[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct FileShareUsers {
+pub struct FileShareUser {
     pub id: i32,
     pub file_share_id: i32,
     pub shared_to: i32,

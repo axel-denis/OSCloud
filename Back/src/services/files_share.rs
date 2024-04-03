@@ -35,7 +35,9 @@ fn all_users_ids_to_all_users(users: Vec<i32>, db: &UserData) -> Result<Vec<User
 }
 
 fn share_to_user_list(users: &Vec<User>, share: &FileShare, db: &UserData) {
-    //
+    for user in users.iter() {
+        let _ = db.add_file_share_user(share, &user);
+    }
 }
 
 pub async fn share_file(

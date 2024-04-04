@@ -1,7 +1,7 @@
 use std::ffi::OsString;
+use std::io;
 use std::path::Path;
 use std::sync::Arc;
-use std::{fs, io};
 
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -124,5 +124,22 @@ pub async fn list_shared_to_me(
             (StatusCode::OK, axum::Json(list)).into_response()
         }
         None => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    }
+}
+
+// NOTE - only the owner can see the sharing info.
+// Will maybe be changed in the futur if the user has shared access to the file
+pub async fn file_shared_info(
+    axum::extract::Path(path): axum::extract::Path<String>,
+    State(app_state): State<Arc<AppState>>,
+    Extension(local_user): Extension<User>,
+) -> Response {
+    if let Some(verified_path) = verifiy_user_path(&app_state.userdata, &path, local_user) {
+        match app_state.userdata.get_share_from_file_path(&verified_path) {
+            Some(list) => (StatusCode::OK, axum::Json(list)).into_response(),
+            None => StatusCode::NOT_FOUND.into_response(),
+        }
+    } else {
+        StatusCode::UNAUTHORIZED.into_response()
     }
 }

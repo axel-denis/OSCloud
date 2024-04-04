@@ -189,6 +189,13 @@ impl UserData {
             .ok()
     }
 
+    pub fn get_share_from_file_path(&self, path: &VerifiedUserPath) -> Option<Vec<FileShare>> {
+        files_shares
+            .filter(super::schema::files_shares::path.eq(path.path().to_string_lossy().to_string()))
+            .get_results::<FileShare>(&mut self.pool.get().ok()?)
+            .ok()
+    }
+
     pub fn get_share_from_id(&self, id: i32) -> Option<FileShare> {
         files_shares
             .find(id)
@@ -202,9 +209,7 @@ impl UserData {
             .get_results::<FileShareUser>(&mut self.pool.get().ok()?)
             .ok()?
             .iter()
-            .filter_map(|share| {
-                self.get_share_from_id(share.file_share_id)
-            })
+            .filter_map(|share| self.get_share_from_id(share.file_share_id))
             .collect();
         // NOTE - the filter discards all not valid elements (their shouldn't be)
         // but still they are not "properly" handled

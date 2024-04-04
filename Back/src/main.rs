@@ -12,7 +12,7 @@ use axum::middleware;
 use axum::{routing::get, routing::post, Router};
 use services::file_upload::{download, upload};
 use services::files_management::{delete_file, move_file, rename_file};
-use services::files_share::{list_shared_to_me, share_file};
+use services::files_share::{file_shared_info, list_shared_to_me, share_file};
 use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
@@ -76,6 +76,7 @@ async fn main() {
         .route("/files_management/move", post(move_file))
         .route("/files_management/delete", post(delete_file))
         .route("/share_file/", post(share_file))
+        .route("/share_file/", get(file_shared_info))
         .route("/shared_to_me/", get(list_shared_to_me))
         .nest_service(
             "/download/:file",

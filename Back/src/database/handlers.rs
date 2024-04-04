@@ -7,17 +7,21 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use dotenv::dotenv;
 
-use super::model::{FileShare, FileShareUser, NewFileShare, NewFileShareUser, NewUserMountPoint, ShareType, UserMountPoint};
+use super::model::{
+    FileShare, FileShareUser, NewFileShare, NewFileShareUser, NewUserMountPoint, ShareType,
+    UserMountPoint,
+};
 use super::schema::files_shares::link;
+use super::schema::files_shares_users::shared_to;
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::files_shares::dsl::files_shares;
+use crate::database::schema::files_shares_users::dsl::files_shares_users;
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
 use crate::database::{PostgresPool, UserData};
 use crate::utils::files::file_info::check_path_is_folder;
 use crate::utils::users::VerifiedUserPath;
-
 impl UserData {
     pub fn new() -> Self {
         dotenv().ok();
@@ -192,19 +196,35 @@ impl UserData {
             .ok()
     }
 
+    pub fn get_shared_to_user(&self, user: &User) -> Option<Vec<FileShare>> {
+        let output: Vec<FileShare> = files_shares_users
+            .filter(shared_to.eq(user.id))
+            .get_results::<FileShareUser>(&mut self.pool.get().ok()?)
+            .ok()?
+            .iter()
+            .filter_map(|share| {
+                self.get_share_from_id(share.file_share_id)
+            })
+            .collect();
+        // NOTE - the filter discards all not valid elements (their shouldn't be)
+        // but still they are not "properly" handled
+        // -> does not return internal server error in case of database failure
+        Some(output)
+    }
+
     pub fn add_file_share_user(
         &self,
         share: &FileShare,
         user_to_share_to: &User,
     ) -> Result<FileShareUser> {
         let mut pool = self.pool.get()?;
-        Ok(
-            diesel::insert_into(crate::database::schema::files_shares_users::dsl::files_shares_users)
-                .values(&NewFileShareUser {
-                    file_share_id: share.id,
-                    shared_to: user_to_share_to.id,
-                })
-                .get_result::<FileShareUser>(&mut pool)?,
+        Ok(diesel::insert_into(
+            crate::database::schema::files_shares_users::dsl::files_shares_users,
         )
+        .values(&NewFileShareUser {
+            file_share_id: share.id,
+            shared_to: user_to_share_to.id,
+        })
+        .get_result::<FileShareUser>(&mut pool)?)
     }
 }

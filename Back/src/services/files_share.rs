@@ -1,3 +1,5 @@
+use std::ffi::OsString;
+use std::path::Path;
 use std::sync::Arc;
 use std::{fs, io};
 
@@ -9,6 +11,7 @@ use serde::Deserialize;
 
 use crate::database::model::{FileShare, ShareType, User};
 use crate::database::UserData;
+use crate::utils::files::list_files::{FileInfo, FileType};
 use crate::utils::users::verifiy_user_path;
 use crate::AppState;
 
@@ -74,5 +77,52 @@ pub async fn share_file(
             }
         }
         None => StatusCode::UNAUTHORIZED.into_response(),
+    }
+}
+
+pub struct OptionFileInfo {
+    pub name: Option<OsString>,
+    pub file_type: FileType,
+}
+pub async fn list_shared_to_me(
+    State(app_state): State<Arc<AppState>>,
+    Extension(local_user): Extension<User>,
+) -> Response {
+    match app_state.userdata.get_shared_to_user(&local_user) {
+        Some(shared_to_me) => {
+            let list: Vec<FileInfo> = shared_to_me
+                .iter()
+                .map(|f_share| {
+                    let path = Path::new(&f_share.path);
+                    OptionFileInfo {
+                        name: match path.file_name().to_owned() {
+                            Some(name) => Some(name.to_owned()),
+                            None => None,
+                        },
+                        file_type: if path.is_file() {
+                            FileType::File
+                        } else if path.is_dir() {
+                            FileType::Folder
+                        } else {
+                            FileType::Other
+                        },
+                    }
+                })
+                .filter_map(|opt| {
+                    if opt.name.is_some() {
+                        Some(FileInfo {
+                            name: opt.name.unwrap(),
+                            file_type: opt.file_type,
+                        })
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            // NOTE - the filter discards all not valid elements (there shouldn't be)
+            // but still they are not "properly" handled
+            (StatusCode::OK, axum::Json(list)).into_response()
+        }
+        None => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }

@@ -163,6 +163,12 @@ impl UserData {
         Some(test)
     }
 
+    // NOTE - nothing prevent from creating multiples shares per file, but currently
+    // this shouldn't be done as everything can be stored in one + not all get functions
+    // implement getting many elements and will often returns the first found
+    // multiples shares will be useful when we will implement share rules (passwords, expirations...)
+    // Currently, fronts only need to implement taking the first element of the given list when
+    // getting files shares from the back
     pub fn add_file_share(
         &self,
         user: &User,
@@ -176,7 +182,7 @@ impl UserData {
                     owner_user_id: user.id,
                     path: path.path().to_string_lossy().to_string(),
                     share_type,
-                    link: "abcdef".to_string(),
+                    link: "abcdef".to_string(), // TODO random string
                 })
                 .get_result::<FileShare>(&mut pool)?,
         )
@@ -199,7 +205,7 @@ impl UserData {
     pub fn get_share_from_id(&self, id: i32) -> Option<FileShare> {
         files_shares
             .find(id)
-            .get_result::<FileShare>(&mut self.pool.get().ok()?)
+            .first::<FileShare>(&mut self.pool.get().ok()?)
             .ok()
     }
 

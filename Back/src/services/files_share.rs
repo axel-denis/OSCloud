@@ -7,7 +7,7 @@ use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::{Extension, Json};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::database::model::{FileShare, ShareType, User};
 use crate::database::UserData;
@@ -127,6 +127,15 @@ pub async fn list_shared_to_me(
     }
 }
 
+#[derive(Serialize)]
+struct FileSharedInfoResponse {
+    pub id: i32,
+    pub owner: User,
+    pub path: String,
+    pub share_type: ShareType,
+    pub link: String,
+    pub shared_to: Vec<User>,
+}
 // NOTE - only the owner can see the sharing info.
 // Will maybe be changed in the futur if the user has shared access to the file
 pub async fn file_shared_info(
@@ -136,7 +145,28 @@ pub async fn file_shared_info(
 ) -> Response {
     if let Some(verified_path) = verifiy_user_path(&app_state.userdata, &path, local_user) {
         match app_state.userdata.get_share_from_file_path(&verified_path) {
-            Some(list) => (StatusCode::OK, axum::Json(list)).into_response(),
+            Some(list) => {
+                let output: Vec<FileSharedInfoResponse> = list
+                    .iter()
+                    .filter_map(|elem| {
+                        Some(FileSharedInfoResponse {
+                            id: elem.id,
+                            owner: if let Some(owner) =
+                                app_state.userdata.get_user_by_id(elem.owner_user_id)
+                            {
+                                owner
+                            } else {
+                                return None;
+                            },
+                            path: elem.path.to_owned(),
+                            share_type: elem.share_type.to_owned(),
+                            link: elem.link.to_owned(),
+                            shared_to: Vec::new(), // TODO fetch all user data
+                        })
+                    })
+                    .collect();
+                (StatusCode::OK, axum::Json(output)).into_response()
+            }
             None => StatusCode::NOT_FOUND.into_response(),
         }
     } else {

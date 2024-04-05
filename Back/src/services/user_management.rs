@@ -42,6 +42,7 @@ pub struct AddUserRequest {
     pub role: String,
 }
 
+// Admin
 pub async fn add_user(
     State(app_state): State<Arc<AppState>>,
     Extension(_): Extension<User>,
@@ -66,5 +67,27 @@ pub async fn add_user(
             }
         }
         Ok(_) => StatusCode::OK.into_response(),
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EnableUserRequest {
+    pub user_id: i32,
+    pub state: bool,
+}
+
+// Admin
+pub async fn enable_user(
+    State(app_state): State<Arc<AppState>>,
+    Extension(_): Extension<User>,
+    Json(req): Json<EnableUserRequest>,
+) -> StatusCode {
+    let user = match app_state.userdata.get_user_by_id(req.user_id) {
+        Some(user) => user,
+        None => return StatusCode::NOT_FOUND,
+    };
+    match app_state.userdata.enable_user(&user, req.state) {
+        Ok(_) => StatusCode::OK,
+        Err(_) => StatusCode::INTERNAL_SERVER_ERROR,
     }
 }

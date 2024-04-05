@@ -115,6 +115,29 @@ impl UserData {
         // -> does not return internal server error in case of database failure
     }
 
+    // returns shared info if the provided user has access
+    pub fn does_users_has_acces_to_share_by_code(
+        &self,
+        user: &User,
+        code: &String,
+    ) -> Option<FileShare> {
+        if let Some(share) = self.get_share_from_code(code) {
+            if share.share_type == ShareType::Public {
+                Some(share)
+            } else if let Some(users_shared_to) = self.get_file_users_shared_to(&share) {
+                if users_shared_to.contains(&user.id) {
+                    Some(share)
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+
     pub fn add_file_share_user(
         &self,
         share: &FileShare,

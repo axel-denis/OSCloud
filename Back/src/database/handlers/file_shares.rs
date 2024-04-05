@@ -1,5 +1,5 @@
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use diesel::prelude::*;
 
@@ -120,13 +120,19 @@ impl UserData {
         &self,
         user: &User,
         code: &String,
-    ) -> Option<FileShare> {
+    ) -> Option<VerifiedUserPath> {
         if let Some(share) = self.get_share_from_code(code) {
             if share.share_type == ShareType::Public {
-                Some(share)
+                Some(VerifiedUserPath::new(
+                    user.clone(),
+                    PathBuf::from(share.path),
+                ))
             } else if let Some(users_shared_to) = self.get_file_users_shared_to(&share) {
                 if users_shared_to.contains(&user.id) {
-                    Some(share)
+                    Some(VerifiedUserPath::new(
+                        user.clone(),
+                        PathBuf::from(share.path),
+                    ))
                 } else {
                     None
                 }
@@ -144,7 +150,7 @@ impl UserData {
         &self,
         user: &User,
         path: &Path,
-    ) -> Option<FileShare> {
+    ) -> Option<VerifiedUserPath> {
         let canonical = match std::fs::canonicalize(path) {
             Ok(result) => result,
             Err(_) => return None,
@@ -153,10 +159,10 @@ impl UserData {
             if let Some(shares) = self.get_share_from_file_path(ancestor) {
                 for share in shares {
                     if share.share_type == ShareType::Public {
-                        return Some(share);
+                        return Some(VerifiedUserPath::new(user.clone(), canonical));
                     } else if let Some(users_shared_to) = self.get_file_users_shared_to(&share) {
                         if users_shared_to.contains(&user.id) {
-                            return Some(share);
+                            return Some(VerifiedUserPath::new(user.clone(), canonical));
                         }
                     }
                 }

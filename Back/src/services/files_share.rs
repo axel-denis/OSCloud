@@ -161,7 +161,16 @@ pub async fn file_shared_info(
                             path: elem.path.to_owned(),
                             share_type: elem.share_type.to_owned(),
                             link: elem.link.to_owned(),
-                            shared_to: Vec::new(), // TODO fetch all user data
+                            shared_to: if let Some(users_id) =
+                                app_state.userdata.get_file_users_shared_to(&verified_path)
+                            {
+                                users_id
+                                    .iter()
+                                    .filter_map(|id| app_state.userdata.get_user_by_id(*id))
+                                    .collect()
+                            } else {
+                                return None;
+                            },
                         })
                     })
                     .collect();

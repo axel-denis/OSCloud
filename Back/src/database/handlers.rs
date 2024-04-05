@@ -16,6 +16,7 @@ use super::schema::files_shares_users::shared_to;
 use crate::database::model::{NewUser, Role, User};
 use crate::database::schema::files_shares::dsl::files_shares;
 use crate::database::schema::files_shares_users::dsl::files_shares_users;
+use crate::database::schema::files_shares_users::file_share_id;
 use crate::database::schema::users::dsl::users;
 use crate::database::schema::users::name;
 use crate::database::Result;
@@ -209,6 +210,7 @@ impl UserData {
             .ok()
     }
 
+    // get all files shared toward an user
     pub fn get_shared_to_user(&self, user: &User) -> Option<Vec<FileShare>> {
         let output: Vec<FileShare> = files_shares_users
             .filter(shared_to.eq(user.id))
@@ -217,6 +219,27 @@ impl UserData {
             .iter()
             .filter_map(|share| self.get_share_from_id(share.file_share_id))
             .collect();
+        // NOTE - the filter discards all not valid elements (their shouldn't be)
+        // but still they are not "properly" handled
+        // -> does not return internal server error in case of database failure
+        Some(output)
+    }
+
+    // get all users IDs that have acces to the file via sharing
+    pub fn get_file_users_shared_to(&self, path: &VerifiedUserPath) -> Option<Vec<i32>> {
+        let shares = self.get_share_from_file_path(path)?;
+        let mut output: Vec<i32> = Vec::new();
+        for share in shares {
+            output.append(
+                &mut files_shares_users
+                    .filter(file_share_id.eq(share.id))
+                    .get_results::<FileShareUser>(&mut self.pool.get().ok()?)
+                    .ok()?
+                    .iter()
+                    .map(|user_share| user_share.shared_to)
+                    .collect(),
+            );
+        }
         // NOTE - the filter discards all not valid elements (their shouldn't be)
         // but still they are not "properly" handled
         // -> does not return internal server error in case of database failure

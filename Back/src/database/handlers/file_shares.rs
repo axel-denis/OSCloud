@@ -1,27 +1,14 @@
-use std::fs;
-use std::process::exit;
-
-use bcrypt::{hash, DEFAULT_COST};
-
 use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
-use dotenv::dotenv;
 
-use crate::database::model::{
-    FileShare, FileShareUser, NewFileShare, NewFileShareUser, NewUserMountPoint, ShareType,
-    UserMountPoint,
-};
-use crate::database::model::{NewUser, Role, User};
+use crate::database::model::User;
+use crate::database::model::{FileShare, FileShareUser, NewFileShare, NewFileShareUser, ShareType};
 use crate::database::schema::files_shares::dsl::files_shares;
 use crate::database::schema::files_shares::link;
 use crate::database::schema::files_shares_users::dsl::files_shares_users;
 use crate::database::schema::files_shares_users::file_share_id;
 use crate::database::schema::files_shares_users::shared_to;
-use crate::database::schema::users::dsl::users;
-use crate::database::schema::users::name;
 use crate::database::Result;
-use crate::database::{PostgresPool, UserData};
-use crate::utils::files::file_info::check_path_is_folder;
+use crate::database::UserData;
 use crate::utils::users::VerifiedUserPath;
 
 impl UserData {
@@ -59,7 +46,10 @@ impl UserData {
 
     pub fn get_share_from_file_path(&self, path: &VerifiedUserPath) -> Option<Vec<FileShare>> {
         files_shares
-            .filter(crate::database::schema::files_shares::path.eq(path.path().to_string_lossy().to_string()))
+            .filter(
+                crate::database::schema::files_shares::path
+                    .eq(path.path().to_string_lossy().to_string()),
+            )
             .get_results::<FileShare>(&mut self.pool.get().ok()?)
             .ok()
     }

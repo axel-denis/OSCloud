@@ -58,6 +58,17 @@ pub struct ShareableUser {
     pub enabled: bool,
 }
 
+impl From<User> for ShareableUser {
+    fn from(user: User) -> Self {
+        ShareableUser {
+            id: user.id,
+            name: user.name,
+            user_role: user.user_role,
+            enabled: user.enabled,
+        }
+    }
+}
+
 #[derive(Identifiable, Selectable, PartialEq, Serialize, Deserialize, Debug, Clone, Queryable)]
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
 #[diesel(table_name = crate::database::schema::users)]

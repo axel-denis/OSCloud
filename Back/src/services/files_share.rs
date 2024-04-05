@@ -9,7 +9,7 @@ use axum::response::{IntoResponse, Response};
 use axum::{Extension, Json};
 use serde::{Deserialize, Serialize};
 
-use crate::database::model::{FileShare, ShareType, User};
+use crate::database::model::{FileShare, ShareType, ShareableUser, User};
 use crate::database::UserData;
 use crate::utils::files::list_files::{FileInfo, FileType};
 use crate::utils::users::verifiy_user_path;
@@ -130,11 +130,11 @@ pub async fn list_shared_to_me(
 #[derive(Serialize)]
 struct FileSharedInfoResponse {
     pub id: i32,
-    pub owner: User,
+    pub owner: ShareableUser,
     pub path: String,
     pub share_type: ShareType,
     pub link: String,
-    pub shared_to: Vec<User>,
+    pub shared_to: Vec<ShareableUser>,
 }
 // NOTE - only the owner can see the sharing info.
 // Will maybe be changed in the futur if the user has shared access to the file
@@ -154,7 +154,7 @@ pub async fn file_shared_info(
                             owner: if let Some(owner) =
                                 app_state.userdata.get_user_by_id(elem.owner_user_id)
                             {
-                                owner
+                                ShareableUser::from(owner)
                             } else {
                                 return None;
                             },
@@ -166,7 +166,11 @@ pub async fn file_shared_info(
                             {
                                 users_id
                                     .iter()
-                                    .filter_map(|id| app_state.userdata.get_user_by_id(*id))
+                                    .filter_map(|id| {
+                                        Some(ShareableUser::from(
+                                            app_state.userdata.get_user_by_id(*id)?,
+                                        ))
+                                    })
                                     .collect()
                             } else {
                                 return None;

@@ -8,6 +8,12 @@ pub struct VerifiedUserPath {
 }
 
 impl VerifiedUserPath {
+    pub fn new(user: User, path: PathBuf) -> VerifiedUserPath {
+        VerifiedUserPath {
+            _user: user,
+            _path: path,
+        }
+    }
     pub fn user(&self) -> &User {
         &self._user
     }
@@ -25,10 +31,7 @@ pub fn verifiy_user_path(db: &UserData, path: &String, user: User) -> Option<Ver
     for mnt in mnts {
         for ancestor in canonical.ancestors() {
             if ancestor == PathBuf::from(&mnt) {
-                return Some(VerifiedUserPath {
-                    _user: user,
-                    _path: canonical,
-                });
+                return Some(VerifiedUserPath::new(user, canonical));
             };
         }
     }

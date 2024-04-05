@@ -146,7 +146,7 @@ pub async fn file_shared_info(
     Extension(local_user): Extension<User>,
 ) -> Response {
     if let Some(verified_path) = verifiy_user_path(&app_state.userdata, &path, local_user) {
-        match app_state.userdata.get_share_from_file_path(&verified_path) {
+        match app_state.userdata.get_share_from_file_path(&verified_path.path()) {
             Some(list) => {
                 let output: Vec<FileSharedInfoResponse> = list
                     .iter()
@@ -164,7 +164,7 @@ pub async fn file_shared_info(
                             share_type: elem.share_type.to_owned(),
                             link: elem.link.to_owned(),
                             shared_to: if let Some(users_id) =
-                                app_state.userdata.get_file_users_shared_to_from_path(&verified_path)
+                                app_state.userdata.get_file_users_shared_to_from_path(&verified_path.path())
                             {
                                 users_id
                                     .iter()

@@ -1,4 +1,5 @@
 use std::io;
+use std::path::Path;
 
 use diesel::prelude::*;
 
@@ -46,11 +47,10 @@ impl UserData {
             .ok()
     }
 
-    pub fn get_share_from_file_path(&self, path: &VerifiedUserPath) -> Option<Vec<FileShare>> {
+    pub fn get_share_from_file_path(&self, path: &Path) -> Option<Vec<FileShare>> {
         files_shares
             .filter(
-                crate::database::schema::files_shares::path
-                    .eq(path.path().to_string_lossy().to_string()),
+                crate::database::schema::files_shares::path.eq(path.to_string_lossy().to_string()),
             )
             .get_results::<FileShare>(&mut self.pool.get().ok()?)
             .ok()
@@ -79,7 +79,7 @@ impl UserData {
     }
 
     // get all users IDs that have acces to the file via sharing
-    pub fn get_file_users_shared_to_from_path(&self, path: &VerifiedUserPath) -> Option<Vec<i32>> {
+    pub fn get_file_users_shared_to_from_path(&self, path: &Path) -> Option<Vec<i32>> {
         let shares = self.get_share_from_file_path(path)?;
         let mut output: Vec<i32> = Vec::new();
         for share in shares {
@@ -136,6 +136,33 @@ impl UserData {
         } else {
             None
         }
+    }
+
+    // returns shared info if the provided user has access
+    // Note : goes up the path tree to find if the file is in a shared folder
+    pub fn does_users_has_acces_to_share_by_path(
+        &self,
+        user: &User,
+        path: &Path,
+    ) -> Option<FileShare> {
+        let canonical = match std::fs::canonicalize(path) {
+            Ok(result) => result,
+            Err(_) => return None,
+        };
+        for ancestor in canonical.ancestors() {
+            if let Some(shares) = self.get_share_from_file_path(ancestor) {
+                for share in shares {
+                    if share.share_type == ShareType::Public {
+                        return Some(share);
+                    } else if let Some(users_shared_to) = self.get_file_users_shared_to(&share) {
+                        if users_shared_to.contains(&user.id) {
+                            return Some(share);
+                        }
+                    }
+                }
+            };
+        }
+        None
     }
 
     pub fn add_file_share_user(

@@ -136,6 +136,8 @@ struct FileSharedInfoResponse {
     pub link: String,
     pub shared_to: Vec<ShareableUser>,
 }
+
+// Gives all the share related info of one file
 // NOTE - only the owner can see the sharing info.
 // Will maybe be changed in the futur if the user has shared access to the file
 pub async fn file_shared_info(
@@ -162,7 +164,7 @@ pub async fn file_shared_info(
                             share_type: elem.share_type.to_owned(),
                             link: elem.link.to_owned(),
                             shared_to: if let Some(users_id) =
-                                app_state.userdata.get_file_users_shared_to(&verified_path)
+                                app_state.userdata.get_file_users_shared_to_from_path(&verified_path)
                             {
                                 users_id
                                     .iter()

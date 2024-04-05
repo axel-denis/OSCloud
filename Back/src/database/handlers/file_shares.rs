@@ -1,3 +1,5 @@
+use std::io;
+
 use diesel::prelude::*;
 
 use crate::database::model::User;
@@ -77,7 +79,7 @@ impl UserData {
     }
 
     // get all users IDs that have acces to the file via sharing
-    pub fn get_file_users_shared_to(&self, path: &VerifiedUserPath) -> Option<Vec<i32>> {
+    pub fn get_file_users_shared_to_from_path(&self, path: &VerifiedUserPath) -> Option<Vec<i32>> {
         let shares = self.get_share_from_file_path(path)?;
         let mut output: Vec<i32> = Vec::new();
         for share in shares {
@@ -97,11 +99,38 @@ impl UserData {
         Some(output)
     }
 
+    // get all users IDs that have acces to the file via sharing
+    pub fn get_file_users_shared_to(&self, share: &FileShare) -> Option<Vec<i32>> {
+        Some(
+            files_shares_users
+                .filter(file_share_id.eq(share.id))
+                .get_results::<FileShareUser>(&mut self.pool.get().ok()?)
+                .ok()?
+                .iter()
+                .map(|user_share| user_share.shared_to)
+                .collect(),
+        )
+        // NOTE - the filter discards all not valid elements (their shouldn't be)
+        // but still they are not "properly" handled
+        // -> does not return internal server error in case of database failure
+    }
+
     pub fn add_file_share_user(
         &self,
         share: &FileShare,
         user_to_share_to: &User,
     ) -> Result<FileShareUser> {
+        let existing_shares = self.get_file_users_shared_to(share).unwrap();
+        let users: Vec<User> = existing_shares
+            .iter()
+            .filter_map(|id| Some(self.get_user_by_id(*id)?))
+            .collect();
+        if users.contains(user_to_share_to) {
+            return Err(Box::new(io::Error::new(
+                io::ErrorKind::AlreadyExists,
+                "File already shared to this user",
+            )));
+        }
         let mut pool = self.pool.get()?;
         Ok(diesel::insert_into(
             crate::database::schema::files_shares_users::dsl::files_shares_users,

@@ -144,33 +144,6 @@ impl UserData {
         }
     }
 
-    // returns shared info if the provided user has access
-    // Note : goes up the path tree to find if the file is in a shared folder
-    pub fn does_users_has_acces_to_share_by_path(
-        &self,
-        user: &User,
-        path: &Path,
-    ) -> Option<VerifiedUserPath> {
-        let canonical = match std::fs::canonicalize(path) {
-            Ok(result) => result,
-            Err(_) => return None,
-        };
-        for ancestor in canonical.ancestors() {
-            if let Some(shares) = self.get_share_from_file_path(ancestor) {
-                for share in shares {
-                    if share.share_type == ShareType::Public {
-                        return Some(VerifiedUserPath::new(user.clone(), canonical));
-                    } else if let Some(users_shared_to) = self.get_file_users_shared_to(&share) {
-                        if users_shared_to.contains(&user.id) {
-                            return Some(VerifiedUserPath::new(user.clone(), canonical));
-                        }
-                    }
-                }
-            };
-        }
-        None
-    }
-
     pub fn add_file_share_user(
         &self,
         share: &FileShare,

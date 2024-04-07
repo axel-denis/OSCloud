@@ -74,7 +74,13 @@ impl UserData {
         Ok(())
     }
 
-    pub fn create_user(&self, user_name: &str, user_password: &str, role: Role, enable: bool) -> Result<User> {
+    pub fn create_user(
+        &self,
+        user_name: &str,
+        user_password: &str,
+        role: Role,
+        enable: bool,
+    ) -> Result<User> {
         let mut pool = self.pool.get()?;
         if !users
             .filter(name.eq(user_name))
@@ -125,7 +131,7 @@ impl UserData {
             Ok(path) => path,
             Err(_) => return Err("Mount point could not be resolved into a string".into()),
         };
-        if !check_path_is_folder(&path) {
+        if !check_path_is_folder(path) {
             return Err("Mount point need to be a valid folder".into());
         }
         let mut pool = self.pool.get()?;

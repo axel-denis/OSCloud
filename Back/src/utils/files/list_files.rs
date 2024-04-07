@@ -1,40 +1,47 @@
 use core::fmt;
 use std::{ffi::OsString, fs::read_dir};
 
+use serde::Serialize;
+
+use crate::utils::users::VerifiedUserPath;
+
+#[derive(Serialize)]
 pub enum FileType {
-    FILE,
-    FOLDER,
-    OTHER,
+    File,
+    Folder,
+    Other,
 }
 
 impl fmt::Display for FileType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            FileType::FILE => write!(f, "File"),
-            FileType::FOLDER => write!(f, "Folder"),
-            FileType::OTHER => write!(f, "Other"),
+            FileType::File => write!(f, "File"),
+            FileType::Folder => write!(f, "Folder"),
+            FileType::Other => write!(f, "Other"),
         }
     }
 }
 
+#[derive(Serialize)]
 pub struct FileInfo {
     pub name: OsString,
     pub file_type: FileType,
 }
 
-pub fn list_files(path: String) -> Result<Vec<FileInfo>, std::io::Error> {
-    let paths = read_dir(path)?;
+// Please generate user path only with verifiy_user_path
+pub fn list_files(user_path: &VerifiedUserPath) -> Result<Vec<FileInfo>, std::io::Error> {
+    let paths = read_dir(user_path.path())?;
 
     Ok(paths
         .flatten()
         .map(|pth| FileInfo {
             name: pth.file_name(),
             file_type: if pth.path().is_file() {
-                FileType::FILE
+                FileType::File
             } else if pth.path().is_dir() {
-                FileType::FOLDER
+                FileType::Folder
             } else {
-                FileType::OTHER
+                FileType::Other
             },
         })
         .collect())

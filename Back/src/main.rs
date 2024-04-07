@@ -10,11 +10,13 @@ use axum::http::header::CONTENT_TYPE;
 use axum::http::Method;
 use axum::middleware;
 use axum::{routing::get, routing::post, Router};
-use services::user_gestion::{add_user, delete_user};
+use services::file_upload::{download, upload};
+use services::files_management::{delete_file, move_file, rename_file};
 use services::home::home;
 use services::json::import_from_json;
 use services::json::save_to_json;
 use services::login::login;
+use services::user_management::{add_user, delete_user};
 use services::user_info::user_info;
 
 mod cli;
@@ -23,6 +25,8 @@ use database::UserData;
 use dotenv::dotenv;
 
 use tower_http::cors::{Any, CorsLayer};
+
+use crate::services::list_files::list_files;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -53,6 +57,7 @@ async fn main() {
     let all_router = Router::new()
         .route("/login", post(login))
         .with_state(shared_state.clone());
+
     let registered_router = Router::new()
         .route(
             "/user",
@@ -63,7 +68,16 @@ async fn main() {
         .route("/save", post(save_to_json))
         .route("/import", post(import_from_json))
         .route("/file", post(|| async { "Hello, World!" }))
+        .route("/list_files/:dir", get(list_files))
         .route("/home", get(home))
+        .route("/upload", post(upload))
+        .route("/files_management/rename", post(rename_file))
+        .route("/files_management/move", post(move_file))
+        .route("/files_management/delete", post(delete_file))
+        .nest_service(
+            "/download/:file",
+            get(download).with_state(shared_state.clone()),
+        )
         .route_layer(middleware::from_fn_with_state(
             shared_state.clone(),
             auth_middleware::auth_middleware,
@@ -84,7 +98,13 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888")
         .await
         .expect("failed to launch server");
-    axum::serve(listener, all_router.merge(registered_router).merge(admin_router).layer(cors))
-        .await
-        .expect("failed to launch server");
+    axum::serve(
+        listener,
+        all_router
+            .merge(registered_router)
+            .merge(admin_router)
+            .layer(cors),
+    )
+    .await
+    .expect("failed to launch server");
 }

@@ -75,10 +75,10 @@ pub(crate) fn import_help(db: &UserData) {
     println!("{str}");
 }
 
-pub(crate) fn list_files_help(_: &UserData) {
-    println!("Usage: alias 'lf'");
-    println!("    list_files [path]");
-    println!("List files and folders at a given path");
+pub(crate) fn list_files_as_help(_: &UserData) {
+    println!("Usage: alias 'lfa'");
+    println!("    list_files_as [username] [path]");
+    println!("List files and folders at a given path if the given user has access");
 }
 
 pub(crate) fn user_mounts_points_help(_: &UserData) {
@@ -114,8 +114,8 @@ pub(crate) fn create_help_map() -> HelpMap {
     map.insert("create_user".to_owned(), create_user_help);
     map.insert("du".to_owned(), delete_user_help);
     map.insert("delete_user".to_owned(), delete_user_help);
-    map.insert("lf".to_owned(), list_files_help);
-    map.insert("list_files".to_owned(), list_files_help);
+    map.insert("lf".to_owned(), list_files_as_help);
+    map.insert("list_files".to_owned(), list_files_as_help);
     map.insert("ump".to_owned(), user_mounts_points_help);
     map.insert("user_mounts_points".to_owned(), user_mounts_points_help);
     map.insert("aump".to_owned(), add_user_mount_point_help);

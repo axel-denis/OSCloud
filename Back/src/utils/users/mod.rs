@@ -2,6 +2,7 @@ use std::{fs, path::PathBuf};
 
 use crate::database::{model::User, UserData};
 
+#[must_use]
 pub struct VerifiedUserPath {
     user: User,
     path: PathBuf,

@@ -1,40 +1,43 @@
-use std::{fs, path::PathBuf};
+use std::path::PathBuf;
 
 use crate::database::{
     model::{ShareType, User},
     UserData,
 };
 
+use super::files::clean_path::clean_path;
+
+#[must_use]
 pub struct VerifiedUserPath {
-    _user: User,
-    _path: PathBuf,
+    user: User,
+    path: PathBuf,
 }
 
 impl VerifiedUserPath {
     pub fn new(user: User, path: PathBuf) -> VerifiedUserPath {
         VerifiedUserPath {
-            _user: user,
-            _path: path,
+            user: user,
+            path: path,
         }
     }
     pub fn user(&self) -> &User {
-        &self._user
+        &self.user
     }
     pub fn path(&self) -> &PathBuf {
-        &self._path
+        &self.path
     }
 }
 
 pub fn verifiy_user_path(db: &UserData, path: &String, user: User) -> Option<VerifiedUserPath> {
     let mnts = db.get_user_mounts_points(&user)?;
-    let canonical = match fs::canonicalize(path) {
-        Ok(result) => result,
-        Err(_) => return None,
-    };
+    let clean_path = clean_path(path);
     for mnt in mnts {
-        for ancestor in canonical.ancestors() {
+        for ancestor in clean_path.ancestors() {
             if ancestor == PathBuf::from(&mnt) {
-                return Some(VerifiedUserPath::new(user, canonical));
+                return Some(VerifiedUserPath {
+                    user,
+                    path: clean_path,
+                });
             };
         }
     }

@@ -49,5 +49,5 @@ pub async fn download(
             };
         }
     }
-    return StatusCode::UNAUTHORIZED.into_response();
+    StatusCode::UNAUTHORIZED.into_response()
 }

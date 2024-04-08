@@ -51,18 +51,15 @@ pub fn verify_user_shared_path(
     path: &String,
     user: User,
 ) -> Option<VerifiedUserPath> {
-    let canonical = match std::fs::canonicalize(PathBuf::from(path)) {
-        Ok(result) => result,
-        Err(_) => return None,
-    };
-    for ancestor in canonical.ancestors() {
+    let clean_path = clean_path(path);
+    for ancestor in clean_path.ancestors() {
         if let Some(shares) = db.get_share_from_file_path(ancestor) {
             for share in shares {
                 if share.share_type == ShareType::Public {
-                    return Some(VerifiedUserPath::new(user, canonical));
+                    return Some(VerifiedUserPath::new(user, clean_path));
                 } else if let Some(users_shared_to) = db.get_file_users_shared_to(&share) {
                     if users_shared_to.contains(&user.id) {
-                        return Some(VerifiedUserPath::new(user, canonical));
+                        return Some(VerifiedUserPath::new(user, clean_path));
                     }
                 }
             }

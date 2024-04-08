@@ -1,6 +1,8 @@
-use std::{fs, path::PathBuf};
+use std::path::PathBuf;
 
 use crate::database::{model::User, UserData};
+
+use super::files::clean_path::clean_path;
 
 #[must_use]
 pub struct VerifiedUserPath {
@@ -19,16 +21,13 @@ impl VerifiedUserPath {
 
 pub fn verifiy_user_path(db: &UserData, path: &String, user: User) -> Option<VerifiedUserPath> {
     let mnts = db.get_user_mounts_points(&user)?;
-    let canonical = match fs::canonicalize(path) {
-        Ok(result) => result,
-        Err(_) => return None,
-    };
+    let clean_path = clean_path(path);
     for mnt in mnts {
-        for ancestor in canonical.ancestors() {
+        for ancestor in clean_path.ancestors() {
             if ancestor == PathBuf::from(&mnt) {
                 return Some(VerifiedUserPath {
                     user,
-                    path: canonical,
+                    path: clean_path,
                 });
             };
         }

@@ -70,34 +70,26 @@ pub fn verify_user_shared_path(
         .to_string_lossy()
         .to_string(); // TODO - check if a / is included
     if let Some(share) = db.get_share_from_code(&code) {
-        let new_path = change_path_origin(share.path, entire_path);
+        let new_path = change_path_origin(share.path.clone(), entire_path);
         if new_path.exists() {
-            if new_path.is_dir() {
-                match share.share_type {
-                    ShareType::Public => Some(VerifiedUserPath::new(user, new_path)),
-                    ShareType::User => Some(VerifiedUserPath::new(user, new_path)), // TODO
+            match share.share_type {
+                ShareType::Public => Some(VerifiedUserPath::new(user, new_path)),
+                ShareType::User => {
+                    if let Some(users_ids) = db.get_file_users_shared_to(&share) {
+                        if users_ids.contains(&user.id) {
+                            Some(VerifiedUserPath::new(user, new_path))
+                        } else {
+                            None // user don't have access
+                        }
+                    } else {
+                        None // db error
+                    }
                 }
-            } else {
-                None // TODO (gives access if only the code is given. If path after code, refuse or only give file pointed by the code)
             }
         } else {
-            None
+            None // no paths exists with share mount point + given path
         }
     } else {
-        None
+        None // no share to this code
     }
-    // for ancestor in clean_path.ancestors() {
-    //     if let Some(shares) = db.get_share_from_file_path(ancestor) {
-    //         for share in shares {
-    //             if share.share_type == ShareType::Public {
-    //                 return Some(VerifiedUserPath::new(user, clean_path));
-    //             } else if let Some(users_shared_to) = db.get_file_users_shared_to(&share) {
-    //                 if users_shared_to.contains(&user.id) {
-    //                     return Some(VerifiedUserPath::new(user, clean_path));
-    //                 }
-    //             }
-    //         }
-    //     };
-    // }
-    // None
 }

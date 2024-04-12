@@ -9,7 +9,7 @@ use axum_typed_multipart::{TryFromMultipart, TypedMultipart};
 use tower::ServiceExt;
 
 use crate::database::model::User;
-use crate::utils::users::verifiy_user_path;
+use crate::utils::users::{verifiy_user_path, verify_user_shared_path};
 use crate::AppState;
 
 use tower_http::services::ServeDir;
@@ -41,7 +41,11 @@ pub async fn download(
     axum::extract::Path(file): axum::extract::Path<String>,
     request: Request,
 ) -> impl IntoResponse {
-    if let Some(path) = verifiy_user_path(&app_state.userdata, &file, local_user) {
+    let mut verified_path = verifiy_user_path(&app_state.userdata, &file, local_user.clone());
+    if verified_path.is_none() {
+        verified_path = verify_user_shared_path(&app_state.userdata, &file, local_user);
+    }
+    if let Some(path) = verified_path {
         if path.path().exists() && path.path().is_file() {
             return match ServeDir::new(path.path()).oneshot(request).await {
                 Ok(result) => result.into_response(),

@@ -6,10 +6,10 @@ import Banner from '../Banner/Banner';
 import Window from '../Window/Window';
 import { MobileDevice } from '../App';
 import { AnimatePresence, motion } from 'framer-motion';
-import { backIp, timeScale } from '../consts';
+import { timeScale } from '../consts';
 import SelectableFile from './SelectableFile';
 import DragDropFile from './DragDropFile';
-import { getUserMountPoints } from '../Routes/Routes';
+import { get_list_files, getUserMountPoints, receivedFileInfoToFileInfo } from '../Routes/Routes';
 
 
 interface Props {
@@ -18,13 +18,6 @@ interface Props {
   setIsLoggedIn: Function;
   urlsHandler: UrlInfo;
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
-}
-
-export type ReceivedFileType = "folder" | "file";
-
-export interface ReceivedFileInfo {
-  name: string;
-  type: ReceivedFileType;
 }
 
 
@@ -46,14 +39,7 @@ export interface FileInfo {
   rights: "read" | "write";
 }
 
-function receivedFileInfoToFileInfo(data: ReceivedFileInfo): FileInfo { // TODO - tmp until the back returns proper type
-  return {
-    name: data.name,
-    type: data.type === "file" ? "unknown" : "folder",
-    size: 10,
-    rights: "write",
-  }
-}
+
 
 function mountPointToFileInfo(data: string): FileInfo {
   return {
@@ -163,6 +149,7 @@ export default function FilesApp(props: Props) {
   }, []);
 
   React.useEffect(() => {
+    setLoading(true);
     // loads the mountpoints if path is root
     if (path === "/") {
       (async () => {
@@ -175,7 +162,20 @@ export default function FilesApp(props: Props) {
         }
       })();
     } else {
-
+      (async () => {
+        const files_list = await get_list_files(path);
+        setLoading(false);
+        setOnError(false);
+        if (files_list.answer.status === 200 && files_list.data) {
+          setDisplayedFiles(files_list.data.map((elem) => receivedFileInfoToFileInfo(elem)));
+        } else {
+          console.log("files_app error while listing files code :",
+            files_list.answer.status,
+            files_list.answer.statusText,
+            files_list.answer.url);
+          setOnError(true);
+        }
+      })();
     }
   }, [path]);
 

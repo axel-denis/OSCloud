@@ -80,7 +80,7 @@ interface ReceivedFileInfo {
 }
 
 // TODO - fast patch - will be changed once the back returns proper types
-function receivedFileInfoToFileInfo(data: ReceivedFileInfo): FileInfo { // TODO - tmp until the back returns proper type
+export function receivedFileInfoToFileInfo(data: ReceivedFileInfo): FileInfo { // TODO - tmp until the back returns proper type
     return {
         name: data.name,
         type: data.type === "file" ? "unknown" : "folder",

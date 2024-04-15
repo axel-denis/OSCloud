@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { backIp, timeScale } from '../consts';
 import SelectableFile from './SelectableFile';
 import DragDropFile from './DragDropFile';
+import { getUserMountPoints } from '../Routes/Routes';
 
 
 interface Props {
@@ -18,6 +19,14 @@ interface Props {
   urlsHandler: UrlInfo;
   setUrlsHandler: React.Dispatch<React.SetStateAction<UrlInfo>>;
 }
+
+export type ReceivedFileType = "folder" | "file";
+
+export interface ReceivedFileInfo {
+  name: string;
+  type: ReceivedFileType;
+}
+
 
 export type FileType =
   "folder" |
@@ -35,6 +44,24 @@ export interface FileInfo {
   type: FileType;
   size: number;
   rights: "read" | "write";
+}
+
+function receivedFileInfoToFileInfo(data: ReceivedFileInfo): FileInfo { // TODO - tmp until the back returns proper type
+  return {
+    name: data.name,
+    type: data.type === "file" ? "unknown" : "folder",
+    size: 10,
+    rights: "write",
+  }
+}
+
+function mountPointToFileInfo(data: string): FileInfo {
+  return {
+    name: data,
+    type: "folder",
+    size: 0,
+    rights: "read",
+  }
 }
 
 const sample_data: FileInfo[] = [
@@ -113,15 +140,48 @@ function MosaicDisplay(props: DisplayProps) {
   )
 }
 
-
 export default function FilesApp(props: Props) {
-  const isMobile = React.useContext(MobileDevice); // FIXME - pas encore mis la condition
+  const isMobile = React.useContext(MobileDevice); // TODO - pas encore mis la condition
   const [lpOpen, setLpOpen] = React.useState(isMobile); // is left panel opened
-  const [sliderValue, setSliderValue] = React.useState(177); //FIXME - just for testing
+  const [sliderValue, setSliderValue] = React.useState(177); // TODO - just for testing
+  const [path, setPath] = React.useState("/");
+  const [loading, setLoading] = React.useState(true);
+  const [displayedFiles, setDisplayedFiles] = React.useState<FileInfo[]>([]);
+  const [onError, setOnError] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    // loads the mountpoints at root
+    (async () => {
+      const loaded_mounts_points = await getUserMountPoints();
+      setLoading(false);
+      if (loaded_mounts_points === undefined) {
+        setOnError(true);
+      } else {
+        setDisplayedFiles(loaded_mounts_points.map((elem) => mountPointToFileInfo(elem)));
+      }
+    })();
+  }, []);
+
+  React.useEffect(() => {
+    // loads the mountpoints if path is root
+    if (path === "/") {
+      (async () => {
+        const loaded_mounts_points = await getUserMountPoints();
+        setLoading(false);
+        if (loaded_mounts_points === undefined) {
+          setOnError(true);
+        } else {
+          setDisplayedFiles(loaded_mounts_points.map((elem) => mountPointToFileInfo(elem)));
+        }
+      })();
+    } else {
+
+    }
+  }, [path]);
 
   return (
     <Window>
-      <DragDropFile/>
+      <DragDropFile />
       <Banner
         text="OSCloud:Files"
         onClick={() => {

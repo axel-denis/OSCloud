@@ -41,8 +41,8 @@ export async function get_user() { // GET /user
 
 export async function getUserMountPoints(): Promise<string[] | undefined> {
     const { answer, data, errors } = await get_user();
-    if (answer.status === 200 && data) {
-        return data.response.mount_points;
+    if (answer.status === 200) {
+        return data?.response.mount_points;
     } else {
         return undefined;
     }

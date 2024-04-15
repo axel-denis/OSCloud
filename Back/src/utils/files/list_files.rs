@@ -6,6 +6,7 @@ use serde::Serialize;
 use crate::utils::users::VerifiedUserPath;
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum FileType {
     File,
     Folder,

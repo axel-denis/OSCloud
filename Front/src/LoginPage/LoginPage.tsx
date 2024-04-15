@@ -10,6 +10,17 @@ interface Props {
   setIsLoggedIn: Function;
 }
 
+interface LoginResponse {
+  jwt: string,
+}
+
+type JSONResponse = {
+  data?: {
+    login_response: Omit<LoginResponse, 'fetchedAt'>
+  }
+  errors?: Array<{ message: string }>
+}
+
 export default function LoginPage(props: Props) {
   const [waitingValidation, setWaitingValidation] = React.useState<boolean>(false);
   const [errorAnim, setErrorAnim] = React.useState<boolean>(false);
@@ -30,8 +41,14 @@ export default function LoginPage(props: Props) {
       })
     }
     const answer: Response = await fetch(backIp + "/login", options);
+    const { data, errors }: JSONResponse = await answer.json();
     if (answer.status === 200) {
-      props.setIsLoggedIn(true);
+      if (data) {
+        props.setIsLoggedIn(true);
+        localStorage.setItem("token", data.login_response.jwt);
+      } else {
+        console.log("missing field in back response");
+      }
     } else {
       setErrorAnim(true);
       setTimeout(() => {
@@ -46,8 +63,8 @@ export default function LoginPage(props: Props) {
       {!props.isLoggedIn &&
         <motion.div className={'backPannel'}
           initial={{ top: "100vh" }}
-          animate={{ top: "0vh", transition: { duration: .6 * timeScale, ease: "easeOut"} }}
-          exit={{ top: "100vh", transition: { duration: .6 * timeScale, ease: "easeIn"} }}
+          animate={{ top: "0vh", transition: { duration: .6 * timeScale, ease: "easeOut" } }}
+          exit={{ top: "100vh", transition: { duration: .6 * timeScale, ease: "easeIn" } }}
         >
           <form className={'roundedBox centeredForm ' + (errorAnim ? "shake" : "")} onSubmit={handleSubmit}>
             <h1 className="h1LoginPage">
@@ -72,7 +89,7 @@ export default function LoginPage(props: Props) {
               </div>
               <motion.button
                 className='nextButton'
-                whileHover={{backgroundColor: "#dddddd"}}
+                whileHover={{ backgroundColor: "#dddddd" }}
               >
                 <motion.div
                   className='nextButtonSlider'
@@ -89,11 +106,11 @@ export default function LoginPage(props: Props) {
 
               <motion.div
                 className="loadingFieldsBox"
-                initial = {false}
-                animate = {{
+                initial={false}
+                animate={{
                   display: waitingValidation ? "" : "none",
                   backgroundColor: waitingValidation ? "#ffffffcc" : "#ffffff00",
-                  transition: {duration: timeScale * .25}
+                  transition: { duration: timeScale * .25 }
                 }}
               >
                 <img src={loadingIcon} alt="loading" className='loadingRotation' />
@@ -102,9 +119,9 @@ export default function LoginPage(props: Props) {
           </form>
 
           <motion.div className='roundedBox decorativeFlyers'
-            initial={{left: "calc(50% + 260px)" }}
-            animate={{ left: "calc(50% + 150px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
-            exit={{left: "calc(50% + 260px)" }}
+            initial={{ left: "calc(50% + 260px)" }}
+            animate={{ left: "calc(50% + 150px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut" } }}
+            exit={{ left: "calc(50% + 260px)" }}
             style={{
               top: "calc(22% - 100px)",
               width: "150px",
@@ -113,9 +130,9 @@ export default function LoginPage(props: Props) {
               zIndex: 3
             }} />
           <motion.div className='roundedBox decorativeFlyers'
-            initial={{left: "calc(50% - 550px)" }}
-            animate={{ left: "calc(50% - 400px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut"} }}
-            exit={{left: "calc(50% - 550px)" }}
+            initial={{ left: "calc(50% - 550px)" }}
+            animate={{ left: "calc(50% - 400px)", transition: { duration: 1.75 * timeScale, delay: .1 * timeScale, ease: "circOut" } }}
+            exit={{ left: "calc(50% - 550px)" }}
             style={{
               top: "calc(70% - 200px)",
               width: "300px",

@@ -90,7 +90,7 @@ pub struct NewUserMountPoint {
     pub path: String,
 }
 #[cfg_attr(feature = "cli", derive(tabled::Tabled))]
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, PartialEq, Serialize)]
 #[diesel(belongs_to(User, foreign_key = user_id))]
 #[diesel(table_name = crate::database::schema::user_mounts_points)]
 // #[diesel(check_for_backend(diesel::pg::Pg))]
